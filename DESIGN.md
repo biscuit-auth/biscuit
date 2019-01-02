@@ -238,6 +238,8 @@ could also be present in the list of common keys and values
 
 ### Pairing based cryptography
 
+proposed by @geal
+
 Assuming we have a pairing e: G1 x G2 -> Gt with G1 and G2 two additive cyclic groups of prime order q, Gt a multiplicative cyclic group of order q
 with a, b from Fq* finite field of order q
 with P from G1, Q from G2
@@ -290,16 +292,106 @@ Example of library this can be implemented with:
 - pairing crate: https://github.com/zkcrypto/pairing
 - mcl: https://github.com/herumi/mcl
 
-#### Elliptic curve verifiable random functions
+### Elliptic curve verifiable random functions
+
+proposed by @KellerFuchs
 
 https://tools.ietf.org/html/draft-goldbe-vrf-01
 
-#### Gamma signatures
+Using the primitives defined in https://tools.ietf.org/html/draft-goldbe-vrf-01#section-5 :
+
+F - finite field
+2n - length, in octets, of a field element in F
+E - elliptic curve (EC) defined over F
+m - length, in octets, of an EC point encoded as an octet string
+G - subgroup of E of large prime order
+q - prime order of group G
+cofactor - number of points on E divided by q
+g - generator of group G
+Hash - cryptographic hash function
+hLen - output length in octets of Hash
+
+Constraints on options:
+
+Field elements in F have bit lengths divisible by 16
+
+hLen is equal to 2n
+
+Steps:
+
+Keygen:
+`(pk, sk) <- Keygen()`: sk random x with 0 < x < q
+
+Sign(pk, sk, message):
+creating a proof pi = ECVRF_prove(pk, sk, message):
+- h = ECVRF_hash_to_curve(pk, message)
+- gamma = h^sk
+- choose a random integer nonce k from [0, q-1]
+- c = ECVRF_hash_points(g, h, pk, gamma, g^k, h^k)
+- s = k - c*sk mod q
+- pi = (gamma, c, s)
+
+Verify(pk, pi, message) for one message and its signature:
+- (gamma, c, s) = pi
+- u = pk^c * g^s
+    = g^(sk*c)*g^(k - c*sk)
+    = g^k
+- h = ECVRF_hash_to_curve(pk, message)
+- v = gamma^c * h^s
+    = h^(sk*c)*h^(k - c*sk)
+    = h^k
+- c' = ECVRF_hash_points(g, h, pk, gamma, u, v)
+- return c == c'
+
+Aggregate(pk', pi', [pk], PI) with [pk] list of public keys and PI aggregated signature:
+- (gamma', c', s') = pi'
+- ([gamma], [c], S, W, C) = PI
+- h' = ECVRF_hash_to_curve(pk', message')
+- S' = S + s'
+- if previous signature was:
+  - the first block:
+    - set W' = h_0^-s_1 * h_1^-s_0
+  - else:
+    - W == (h_0 ^ (s_0 - S) * .. * h_n^(s_n - S))
+    - W' = W * (h_0^-s') * .. * (h_n^-s') * (h'^-S)
+         = (h_0 ^ (s_0 - S - s') * .. * h_n^(s_n - S - s')) * h'^(s' - S')
+         = (h_0 ^ (s_0 - S') * .. * h_n^(s_n - S')) * h'^(s' - S')
+
+- C' = ECVRF_hash_points(g, h, pk_0 * .. * pk_n, gamma_0 * .. * gamma_n, U', V')
+- PI' = ([gamma]||gamma', [c]||c', S', W', C')
+
+Verify([pk], PI, [message]):
+- ([gamma], [c], S, W, C) = PI
+- check that n = |[pk]| == |[message]| == |[gamma]| == |[c]|
+- for each tuple (pk_i, message_i, gamma_i, c_i) with i from 0 to n:
+  - p_i = pk_i^c_i
+  - h_i = ECVRF_hash_to_curve(pk_i, message_i)
+  - v_i = gamma_i^c_i * h_i^S
+- U = (p_0* .. * p_n) * g^S
+    = pk_0^c_0 * .. * pk_n ^ c_n * g^((k_0 - c_0*sk_0) + .. + (k_n - c_n*sk_n))
+    = g^(sk0 * c_0 + .. + sk_n * c_n + (k_0 - c_0*sk_0) + .. + (k_n - c_n*sk_n))
+    = g^(k_0 + .. + k_n)
+
+- V = v_0 * .. * v_n * W
+    = gamma_0^c_0 * .. * gamma_n^c_n * h_0^S * .. * h_n^S * h_0^(s_0 - S) * .. * h_n^(s_n - S)
+    = h_0^(sk_0*c_0) * .. *  h_n^(sk_n*c_n) * h_0^s_0 * .. * h_n^s_n
+    = h_0^(sk_0*c_0) * .. *  h_n^(sk_n*c_n) * h_0^(k_0 - sk0*c0) * .. * h_n^(k_n - sk_n*c_n)
+    = h_0^k_0 * .. * h_n^k_n
+
+- C' = ECVRF_hash_points(g, h, pk_0 * .. * pk_n, gamma_0 * .. * gamma_n, U, V)
+- return C == C'
+
+
+
+### Gamma signatures
+
+proposed by @bascule
 
 Yao, A. C.-C., & Yunlei Zhao. (2013). Online/Offline Signatures for Low-Power Devices. IEEE Transactions on Information Forensics and Security, 8(2), 283–294.
 Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao https://eprint.iacr.org/2018/414.pdf
 
-#### BIP32 derived keys
+### BIP32 derived keys
 
+proposed by @bascule
 https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
 
