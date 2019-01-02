@@ -373,7 +373,7 @@ Aggregate(pk', pi', [pk], PI) with [pk] list of public keys and PI aggregated si
     - set W' = h_0^-s_1 * h_1^-s_0
   - else:
     - W == (h_0 ^ (s_0 - S) * .. * h_n^(s_n - S))
-    ```
+```
     W' = W * (h_0^-s') * .. * (h_n^-s') * (h'^-S)
        = (h_0 ^ (s_0 - S - s') * .. * h_n^(s_n - S - s')) * h'^(s' - S')
        = (h_0 ^ (s_0 - S') * .. * h_n^(s_n - S')) * h'^(s' - S')
