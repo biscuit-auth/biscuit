@@ -68,6 +68,7 @@ format. HPACK was chosen to avoid specifying yet another serialization format,
 and reusing its data compression features to make tokens small enough to
 fit in a cookie.
 
+```
 biscuit := block\*, signature
 block := HPACK{ kv\* }
 kv := ["rights", rights] | ["pub", pubkey] | [TEXT, TEXT]
@@ -79,15 +80,18 @@ right := (+|-) tag : feature(options)
 tag := TEXT | /regexp/ | *
 feature := TEXT | /regexp/ | *
 options := (r|w|e),\*
+```
 
 Example:
 
+```
 [
 issuer = Clever Cloud
 user = user_id_123
 rights = clevercloud{-/.*prod/ : *(*) +/org_456-*/: *(*)  +lapin-prod:log(r) +sozu-prod:metric(r)}
 ]
 <signature = base_64(64 bytes signature)>
+```
 
 This token was issued by "Clever Cloud" for user "user_id_123".
 It defines the following capabilities, applied in order:
@@ -98,6 +102,7 @@ It defines the following capabilities, applied in order:
 
 Example of attenuated token:
 
+```
 [
 issuer = Clever Cloud
 user = user_id_123
@@ -109,6 +114,7 @@ pub = base64(128 bytes key)
 rights = clevercloud { -/org_456-*/: *(*) +/org_456-test/ database(*) }
 ]
 <signature = base_64(new 64 bytes signature)>
+```
 
 This new token starts from the same rights as the previous one, but attenuates it
 that way:
@@ -245,37 +251,41 @@ with a, b from Fq* finite field of order q
 with P from G1, Q from G2
 
 We have the following properties:
-`e(aP, bQ) == e(P, Q)^(ab)`
-`e != 1`
+- `e(aP, bQ) == e(P, Q)^(ab)`
+- `e != 1`
 
 More specifically:
 
-`e(aP, Q) == e(P, aQ) == e(P,Q)^a`
-`e(P1 + P2, Q) == e(P1, Q) * e(P2, Q)`
+- `e(aP, Q) == e(P, aQ) == e(P,Q)^a`
+- `e(P1 + P2, Q) == e(P1, Q) * e(P2, Q)`
 
 #### Signature
 
-choose k from Fq* as private key, g2 a generator of G2
-public key P = k*g2
+- choose k from Fq* as private key, g2 a generator of G2
+- public key P = k*g2
 
-Signature S = k*H1(message) with H1 function to hash message to G1
-Verifying: knowing message, P and S
+- Signature S = k*H1(message) with H1 function to hash message to G1
+- Verifying: knowing message, P and S
+```
 e(S, g2) == e( k*H1(message), g2)
-              == e( H1(message), k*g2)
-              == e( H1(message), P)
+         == e( H1(message), k*g2)
+         == e( H1(message), P)
+```
 
 #### Signature aggregation
 
-knowing messages m1 and m2, public keys P1 and P2
-signatures S1 = Sign(k1, m1), S2  = Sign(k2, m2)
-the aggregated signature S = S1 + S2
+- knowing messages m1 and m2, public keys P1 and P2
+- signatures S1 = Sign(k1, m1), S2 = Sign(k2, m2)
+- the aggregated signature S = S1 + S2
 
 Verifying:
+```
 e(S, g2) == e(S1+S2, g2)
-              == e(S1, g2)*e(S2, g2)
-              == e(k1*H1(m1), g2) * e(k2*HA(m2), g2)
-              == e(H1(m1), k1*g2) * e(H1(m2), k2*g2)
-              == e(H1(m1), P1) * e(H1(m2), P2)
+         == e(S1, g2)*e(S2, g2)
+         == e(k1*H1(m1), g2) * e(k2*HA(m2), g2)
+         == e(H1(m1), k1*g2) * e(H1(m2), k2*g2)
+         == e(H1(m1), P1) * e(H1(m2), P2)
+```
 
 so we calculate signature verification pairing for every caveat
 then we multiply the result and check equality
@@ -300,6 +310,7 @@ https://tools.ietf.org/html/draft-goldbe-vrf-01
 
 Using the primitives defined in https://tools.ietf.org/html/draft-goldbe-vrf-01#section-5 :
 
+```
 F - finite field
 2n - length, in octets, of a field element in F
 E - elliptic curve (EC) defined over F
@@ -310,6 +321,7 @@ cofactor - number of points on E divided by q
 g - generator of group G
 Hash - cryptographic hash function
 hLen - output length in octets of Hash
+```
 
 Constraints on options:
 
@@ -323,7 +335,9 @@ Keygen:
 `(pk, sk) <- Keygen()`: sk random x with 0 < x < q
 
 Sign(pk, sk, message):
+
 creating a proof pi = ECVRF_prove(pk, sk, message):
+
 - h = ECVRF_hash_to_curve(pk, message)
 - gamma = h^sk
 - choose a random integer nonce k from [0, q-1]
@@ -332,18 +346,24 @@ creating a proof pi = ECVRF_prove(pk, sk, message):
 - pi = (gamma, c, s)
 
 Verify(pk, pi, message) for one message and its signature:
+
 - (gamma, c, s) = pi
-- u = pk^c * g^s
-    = g^(sk*c)*g^(k - c*sk)
-    = g^k
+- ```
+u = pk^c * g^s
+  = g^(sk*c)*g^(k - c*sk)
+  = g^k
+```
 - h = ECVRF_hash_to_curve(pk, message)
-- v = gamma^c * h^s
-    = h^(sk*c)*h^(k - c*sk)
-    = h^k
+- ```
+v = gamma^c * h^s
+  = h^(sk*c)*h^(k - c*sk)
+  = h^k
+```
 - c' = ECVRF_hash_points(g, h, pk, gamma, u, v)
 - return c == c'
 
 Aggregate(pk', pi', [pk], PI) with [pk] list of public keys and PI aggregated signature:
+
 - (gamma', c', s') = pi'
 - ([gamma], [c], S, W, C) = PI
 - h' = ECVRF_hash_to_curve(pk', message')
@@ -353,30 +373,37 @@ Aggregate(pk', pi', [pk], PI) with [pk] list of public keys and PI aggregated si
     - set W' = h_0^-s_1 * h_1^-s_0
   - else:
     - W == (h_0 ^ (s_0 - S) * .. * h_n^(s_n - S))
-    - W' = W * (h_0^-s') * .. * (h_n^-s') * (h'^-S)
-         = (h_0 ^ (s_0 - S - s') * .. * h_n^(s_n - S - s')) * h'^(s' - S')
-         = (h_0 ^ (s_0 - S') * .. * h_n^(s_n - S')) * h'^(s' - S')
+    - ```
+    W' = W * (h_0^-s') * .. * (h_n^-s') * (h'^-S)
+       = (h_0 ^ (s_0 - S - s') * .. * h_n^(s_n - S - s')) * h'^(s' - S')
+       = (h_0 ^ (s_0 - S') * .. * h_n^(s_n - S')) * h'^(s' - S')
+```
 
 - C' = ECVRF_hash_points(g, h, pk_0 * .. * pk_n, gamma_0 * .. * gamma_n, U', V')
 - PI' = ([gamma]||gamma', [c]||c', S', W', C')
 
 Verify([pk], PI, [message]):
+
 - ([gamma], [c], S, W, C) = PI
 - check that n = |[pk]| == |[message]| == |[gamma]| == |[c]|
 - for each tuple (pk_i, message_i, gamma_i, c_i) with i from 0 to n:
   - p_i = pk_i^c_i
   - h_i = ECVRF_hash_to_curve(pk_i, message_i)
   - v_i = gamma_i^c_i * h_i^S
-- U = (p_0* .. * p_n) * g^S
+- ```
+U = (p_0* .. * p_n) * g^S
     = pk_0^c_0 * .. * pk_n ^ c_n * g^((k_0 - c_0*sk_0) + .. + (k_n - c_n*sk_n))
     = g^(sk0 * c_0 + .. + sk_n * c_n + (k_0 - c_0*sk_0) + .. + (k_n - c_n*sk_n))
     = g^(k_0 + .. + k_n)
+```
 
-- V = v_0 * .. * v_n * W
+-```
+V = v_0 * .. * v_n * W
     = gamma_0^c_0 * .. * gamma_n^c_n * h_0^S * .. * h_n^S * h_0^(s_0 - S) * .. * h_n^(s_n - S)
     = h_0^(sk_0*c_0) * .. *  h_n^(sk_n*c_n) * h_0^s_0 * .. * h_n^s_n
     = h_0^(sk_0*c_0) * .. *  h_n^(sk_n*c_n) * h_0^(k_0 - sk0*c0) * .. * h_n^(k_n - sk_n*c_n)
     = h_0^k_0 * .. * h_n^k_n
+```
 
 - C' = ECVRF_hash_points(g, h, pk_0 * .. * pk_n, gamma_0 * .. * gamma_n, U, V)
 - return C == C'
