@@ -2,13 +2,6 @@
 
 ## Introduction
 
-## Inspiration
-
-This system draws ideas from X509 certificates,
-JWT, macaroons and vanadium.
-
-# Goals and prior art
-
 distributed authorization is traditionally done through
 centralized systems like OAuth, where any new authorization
 will be delivered by a server, and validated by that same server.
@@ -16,7 +9,13 @@ This is fine when working with a monolithic system, or a small
 set of microservices.
 A request coming from a user agent could result in hundreds of
 internal requests between microservices, each requiring a verification
-of authorization.
+of authorization, and we cannot have a centralized server to handle
+authorization for every service.
+
+### Inspiration
+
+This system draws ideas from X509 certificates,
+JWT, macaroons and vanadium.
 
 JSON Web Tokens were designed in part to handle distributed authorization,
 and in part to provide a stateless authentication token.
@@ -50,6 +49,8 @@ holder. The token is then validated first by validating the certificate,
 then validating the caveats, then applying ACLs based on patterns
 in the blessings.
 
+
+### Goals
 
 Here is what we want:
 - distributed authorization: any node could validate the token only with public information
@@ -116,54 +117,142 @@ that way:
 
 The new token has a signature derived from the previous one and the second block.
 
-## Common keys and values
+### Common keys and values
 
 Key-value tuples can contain arbitrary data, but some of them have predefined
 semantics (and could be part of HPACK's static tables to reduce the size of
 the token):
-- issuer: original creator of the token (validators will be able 
+- issuer: original creator of the token (validators are able to look up the root public key from the issuer field). Appears in the first block
+- holder: current holder of the token (will be used for audit purpose). Can appear once per block
+- pub: public key used to sign the current block. Appears in every block except the first
+- created-on: creation date, in ISO 8601 format. Can appear once per block
+- expires-on: expiration date, in ISO 8601 format. Can appear once per block. Must be lower than the expiration dates from previous blocks if present
+- restricts: comma separated list of public keys. Any future block can only be signed by one of those keys
+- sealed: if present, stops delegation (no further block can be added). Its only value is "true"
+- rights: string specifying the rights restriction for this block
+
+Those common keys and values will be present in the HPACK static table
+
+## Rights management
+
+The rules are defined to allow flexibility in rules verification. The default token
+will start with all the rights, and restrict them with the "rights" field in each
+new block. But what those restrictions mean will depend on which service verifies
+the token, as they might care (or even know) about different sets of capabilities.
+
+Starting from a set of rights `R`, that contains a list of namespaces. Each namespace
+has a list of tuples `(tag, feature, [options])`. Tags and features can appear in
+multiple tuples.
+A `rights` field contains a list of namespaces, and for each namespace,
+a list of right patterns matching `(tag, feature, [options])` tuples,
+and a `+` or `-` tag indicating if it should be added or removed.
+
+Appying rights attenuation:
+
+- for each namespace `N`:
+  - load the current set of rights `R`
+    - either the original set of rights for the verifier
+    - or the set of rights after attenuation by the previous block
+  - all rights in `R` are marked as `+` (active)
+  - for each right pattern ( `RP = (+|-) tag : feature(options)` ):
+    - for each right tuple `r = (tag, feature, [options])` in `R` matched by `RP`:
+      - if r is active ( `+` ) but `RP` contains `-`, mark r as inactive ( `-` )
+      - if r is inactive ( `-` ) but `RP` contains `+`, mark r as active ( `+` )
+  - filter `R` to keep only the tuples marked as active
+  - store `R` as the newt rights for `N`
+
 ## Cryptography
 
-ISSUER = $issuer_token$
-// think about repudation
-USER = $user_id$ // using f for field
-rights = +/-(tagregexp):feature_name(options),feature_name(options,options) -tag:feature(w)
-rights = 
+This design requires a non interactive signature aggregation scheme.
+We have multiple propositions, described in annex to the document.
+We have not chosen yet which scheme will be used. The choice will
+depend on the speed on the algorithm (for signature, aggregation and
+verification), the size of the keys and signatures, and pending
+an audit.
 
-log(r)
-log_drain(r,w)
-apps(r,w)
-metric(r)
-domain
+The system needs to be non interactive, so that delegation can
+be done "offline", without talking to the initial authorization
+system, or any of the other participants in the delegation chain.
 
-/.+/ = *
+A signature aggregation scheme, can take a list of tuples
+(message, signature, public key), and produce one signature
+that can be verified with the list of messages and public keys.
+An additional important property we need here: we cannot get
+the original signatures from an aggregated one.
 
-+/.+/:/.+/(/.+/) -/.*prod/:/.+/(/.+/)
-+*:*(*)
+### Biscuit signature scheme
 
-clevercloud{  }
-//
-alias * = /.+/ 
+Assuming we have the following primitives:
 
+- `Keygen()` can give use a publick key `pk` and a private key `sk`
+- `Sign(sk, message)` can give us a signature `S`, with `message` a byte array or arbitrary length
+- `Aggregate(S1, S2)` can give us an aggregated signature `S`. Additionally, `Aggregate`
+can be called with an aggregated signature `S` and a single signature `S'`, and return a new
+aggregated signature `S"`
+- `Verify([message], [pk], S)` will return true if the signature `S`
+is valid for the list of messages `[message]` and the list of public keys `[pk]`
 
+#### First layer of the authorization token
 
-*{-*:*(*)}
-clevercloud{+sozu:metric(r) +/.*rust/:/.+/(/.+/) -/.*prod/:/.+/(/.+/) +lapin:log(r)}
+The issuing server performs the following steps:
 
-# Pairing based cryptography
+- `(pk1, sk1) <- Keygen()` (done once)
+- create the first block (we can omit `pk1` from that block, since we assume the
+token will be verified on a system that knows that public key)
+- Serialize that first block to `m1`
+- `S <- Sign(sk1, m1)`
+- `token1 <- m1||S`
 
-https://en.wikipedia.org/wiki/Pairing-based_cryptography
-Pairing e: G1 x G2 -> Gt with G1 and G2 two additive cyclic groups of prime order q, Gt a multiplicative cyclic group of order q
+#### Adding a block to the token
+
+The holder of a token can attenuate it by adding a new block and
+signing it, with the following steps:
+
+- With `token1` containing `[messages]||S`, and a way to get
+the list of public keys `[pk]` for each block from the blocks, or
+from the environment
+- `(pk2, sk2) <- Keygen()`
+- With `message2` the block we want to add (containing `pk2`, so it
+can be found in further verifications)`
+- `S2 <- Sign(sk2, message2)`
+- `S' <- Aggregate(S, S2)`
+- `token2 <- [messages]||message2||S'`
+
+Note: the block can contain `sealed: true` in its keys and values, to
+indicate a token should not be attenuated further.
+
+Question: should the previous signature be verified before adding the
+new block?
+
+#### Verifying the token
+
+- With `token` containing `[messages]||S`
+- extract `[pk]` from `[messages]` and the environment: the first public
+key should already be known, and for performance reasons, some public keys
+could also be present in the list of common keys and values
+- `b <- Verify([messages], [pk], S)`
+- if `b` is true, the signature is valid
+- proceed to validating rights
+
+## Annex 1: Cryptographic design proposals
+
+### Pairing based cryptography
+
+Assuming we have a pairing e: G1 x G2 -> Gt with G1 and G2 two additive cyclic groups of prime order q, Gt a multiplicative cyclic group of order q
 with a, b from Fq* finite field of order q
 with P from G1, Q from G2
-e(aP, bQ) == e(P, Q)^(ab)
-e != 1
 
-# more specifically:
-e(aP, Q) == e(P, aQ) == e(P,Q)^a
-e(P1 + P2, Q) == e(P1, Q) * e(P2, Q)
+We have the following properties:
+`e(aP, bQ) == e(P, Q)^(ab)`
+`e != 1`
 
-# Signature
+More specifically:
+
+`e(aP, Q) == e(P, aQ) == e(P,Q)^a`
+`e(P1 + P2, Q) == e(P1, Q) * e(P2, Q)`
+
+#### Signature
+
 choose k from Fq* as private key, g2 a generator of G2
 public key P = k*g2
 
@@ -173,7 +262,8 @@ e(S, g2) == e( k*H1(message), g2)
               == e( H1(message), k*g2)
               == e( H1(message), P)
 
-# Signature aggregation
+#### Signature aggregation
+
 knowing messages m1 and m2, public keys P1 and P2
 signatures S1 = Sign(k1, m1), S2  = Sign(k2, m2)
 the aggregated signature S = S1 + S2
@@ -184,6 +274,7 @@ e(S, g2) == e(S1+S2, g2)
               == e(k1*H1(m1), g2) * e(k2*HA(m2), g2)
               == e(H1(m1), k1*g2) * e(H1(m2), k2*g2)
               == e(H1(m1), P1) * e(H1(m2), P2)
+
 so we calculate signature verification pairing for every caveat
 then we multiply the result and check equality
 
@@ -192,6 +283,23 @@ we use curve BLS12-381 (Boneh Lynn Shacham) for security reasons
 for comparions with Barreto Naehrig curves)
 assumes computational Diffe Hellman is hard
 
+Performance is not stellar (with the pairing crate, we can
+spend 30ms verifying a token with 3 blocks, with mcl 1.7ms).
+
 Example of library this can be implemented with:
 - pairing crate: https://github.com/zkcrypto/pairing
 - mcl: https://github.com/herumi/mcl
+
+#### Elliptic curve verifiable random functions
+
+https://tools.ietf.org/html/draft-goldbe-vrf-01
+
+#### Gamma signatures
+
+Yao, A. C.-C., & Yunlei Zhao. (2013). Online/Offline Signatures for Low-Power Devices. IEEE Transactions on Information Forensics and Security, 8(2), 283–294.
+Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao https://eprint.iacr.org/2018/414.pdf
+
+#### BIP32 derived keys
+
+https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
+
