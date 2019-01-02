@@ -348,13 +348,13 @@ creating a proof pi = ECVRF_prove(pk, sk, message):
 Verify(pk, pi, message) for one message and its signature:
 
 - (gamma, c, s) = pi
-- ```
+```
 u = pk^c * g^s
   = g^(sk*c)*g^(k - c*sk)
   = g^k
 ```
 - h = ECVRF_hash_to_curve(pk, message)
-- ```
+```
 v = gamma^c * h^s
   = h^(sk*c)*h^(k - c*sk)
   = h^k
@@ -373,7 +373,7 @@ Aggregate(pk', pi', [pk], PI) with [pk] list of public keys and PI aggregated si
     - set W' = h_0^-s_1 * h_1^-s_0
   - else:
     - W == (h_0 ^ (s_0 - S) * .. * h_n^(s_n - S))
-    - ```
+    ```
     W' = W * (h_0^-s') * .. * (h_n^-s') * (h'^-S)
        = (h_0 ^ (s_0 - S - s') * .. * h_n^(s_n - S - s')) * h'^(s' - S')
        = (h_0 ^ (s_0 - S') * .. * h_n^(s_n - S')) * h'^(s' - S')
@@ -390,14 +390,14 @@ Verify([pk], PI, [message]):
   - p_i = pk_i^c_i
   - h_i = ECVRF_hash_to_curve(pk_i, message_i)
   - v_i = gamma_i^c_i * h_i^S
-- ```
+```
 U = (p_0* .. * p_n) * g^S
     = pk_0^c_0 * .. * pk_n ^ c_n * g^((k_0 - c_0*sk_0) + .. + (k_n - c_n*sk_n))
     = g^(sk0 * c_0 + .. + sk_n * c_n + (k_0 - c_0*sk_0) + .. + (k_n - c_n*sk_n))
     = g^(k_0 + .. + k_n)
 ```
 
--```
+```
 V = v_0 * .. * v_n * W
     = gamma_0^c_0 * .. * gamma_n^c_n * h_0^S * .. * h_n^S * h_0^(s_0 - S) * .. * h_n^(s_n - S)
     = h_0^(sk_0*c_0) * .. *  h_n^(sk_n*c_n) * h_0^s_0 * .. * h_n^s_n
