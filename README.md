@@ -1,5 +1,9 @@
 # Biscuit authentication token
 
+![logo by Mathias Adam](https://raw.githubusercontent.com/CleverCloud/biscuit/master/assets/brown.png)
+
+*logo by [Mathias Adam](http://www.madgraphism.com/)*
+
 Biscuit is a (in development) authentication token for microservices
 architectures with the following properties:
 
