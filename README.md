@@ -1,6 +1,6 @@
 # Biscuit authentication token
 
-![logo by Mathias Adam](https://raw.githubusercontent.com/CleverCloud/biscuit/master/assets/brown.png)
+<img src="https://raw.githubusercontent.com/CleverCloud/biscuit/master/assets/brown.png" width="300">
 
 *logo by [Mathias Adam](http://www.madgraphism.com/)*
 
