@@ -369,34 +369,36 @@ v = gamma^c * h^s
 Sign:
 
 First block: Sign0(pk, sk, message)
-- h = ECVRF_hash_to_curve(pk, message)
-- gamma = h^sk
-- choose a random integer nonce k from [0, q-1]
-- c = ECVRF_hash_points(g, h, pk, gamma, g^k, h^k)
-- s = k - c * sk mod q
-- W = 1
-- S = s
-- PI_0 = (gamma, c, S, W)
+- `h = ECVRF_hash_to_curve(pk, message)`
+- `gamma = h^sk`
+- `choose a random integer nonce k from [0, q-1]`
+- `c = ECVRF_hash_points(g, h, pk, gamma, g^k, h^k)`
+- `s = k - c * sk mod q`
+- `W = 1`
+- `S = s`
+- `PI_0 = (gamma, c, S, W)`
 
 Block n+1: Sign( pk_(n+1), sk_(n+1), message_(n+1), PI_n):
-- ([gamma_i], [c_i], S_n, W_n) = PI_n
-- h_(n+1) = ECVRF_hash_to_curve(pk_(n+1), message_(n+1))
-- gamma_(n+1) = h_(n+1)^sk_(n+1)
+- `([gamma_i], [c_i], S_n, W_n) = PI_n`
+- `h_(n+1) = ECVRF_hash_to_curve(pk_(n+1), message_(n+1))`
+- `gamma_(n+1) = h_(n+1)^sk_(n+1)`
 - choose a random integer nonce k_(n+1) from [0, q-1]
-- c_(n+1) = ECVRF_hash_points(g, h_(n+1), pk_0 * .. * pk_(n+1) ,
+```
+c_(n+1) = ECVRF_hash_points(g, h_(n+1), pk_0 * .. * pk_(n+1) ,
     gamma_0 * .. * gamma_(n+1), g^(k_0 + .. + k_(n+1)),
     h^(k_0 + .. + k_(n+1)))
-- s_(n+1) = k_(n+1) - c_(n+1) * sk_(n+1) mod q
-- S_(n+1) = S_n + s_(n+1)
-- W_(n+1) = W_n * (h_0 * .. * h_n)^(-s_(n+1)) * h_(n+1)^(-Sn) == h_0^(s_0 - S_(n+1)) * .. * h_(n+1)^(s_(n+1) - S_(n+1))
-- PI_(n+1) = ([gamma_i], [c_i], S_(n+1), W_(n+1))
+```
+- `s_(n+1) = k_(n+1) - c_(n+1) * sk_(n+1) mod q`
+- `S_(n+1) = S_n + s_(n+1)`
+- `W_(n+1) = W_n * (h_0 * .. * h_n)^(-s_(n+1)) * h_(n+1)^(-Sn) == h_0^(s_0 - S_(n+1)) * .. * h_(n+1)^(s_(n+1) - S_(n+1))`
+- `PI_(n+1) = ([gamma_i], [c_i], S_(n+1), W_(n+1))`
 
 Verify([pk], PI, [message]) (with n blocks):
 
 
 Aggregate(pk', pi', [pk], PI) with [pk] list of public keys and PI aggregated signature:
-- ([gamma], [c], S, W, C) = PI
-- check that n = |[pk]| == |[message]| == |[gamma]| == |[c]|
+- `([gamma], [c], S, W, C) = PI`
+- check that `n = |[pk]| == |[message]| == |[gamma]| == |[c]|`
 ```
 U = pk_0^c_0 * .. * pk_n^c_n * g^S
   = g^(sk_0*c_0) * .. * g^(sk_n*c_n) * g^(k_0 - sk0*c_0 + .. + k_n - sk_n*c_n)
@@ -409,8 +411,8 @@ V = W* gamma_0^c_0 * h_0^S * .. * gamma_n^c_n * h_n^S
   = h_0^(k_0 - sk_0*c_0 - S + sk_0*c_0 + S) * .. * h_n^(k_n - sk_n*c_n - S + sk_n*c_n + S)
   = h_0^k_0 * .. * h_n^k_n
 ```
-- C = ECVRF_hash_points(g, h_n, pk0 * .. * pk_n, gamma_0 * .. * gamma_n, U, V)
-- verify that C == c_n
+- `C = ECVRF_hash_points(g, h_n, pk0 * .. * pk_n, gamma_0 * .. * gamma_n, U, V)`
+- verify that `C == c_n`
 
 Note: we could probably store the product of gamma points instead
 of the list. This would avoid some calculations and make signatures
