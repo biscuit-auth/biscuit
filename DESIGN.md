@@ -120,6 +120,27 @@ attributes, or new values for them, are added in the system.  (The use of `any`
 is considered intentional.)
 
 
+### Interpretation
+
+Given an operation's `attributes`, the set of `critical` attributes, a given
+`biscuit` is evaluated as follows:
+
+```python3
+for caveat in biscuit:
+  bounds = set()
+  for predicate in caveat:
+    if not predicate.eval(attributes):
+      return False
+    if predicate.isbound:
+      bounds.add(predicate.attribute)
+
+  if bounds != critical:
+    return False
+
+return True
+```
+
+
 ## Format
 
 XXXTODO: Update for caveats
@@ -200,33 +221,6 @@ the token):
 
 Those common keys and values will be present in the HPACK static table
 
-## Rights management
-
-The rules are defined to allow flexibility in rules verification. The default token
-will start with all the rights, and restrict them with the "rights" field in each
-new block. But what those restrictions mean will depend on which service verifies
-the token, as they might care (or even know) about different sets of capabilities.
-
-Starting from a set of rights `R`, that contains a list of namespaces. Each namespace
-has a list of tuples `(tag, feature, [options])`. Tags and features can appear in
-multiple tuples.
-A `rights` field contains a list of namespaces, and for each namespace,
-a list of right patterns matching `(tag, feature, [options])` tuples,
-and a `+` or `-` tag indicating if it should be added or removed.
-
-Appying rights attenuation:
-
-- for each namespace `N`:
-  - load the current set of rights `R`
-    - either the original set of rights for the verifier
-    - or the set of rights after attenuation by the previous block
-  - all rights in `R` are marked as `+` (active)
-  - for each right pattern ( `RP = (+|-) tag : feature(options)` ):
-    - for each right tuple `r = (tag, feature, [options])` in `R` matched by `RP`:
-      - if r is active ( `+` ) but `RP` contains `-`, mark r as inactive ( `-` )
-      - if r is inactive ( `-` ) but `RP` contains `+`, mark r as active ( `+` )
-  - filter `R` to keep only the tuples marked as active
-  - store `R` as the newt rights for `N`
 
 ## Cryptography
 
