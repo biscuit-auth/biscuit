@@ -2,24 +2,24 @@
 
 ## Introduction
 
-distributed authorization is traditionally done through
+Distributed authorization is traditionally done through
 centralized systems like OAuth, where any new authorization
 will be delivered by a server, and validated by that same server.
 This is fine when working with a monolithic system, or a small
 set of microservices.
-A request coming from a user agent could result in hundreds of
-internal requests between microservices, each requiring a verification
-of authorization, and we cannot have a centralized server to handle
-authorization for every service.
+
+However, in microservice architectures, a single request coming from a user
+agent could result in hundreds of internal requests between microservices, each
+requiring a verification of authorization, making it inpractical to delegate
+it to a centralized server.
 
 ### Inspiration
 
-This system draws ideas from X509 certificates,
-JWT, macaroons and vanadium.
+This system draws ideas from X509 certificates, JWT, Macaroons and Vanadium.
 
 JSON Web Tokens were designed in part to handle distributed authorization,
 and in part to provide a stateless authentication token.
-While it has been shown that state management cannot be avoid (it is
+While it has been shown that state management cannot be avoided (it is
 the only way to have correct revocation), distributed authorization
 has proven useful. JSON Web Tokens are JSON objects that carry
 data about their principal, expiration dates and a serie of claims,
