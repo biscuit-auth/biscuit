@@ -134,7 +134,7 @@ for caveat in biscuit:
     if predicate.isbound:
       bounds.add(predicate.attribute)
 
-  if bounds != critical:
+  if not bounds.contains(critical):
     return False
 
 return True
