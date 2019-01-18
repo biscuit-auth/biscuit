@@ -1,5 +1,7 @@
 # Biscuit authentication token
 
+[![Join the chat at https://gitter.im/CleverCloud/biscuit](https://badges.gitter.im/CleverCloud/biscuit.svg)](https://gitter.im/CleverCloud/biscuit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 <img src="https://raw.githubusercontent.com/CleverCloud/biscuit/master/assets/brown.png" width="300">
 
 *logo by [Mathias Adam](http://www.madgraphism.com/)*
