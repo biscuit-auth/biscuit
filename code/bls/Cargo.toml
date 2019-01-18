@@ -1,0 +1,8 @@
+[package]
+name = "bls"
+version = "0.1.0"
+authors = ["Geoffroy Couprie <geoffroy.couprie@clever-cloud.com>"]
+
+[dependencies]
+pairing = "^0.14"
+rand = "*"
