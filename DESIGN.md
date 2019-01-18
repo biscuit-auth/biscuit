@@ -61,7 +61,89 @@ specific authorizations
 - capabilities: a request carries a token that contains a set of rights
 that will be used for authorization, instead of deploying ACLs on every node
 
+
+## Structure and semantics
+
+A biscuit is structured as a cryptographic, append-only list; its elements are
+called *caveats*, and describe authorization properties.  As with Macaroons,
+an operation must comply with all caveats in order to be allowed by the biscuit.
+
+Caveats describe which operations are authorized by providing predicates over
+the operation's attributes.
+
+Attributes are data, associated with the operation,
+that is known when the policy is evaluated, such as an identifier for the
+ressource being accessed, the type of the operation (read, write, append, ...),
+the operation's parameters (if any), the client's IP address or a
+channel-binding value (like the TLS transcript hash).
+
+Available attributes, and their type, are known ahead of time by the verifier.
+Some of those attributes are *critical*, and all caveats must provide a *bound*
+for each critical attribute.
+
+Bounds are a subset of predicates, that only allow the following:
+- `any`: all values match;
+- `in <subset>`: only elements in `subset` match; this can be an explicit
+  enumeration, or a (non-infinite) range in the case of numeric types.
+
+
+### Rationale
+
+Some attributes grant authority (such as ressource identifiers, operation type,
+...), and failing to include a caveat limiting acceptable values is a common
+failure with Macaroons, resulting in authority being accidentally granted.
+
+By marking them critical, two things are achieved:
+- They must be bound by caveats, preventing accidental authority grants when new
+  values are added.
+- Their presence is required in all caveats for a biscuit to be valid; as such:
+  - if developers accidentally fail to provide a bound, the biscuit is invalid;
+  - biscuits issued before the attribute was defined are implicitely revoked.
+
+For example, consider a data store, which initially only provides read access.
+Assume I was granted a biscuit for ressources in it, before a developper
+implemented read-write access, along with a `type` attribute (which can be
+`Read` or `Write`).  My biscuit suddenly grants me read-write access.
+
+Marking the `type` attribute as critical means that I must request a new
+biscuit, that properly specifies whether my access is read and/or write.
+
+Now, if I was to be issued a biscuit with the caveat `type != Write`, before the
+types `Append`, `Create`, and `Delete` were added, my the biscuit would again go
+from granting read-only access to granting write access; this is why critical
+attributes must use bounds.
+
+
+By requiring that all caveats provide a bound for each critical attribute, we
+can guarantee that a biscuit does not gain unintended authority when new
+attributes, or new values for them, are added in the system.  (The use of `any`
+is considered intentional.)
+
+
+### Interpretation
+
+Given an operation's `attributes`, the set of `critical` attributes, a given
+`biscuit` is evaluated as follows:
+
+```python3
+for caveat in biscuit:
+  bounds = set()
+  for predicate in caveat:
+    if not predicate.eval(attributes):
+      return False
+    if predicate.isbound:
+      bounds.add(predicate.attribute)
+
+  if not bounds.contains(critical):
+    return False
+
+return True
+```
+
+
 ## Format
+
+XXXTODO: Update for caveats
 
 A biscuit token is an ordered list of key and value tuples, stored in HPACK
 format. HPACK was chosen to avoid specifying yet another serialization format,
@@ -139,33 +221,6 @@ the token):
 
 Those common keys and values will be present in the HPACK static table
 
-## Rights management
-
-The rules are defined to allow flexibility in rules verification. The default token
-will start with all the rights, and restrict them with the "rights" field in each
-new block. But what those restrictions mean will depend on which service verifies
-the token, as they might care (or even know) about different sets of capabilities.
-
-Starting from a set of rights `R`, that contains a list of namespaces. Each namespace
-has a list of tuples `(tag, feature, [options])`. Tags and features can appear in
-multiple tuples.
-A `rights` field contains a list of namespaces, and for each namespace,
-a list of right patterns matching `(tag, feature, [options])` tuples,
-and a `+` or `-` tag indicating if it should be added or removed.
-
-Appying rights attenuation:
-
-- for each namespace `N`:
-  - load the current set of rights `R`
-    - either the original set of rights for the verifier
-    - or the set of rights after attenuation by the previous block
-  - all rights in `R` are marked as `+` (active)
-  - for each right pattern ( `RP = (+|-) tag : feature(options)` ):
-    - for each right tuple `r = (tag, feature, [options])` in `R` matched by `RP`:
-      - if r is active ( `+` ) but `RP` contains `-`, mark r as inactive ( `-` )
-      - if r is inactive ( `-` ) but `RP` contains `+`, mark r as active ( `+` )
-  - filter `R` to keep only the tuples marked as active
-  - store `R` as the newt rights for `N`
 
 ## Cryptography
 
