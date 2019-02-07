@@ -25,7 +25,8 @@ mod bench {
     assert!(token1.verify(), "cannot verify first token");
 
     b.iter(||{
-      Token::new(&mut rng, &keypair1, &message1[..])
+      let t = Token::new(&mut rng, &keypair1, &message1[..]);
+      t.challenge(&mut rng, &b"challenge data"[..])
     });
   }
 
@@ -49,7 +50,8 @@ mod bench {
     assert!(token2.verify(), "cannot verify second token");
 
     b.iter(||{
-      token1.append(&mut rng, &message2[..])
+      let t = token1.append(&mut rng, &message2[..]);
+      t.challenge(&mut rng, &b"challenge data"[..])
     });
   }
 
@@ -81,7 +83,8 @@ mod bench {
     assert!(token3.verify(), "cannot verify third token");
 
     b.iter(||{
-      token2.append(&mut rng, &message3[..])
+      let t = token2.append(&mut rng, &message3[..]);
+      t.challenge(&mut rng, &b"challenge data"[..])
     });
   }
 

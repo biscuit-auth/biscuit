@@ -138,9 +138,9 @@ The verifier knows pk1 and can check the chain, and h allows checking that we ho
 
 Here are some benchmarks for this approach:
 
-test bench::sign_first_block    ... bench:     160,655 ns/iter (+/- 10,882)
-test bench::sign_second_block   ... bench:     233,960 ns/iter (+/- 35,729)
-test bench::sign_third_block    ... bench:     231,397 ns/iter (+/- 11,327)
+test bench::sign_first_block    ... bench:     325,113 ns/iter (+/- 22,812)
+test bench::sign_second_block   ... bench:     402,085 ns/iter (+/- 36,133)
+test bench::sign_third_block    ... bench:     405,621 ns/iter (+/- 28,162)
 test bench::verify_one_block    ... bench:     308,992 ns/iter (+/- 32,920)
 test bench::verify_two_blocks   ... bench:     472,676 ns/iter (+/- 97,749)
 test bench::verify_three_blocks ... bench:     624,811 ns/iter (+/- 63,081)
@@ -184,7 +184,7 @@ It has som slight differences in behaviour with the other methods, though:
 | pairing   | 2932 μs | 3234 μs  |          |
 | VRF 1     |  281 μs |  737 μs  | 888 μs   |
 | VRF 2     |  333 μs |  715 μs  | 818 μs   |
-| challenge |  160 μs |  233 μs  | 231 μs   |
+| challenge |  325 μs |  402 μs  | 405 μs   |
 
 ### Verifying
 
