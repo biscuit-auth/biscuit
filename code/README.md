@@ -17,6 +17,8 @@ It should not be possible to infer `signature_n` if we have the token at level `
 The first solution that was proposed uses pairing based crypto. There are two experiments,
 one with the Rust pairing crate, one with the mcl C++ library.
 
+#### Performance
+
 Performance for the Rust library is not great:
 
 ```
@@ -29,6 +31,17 @@ test bench::verify_three_blocks                     ... bench:  30,657,499 ns/it
 
 But the mcl library can get at verification in 1 or 2ms.
 
+#### Signature overhead
+
+The first group's points can be stored in 48 bytes, the second group's in 96 bytes.
+Assuming we use the first group to get smaller points (probably at the price of a reduced security bound),
+We would need to store one G1 point per block, and one G2 point.
+So, for:
+- 1 block: 1 * 48 + 96 = 144 bytes
+- 2 blocks: 2 * 48 + 96 = 192 bytes
+- 5 blocks: 5 * 48 + 96 = 336 bytes
+- 10 blocks: 10 * 48 + 96 = 576 bytes
+
 Pairing based crypto libraries are not frequent, so it might be hard to implement in various languages
 
 ### Verifiable random functions
@@ -37,6 +50,8 @@ By reusing primitives from https://tools.ietf.org/html/draft-goldbe-vrf-01#secti
 aggregated non interactive proof of discrete logarithms, that match our requirements.
 
 We have an example that uses the curve25519-dalek Rust crate, with the Ristretto group.
+
+#### Performance
 
 Here are some benchmarks for this approach:
 
@@ -64,6 +79,27 @@ test bench::verify_two_blocks   ... bench:     345,233 ns/iter (+/- 22,881)
 
 There's probably a lot of low hanging fruit in optimizing those, but
 token attenuation and verification happening in less than 1ms makes it usable.
+
+#### Signature overhead
+
+a Ristretto point can be stored in 32 bytes, a Scalar can be stored in 32 bytes
+
+With the first method, we will store 2 points (pubkey and gamma) and 1 scalar
+per block, and 1 point and 1 scalar in the signature.
+With the second method, we will store 1 point (pubkey) and 1 scalar per block,
+and 2 points and 1 scalar in the signature.
+
+So, for the first method:
+- 1 block: 1 * 96 + 64 = 160 bytes
+- 2 blocks: 2 * 96 + 64 = 256 bytes
+- 5 blocks: 5 * 96 + 64 = 544 bytes
+- 10 blocks: 10 * 96 + 64 = 1024 bytes
+
+For the second method:
+- 1 block: 1 * 64 + 96 = 160 bytes
+- 2 blocks: 2 * 64 + 96 = 224 bytes
+- 5 blocks: 5 * 64 + 96 = 416 bytes
+- 10 blocks: 10 * 64 + 96 = 736 bytes
 
 Since this solution uses a well known curve, there's a higher chance of getting
 good quality implementations in other languages.
