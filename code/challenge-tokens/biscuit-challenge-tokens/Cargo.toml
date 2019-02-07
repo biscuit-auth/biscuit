@@ -1,0 +1,10 @@
+[package]
+name = "biscuit-challenge-tokens"
+version = "0.1.0"
+authors = ["Geoffroy Couprie <geo.couprie@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+curve25519-dalek = "^1.0"
+rand = "^0.6"
+sha2 = "^0.8"
