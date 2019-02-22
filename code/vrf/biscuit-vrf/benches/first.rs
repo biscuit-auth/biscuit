@@ -4,9 +4,8 @@ extern crate test;
 extern crate biscuit_vrf;
 extern crate rand;
 
-use rand::{Rng, SeedableRng, XorShiftRng, OsRng};
+use rand::rngs::OsRng;
 use biscuit_vrf::{KeyPair, Token, TokenSignature};
-use test::Bencher;
 
 mod bench {
   use super::*;
@@ -19,12 +18,12 @@ mod bench {
     let message1 = b"hello";
     let keypair1 = KeyPair::new(&mut rng);
 
-    let token1 = Token::new(&mut rng, &keypair1, &message1[..]);
+    let token1 = Token::new(&keypair1, &message1[..]);
 
     assert!(token1.verify(), "cannot verify first token");
 
     b.iter(||{
-      Token::new(&mut rng, &keypair1, &message1[..])
+      Token::new(&keypair1, &message1[..])
     });
   }
 
@@ -35,7 +34,7 @@ mod bench {
     let message1 = b"hello";
     let keypair1 = KeyPair::new(&mut rng);
 
-    let token1 = Token::new(&mut rng, &keypair1, &message1[..]);
+    let token1 = Token::new(&keypair1, &message1[..]);
 
     assert!(token1.verify(), "cannot verify first token");
 
@@ -44,12 +43,12 @@ mod bench {
     let message2 = b"world";
     let keypair2 = KeyPair::new(&mut rng);
 
-    let token2 = token1.append(&mut rng, &keypair2, &message2[..]);
+    let token2 = token1.append(&keypair2, &message2[..]);
 
     assert!(token2.verify(), "cannot verify second token");
 
     b.iter(||{
-      token1.append(&mut rng, &keypair2, &message2[..])
+      token1.append(&keypair2, &message2[..])
     });
   }
 
@@ -60,7 +59,7 @@ mod bench {
     let message1 = b"hello";
     let keypair1 = KeyPair::new(&mut rng);
 
-    let token1 = Token::new(&mut rng, &keypair1, &message1[..]);
+    let token1 = Token::new(&keypair1, &message1[..]);
 
     assert!(token1.verify(), "cannot verify first token");
 
@@ -69,7 +68,7 @@ mod bench {
     let message2 = b"world";
     let keypair2 = KeyPair::new(&mut rng);
 
-    let token2 = token1.append(&mut rng, &keypair2, &message2[..]);
+    let token2 = token1.append(&keypair2, &message2[..]);
 
     assert!(token2.verify(), "cannot verify second token");
 
@@ -78,12 +77,12 @@ mod bench {
     let message3 = b"!!!";
     let keypair3 = KeyPair::new(&mut rng);
 
-    let token3 = token2.append(&mut rng, &keypair3, &message3[..]);
+    let token3 = token2.append(&keypair3, &message3[..]);
 
     assert!(token3.verify(), "cannot verify third token");
 
     b.iter(||{
-      token2.append(&mut rng, &keypair3, &message3[..])
+      token2.append(&keypair3, &message3[..])
     });
   }
 
@@ -94,7 +93,7 @@ mod bench {
     let message1 = b"hello";
     let keypair1 = KeyPair::new(&mut rng);
 
-    let token1 = Token::new(&mut rng, &keypair1, &message1[..]);
+    let token1 = Token::new(&keypair1, &message1[..]);
 
     assert!(token1.verify(), "cannot verify first token");
 
@@ -110,7 +109,7 @@ mod bench {
     let message1 = b"hello";
     let keypair1 = KeyPair::new(&mut rng);
 
-    let token1 = Token::new(&mut rng, &keypair1, &message1[..]);
+    let token1 = Token::new(&keypair1, &message1[..]);
 
     assert!(token1.verify(), "cannot verify first token");
 
@@ -119,7 +118,7 @@ mod bench {
     let message2 = b"world";
     let keypair2 = KeyPair::new(&mut rng);
 
-    let token2 = token1.append(&mut rng, &keypair2, &message2[..]);
+    let token2 = token1.append(&keypair2, &message2[..]);
 
     assert!(token2.verify(), "cannot verify second token");
 
@@ -135,7 +134,7 @@ mod bench {
     let message1 = b"hello";
     let keypair1 = KeyPair::new(&mut rng);
 
-    let token1 = Token::new(&mut rng, &keypair1, &message1[..]);
+    let token1 = Token::new(&keypair1, &message1[..]);
 
     assert!(token1.verify(), "cannot verify first token");
 
@@ -144,7 +143,7 @@ mod bench {
     let message2 = b"world";
     let keypair2 = KeyPair::new(&mut rng);
 
-    let token2 = token1.append(&mut rng, &keypair2, &message2[..]);
+    let token2 = token1.append(&keypair2, &message2[..]);
 
     assert!(token2.verify(), "cannot verify second token");
 
@@ -153,7 +152,7 @@ mod bench {
     let message3 = b"!!!";
     let keypair3 = KeyPair::new(&mut rng);
 
-    let token3 = token2.append(&mut rng, &keypair3, &message3[..]);
+    let token3 = token2.append(&keypair3, &message3[..]);
 
     assert!(token3.verify(), "cannot verify third token");
 

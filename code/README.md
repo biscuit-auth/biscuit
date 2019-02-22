@@ -48,7 +48,7 @@ Pairing based crypto libraries are not frequent, so it might be hard to implemen
 
 ### Verifiable random functions
 
-By reusing primitives from https://tools.ietf.org/html/draft-goldbe-vrf-01#section-5 , we can generate
+By reusing primitives from https://tools.ietf.org/html/draft-irtf-cfrg-vrf-04#section-5 , we can generate
 aggregated non interactive proof of discrete logarithms, that match our requirements.
 
 We have an example that uses the curve25519-dalek Rust crate, with the Ristretto group.
@@ -60,23 +60,23 @@ Here are some benchmarks for this approach:
 The "first" benchmark uses the scheme described in the `DESIGN.md` document.
 
 ```
-test bench::sign_first_block    ... bench:     281,512 ns/iter (+/- 51,906)
-test bench::sign_second_block   ... bench:     737,981 ns/iter (+/- 190,380)
-test bench::sign_third_block    ... bench:     888,010 ns/iter (+/- 129,310)
-test bench::verify_one_block    ... bench:     334,755 ns/iter (+/- 25,783)
-test bench::verify_three_blocks ... bench:     846,658 ns/iter (+/- 101,685)
-test bench::verify_two_blocks   ... bench:     568,526 ns/iter (+/- 106,227)
+test bench::sign_first_block    ... bench:     254,468 ns/iter (+/- 20,833)
+test bench::sign_second_block   ... bench:     690,781 ns/iter (+/- 140,195)
+test bench::sign_third_block    ... bench:     844,560 ns/iter (+/- 44,068)
+test bench::verify_one_block    ... bench:     322,904 ns/iter (+/- 27,904)
+test bench::verify_two_blocks   ... bench:     548,263 ns/iter (+/- 73,312)
+test bench::verify_three_blocks ... bench:     748,755 ns/iter (+/- 95,676)
 ```
 
 The "second" benchmark modifies that scheme to precalculate some point additions.
 
 ```
-test bench::sign_first_block    ... bench:     333,231 ns/iter (+/- 111,969)
-test bench::sign_second_block   ... bench:     715,324 ns/iter (+/- 163,933)
-test bench::sign_third_block    ... bench:     818,048 ns/iter (+/- 220,139)
-test bench::verify_one_block    ... bench:     264,095 ns/iter (+/- 103,451)
-test bench::verify_three_blocks ... bench:     434,528 ns/iter (+/- 28,993)
-test bench::verify_two_blocks   ... bench:     345,233 ns/iter (+/- 22,881)
+test bench::sign_first_block    ... bench:     325,743 ns/iter (+/- 34,561)
+test bench::sign_second_block   ... bench:     678,686 ns/iter (+/- 147,267)
+test bench::sign_third_block    ... bench:     866,091 ns/iter (+/- 282,052)
+test bench::verify_one_block    ... bench:     264,231 ns/iter (+/- 54,111)
+test bench::verify_two_blocks   ... bench:     322,503 ns/iter (+/- 17,924)
+test bench::verify_three_blocks ... bench:     418,594 ns/iter (+/- 37,085)
 ```
 
 There's probably a lot of low hanging fruit in optimizing those, but
@@ -182,8 +182,8 @@ It has som slight differences in behaviour with the other methods, though:
 |           | 1 block | 2 blocks | 3 blocks |
 | --------- | ------- | -------- | -------- |
 | pairing   | 2932 μs | 3234 μs  |          |
-| VRF 1     |  281 μs |  737 μs  | 888 μs   |
-| VRF 2     |  333 μs |  715 μs  | 818 μs   |
+| VRF 1     |  254 μs |  690 μs  | 844 μs   |
+| VRF 2     |  325 μs |  678 μs  | 866 μs   |
 | challenge |  325 μs |  402 μs  | 405 μs   |
 
 ### Verifying
@@ -191,8 +191,8 @@ It has som slight differences in behaviour with the other methods, though:
 |           | 1 block  | 2 blocks | 3 blocks |
 | --------- | -------- | -------- | -------- |
 | pairing   | 15170 μs | 22570 μs | 30657 μs |
-| VRF 1     |   334 μs |   846 μs |   568 μs |
-| VRF 2     |   264 μs |   434 μs |   345 μs |
+| VRF 1     |   322 μs |   548 μs |   748 μs |
+| VRF 2     |   264 μs |   322 μs |   418 μs |
 | challenge |   308 μs |   472 μs |   624 μs |
 
 ### Size overhead
