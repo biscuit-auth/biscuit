@@ -1,0 +1,13 @@
+[package]
+name = "datalog_with_constraints"
+version = "0.1.0"
+authors = ["Geoffroy Couprie <geo.couprie@gmail.com>"]
+edition = "2018"
+
+[features]
+default = ["unstable"]
+unstable = []
+
+[dependencies]
+sha2 = "0.8"
+
