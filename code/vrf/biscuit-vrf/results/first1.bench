@@ -1,0 +1,20 @@
+
+running 4 tests
+test second::tests::change_message ... ignored
+test second::tests::three_messages ... ignored
+test tests::change_message ... ignored
+test tests::three_messages ... ignored
+
+test result: ok. 0 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out
+
+
+running 6 tests
+test bench::sign_first_block    ... bench:     278,046 ns/iter (+/- 56,572)
+test bench::sign_second_block   ... bench:     743,837 ns/iter (+/- 194,811)
+test bench::sign_third_block    ... bench:   1,005,621 ns/iter (+/- 266,561)
+test bench::verify_one_block    ... bench:     351,952 ns/iter (+/- 118,599)
+test bench::verify_three_blocks ... bench:     861,130 ns/iter (+/- 203,346)
+test bench::verify_two_blocks   ... bench:     572,537 ns/iter (+/- 109,673)
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 6 measured; 0 filtered out
+
