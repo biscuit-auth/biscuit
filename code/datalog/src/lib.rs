@@ -8,12 +8,13 @@ use std::time::{SystemTime, Duration, UNIX_EPOCH};
 use std::convert::AsRef;
 use std::collections::{HashMap,HashSet};
 use sha2::{Sha256, Digest};
+use serde::{Serialize, Deserialize};
 
 mod biscuit;
 
 pub type Symbol = u64;
 
-#[derive(Debug,Clone,PartialEq,Hash,Eq)]
+#[derive(Debug,Clone,PartialEq,Hash,Eq,Serialize,Deserialize)]
 pub enum ID {
   Symbol(Symbol),
   Variable(u32),
@@ -40,7 +41,7 @@ impl AsRef<ID> for ID {
   }
 }
 
-#[derive(Debug,Clone,PartialEq,Hash,Eq)]
+#[derive(Debug,Clone,PartialEq,Hash,Eq,Serialize,Deserialize)]
 pub struct Predicate {
   pub name: Symbol,
   pub ids: Vec<ID>,
@@ -58,7 +59,7 @@ impl AsRef<Predicate> for Predicate {
   }
 }
 
-#[derive(Debug,Clone,PartialEq,Hash,Eq)]
+#[derive(Debug,Clone,PartialEq,Hash,Eq,Serialize,Deserialize)]
 pub struct Fact(pub Predicate);
 
 impl Fact {
@@ -67,10 +68,10 @@ impl Fact {
   }
 }
 
-#[derive(Debug,Clone,PartialEq)]
+#[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub struct Rule(pub Predicate, pub Vec<Predicate>, pub Vec<Constraint>);
 
-#[derive(Debug,Clone,PartialEq)]
+#[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub struct Constraint {
   pub id: u32,
   pub kind: ConstraintKind,
@@ -82,7 +83,7 @@ impl AsRef<Constraint> for Constraint {
   }
 }
 
-#[derive(Debug,Clone,PartialEq)]
+#[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub enum ConstraintKind {
   Int(IntConstraint),
   Str(StrConstraint),
@@ -90,7 +91,7 @@ pub enum ConstraintKind {
   Symbol(SymbolConstraint),
 }
 
-#[derive(Debug,Clone,PartialEq)]
+#[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub enum IntConstraint {
   Lower(i64),
   Larger(i64),
@@ -99,7 +100,7 @@ pub enum IntConstraint {
   NotIn(HashSet<i64>),
 }
 
-#[derive(Debug,Clone,PartialEq)]
+#[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub enum StrConstraint {
   Prefix(String),
   Suffix(String),
@@ -108,13 +109,13 @@ pub enum StrConstraint {
   NotIn(HashSet<String>),
 }
 
-#[derive(Debug,Clone,PartialEq)]
+#[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub enum DateConstraint {
   Before(u64),
   After(u64),
 }
 
-#[derive(Debug,Clone,PartialEq)]
+#[derive(Debug,Clone,PartialEq,Serialize,Deserialize)]
 pub enum SymbolConstraint {
   In(HashSet<u64>),
   NotIn(HashSet<u64>),
@@ -463,9 +464,9 @@ impl World {
   }
 }
 
-#[derive(Clone,Debug,PartialEq)]
+#[derive(Clone,Debug,PartialEq,Serialize,Deserialize)]
 pub struct SymbolTable {
-  symbols: Vec<String>,
+  pub symbols: Vec<String>,
 }
 
 impl SymbolTable {
@@ -486,6 +487,10 @@ impl SymbolTable {
   pub fn add(&mut self, s: &str) -> ID {
     let id = self.insert(s);
     ID::Symbol(id)
+  }
+
+  pub fn get(&self, s: &str) -> Option<Symbol> {
+    self.symbols.iter().position(|sym| sym.as_str() == s).map(|i| i as u64)
   }
 
   pub fn print_fact(&self, f: &Fact) -> String {

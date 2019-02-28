@@ -4,12 +4,14 @@ extern crate curve25519_dalek;
 extern crate rand;
 extern crate sha2;
 extern crate hmac;
+extern crate serde;
 
 pub mod second;
 
 use sha2::{Digest, Sha512};
 use hmac::{Hmac, Mac};
 use rand::prelude::*;
+use serde::{Serialize, Deserialize};
 use curve25519_dalek::{
     constants::RISTRETTO_BASEPOINT_POINT,
     ristretto::{RistrettoPoint},
@@ -23,7 +25,7 @@ type HmacSha512 = Hmac<Sha512>;
 
 pub struct KeyPair {
   private: Scalar,
-  public:  RistrettoPoint,
+  pub public:  RistrettoPoint,
 }
 
 impl KeyPair {
@@ -72,6 +74,7 @@ impl Token {
   }
 }
 
+#[derive(Clone,Debug,Serialize,Deserialize)]
 pub struct TokenSignature {
   gamma: Vec<RistrettoPoint>,
   c: Vec<Scalar>,
