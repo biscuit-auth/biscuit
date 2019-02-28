@@ -99,7 +99,7 @@ impl BiscuitLogic {
     let mut symbols = default_symbol_table();
     symbols.symbols.extend(self.authority.symbols.symbols.iter().cloned());
 
-    Block::new(symbols)
+    Block::new((1 + self.blocks.len()) as u32, symbols)
   }
 
   pub fn adjust_authority_symbols(block: &mut Block) {
@@ -122,14 +122,16 @@ impl BiscuitLogic {
 
 #[derive(Clone,Debug,Serialize,Deserialize)]
 pub struct Block {
+  pub index: u32,
   pub symbols: SymbolTable,
   pub facts: Vec<Fact>,
   pub caveats: Vec<Rule>,
 }
 
 impl Block {
-  pub fn new(base_symbols: SymbolTable) -> Block {
+  pub fn new(index: u32, base_symbols: SymbolTable) -> Block {
     Block {
+      index,
       symbols: base_symbols,
       facts: vec![],
       caveats: vec![],
@@ -231,12 +233,23 @@ impl SerializedBiscuit {
   }
 
   pub fn deserialize_logic(&self) -> Result<BiscuitLogic, String> {
-    let authority = serde_cbor::from_slice(&self.authority).map_err(|e| format!("error deserializing authority block: {:?}", e))?;
+    let authority: Block = serde_cbor::from_slice(&self.authority).map_err(|e| format!("error deserializing authority block: {:?}", e))?;
+
+    if authority.index != 0 {
+      return Err(String::from("authority block should have index 0"));
+    }
 
     let mut blocks = vec![];
 
+    let mut index = 1;
     for block in self.blocks.iter() {
-      blocks.push(serde_cbor::from_slice(&block).map_err(|e| format!("error deserializing block: {:?}", e))?);
+      let deser:Block = serde_cbor::from_slice(&block).map_err(|e| format!("error deserializing block: {:?}", e))?;
+      if deser.index != index {
+        return Err(format!("invalid index {} for block n°{}", deser.index, index));
+      }
+      blocks.push(deser);
+
+      index += 1;
     }
 
     Ok(BiscuitLogic { authority, blocks })
@@ -252,7 +265,7 @@ mod tests {
     let mut rng: StdRng = SeedableRng::seed_from_u64(0);
 
     let symbols = default_symbol_table();
-    let mut authority_block = Block::new(symbols);
+    let mut authority_block = Block::new(0, symbols);
 
     let authority = authority_block.symbols.add("authority");
     let ambient = authority_block.symbols.add("ambient");
