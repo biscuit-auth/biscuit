@@ -2,7 +2,7 @@ use curve25519_dalek::ristretto::RistrettoPoint;
 use serde::{Serialize, Deserialize};
 use vrf::{KeyPair, TokenSignature};
 
-use super::{BiscuitLogic,Block};
+use super::Block;
 
 #[derive(Clone,Debug,Serialize,Deserialize)]
 pub struct SerializedBiscuit {
@@ -75,29 +75,6 @@ impl SerializedBiscuit {
     blocks.extend(self.blocks.iter().cloned());
 
     self.signature.verify(&self.keys, &blocks)
-  }
-
-  pub fn deserialize_logic(&self) -> Result<BiscuitLogic, String> {
-    let authority: Block = serde_cbor::from_slice(&self.authority).map_err(|e| format!("error deserializing authority block: {:?}", e))?;
-
-    if authority.index != 0 {
-      return Err(String::from("authority block should have index 0"));
-    }
-
-    let mut blocks = vec![];
-
-    let mut index = 1;
-    for block in self.blocks.iter() {
-      let deser:Block = serde_cbor::from_slice(&block).map_err(|e| format!("error deserializing block: {:?}", e))?;
-      if deser.index != index {
-        return Err(format!("invalid index {} for block n°{}", deser.index, index));
-      }
-      blocks.push(deser);
-
-      index += 1;
-    }
-
-    Ok(BiscuitLogic::new(authority, blocks))
   }
 }
 
