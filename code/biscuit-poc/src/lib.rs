@@ -25,20 +25,35 @@ pub fn default_symbol_table() -> SymbolTable {
 pub struct BiscuitLogic {
   authority: Block,
   blocks: Vec<Block>,
+  symbols: SymbolTable,
 }
 
 impl BiscuitLogic {
+  pub fn new(authority: Block, blocks: Vec<Block>) -> BiscuitLogic {
+    println!("creating BiscuitLogic");
+    // generate the complete symbol table
+    let mut symbols = default_symbol_table();
+    symbols.symbols.extend(authority.symbols.symbols.iter().cloned());
+    println!("symbol table is now: {:#?}", symbols);
+
+    for block in blocks.iter() {
+      symbols.symbols.extend(block.symbols.symbols.iter().cloned());
+      println!("symbol table is now: {:#?}", symbols);
+    }
+
+    BiscuitLogic { authority, blocks, symbols }
+
+  }
+
   pub fn check(&self, mut ambient_facts: Vec<Fact>, mut ambient_rules: Vec<Rule>) -> Result<(), Vec<String>> {
     let mut world = World::new();
-    let mut symbols = default_symbol_table();
-    symbols.symbols.extend(self.authority.symbols.symbols.iter().cloned());
 
-    let authority_index = symbols.get("authority").unwrap();
-    let ambient_index = symbols.get("ambient").unwrap();
+    let authority_index = self.symbols.get("authority").unwrap();
+    let ambient_index = self.symbols.get("ambient").unwrap();
 
     for fact in self.authority.facts.iter().cloned() {
       if fact.0.ids[0] != ID::Symbol(authority_index) {
-        return Err(vec![format!("invalid authority fact: {}", symbols.print_fact(&fact))]);
+        return Err(vec![format!("invalid authority fact: {}", self.symbols.print_fact(&fact))]);
       }
 
       world.facts.insert(fact);
@@ -60,7 +75,7 @@ impl BiscuitLogic {
 
     for fact in ambient_facts.drain(..) {
       if fact.0.ids[0] != ID::Symbol(ambient_index) {
-        return Err(vec![format!("invalid ambient fact: {}", symbols.print_fact(&fact))]);
+        return Err(vec![format!("invalid ambient fact: {}", self.symbols.print_fact(&fact))]);
       }
 
       world.facts.insert(fact);
@@ -78,9 +93,8 @@ impl BiscuitLogic {
     let mut errors = vec![];
     for (i, block) in self.blocks.iter().enumerate() {
       let w = world.clone();
-      let syms = symbols.clone();
 
-      match block.check(i, w, syms) {
+      match block.check(i, w, &self.symbols) {
         Err(mut e) => {
           errors.extend(e.drain(..));
         },
@@ -96,14 +110,11 @@ impl BiscuitLogic {
   }
 
   pub fn create_block(&self) -> Block {
-    let mut symbols = default_symbol_table();
-    symbols.symbols.extend(self.authority.symbols.symbols.iter().cloned());
-
-    Block::new((1 + self.blocks.len()) as u32, symbols)
+    Block::new((1 + self.blocks.len()) as u32, self.symbols.clone())
   }
 
   pub fn adjust_authority_symbols(block: &mut Block) {
-    let mut base_symbols = default_symbol_table();
+    let base_symbols = default_symbol_table();
 
     let new_syms = block.symbols.symbols.split_off(base_symbols.symbols.len());
 
@@ -111,10 +122,8 @@ impl BiscuitLogic {
   }
 
   pub fn adjust_block_symbols(&self, block: &mut Block) {
-    let mut base_symbols = default_symbol_table();
-    base_symbols.symbols.extend(self.authority.symbols.symbols.iter().cloned());
-
-    let new_syms = block.symbols.symbols.split_off(base_symbols.symbols.len());
+    let new_syms = block.symbols.symbols.split_off(self.symbols.symbols.len());
+    println!("adjusting block symbols from {:#?}\nto {:#?}", block.symbols, new_syms);
 
     block.symbols.symbols = new_syms;
   }
@@ -138,12 +147,15 @@ impl Block {
     }
   }
 
-  pub fn symbol(&mut self, s: &str) -> ID {
+  pub fn symbol_add(&mut self, s: &str) -> ID {
     self.symbols.add(s)
   }
 
-  pub fn check(&self, i: usize, mut world: World, mut symbols: SymbolTable) -> Result<(), Vec<String>> {
-    symbols.symbols.extend(self.symbols.symbols.iter().cloned());
+  pub fn symbol_insert(&mut self, s: &str) -> u64 {
+    self.symbols.insert(s)
+  }
+
+  pub fn check(&self, i: usize, mut world: World, symbols: &SymbolTable) -> Result<(), Vec<String>> {
     let authority_index = symbols.get("authority").unwrap();
     let ambient_index = symbols.get("ambient").unwrap();
 
@@ -252,7 +264,7 @@ impl SerializedBiscuit {
       index += 1;
     }
 
-    Ok(BiscuitLogic { authority, blocks })
+    Ok(BiscuitLogic::new(authority, blocks))
   }
 }
 
@@ -274,11 +286,7 @@ mod tests {
     let read = authority_block.symbols.add("read");
     let write = authority_block.symbols.add("write");
     let right = authority_block.symbols.insert("right");
-    let resource = authority_block.symbols.insert("resource");
-    let operation = authority_block.symbols.insert("operation");
-    let caveat1 = authority_block.symbols.insert("caveat1");
-    let caveat2 = authority_block.symbols.insert("caveat2");
-
+    println!("authority symbols: {:#?}", authority_block.symbols);
     authority_block.facts = vec![
       fact(right, &[&authority, &file1, &read]),
       fact(right, &[&authority, &file2, &read]),
@@ -300,6 +308,10 @@ mod tests {
 
     // new caveat: can only have read access1
     let mut block2 = biscuit1_logic.create_block();
+    let resource = block2.symbols.insert("resource");
+    let operation = block2.symbols.insert("operation");
+    let caveat1 = block2.symbols.insert("caveat1");
+
     block2.caveats.push(rule(caveat1, &[var("X")], &[
       pred(resource, &[&ambient, &var("X")]),
       pred(operation, &[&ambient, &read]),
@@ -321,6 +333,8 @@ mod tests {
 
     // new caveat: can only access file1
     let mut block3 = biscuit2_logic.create_block();
+    let caveat2 = block3.symbols.insert("caveat2");
+
     block3.caveats.push(rule(caveat2, &[&file1], &[
       pred(resource, &[&ambient, &file1])
     ]));
@@ -347,7 +361,9 @@ mod tests {
       ];
       let ambient_rules = vec![];
 
-      final_token_logic.check(ambient_facts, ambient_rules).unwrap();
+      let res = final_token_logic.check(ambient_facts, ambient_rules);
+      println!("res1: {:?}", res);
+      res.unwrap();
     }
 
     {
@@ -357,7 +373,9 @@ mod tests {
       ];
       let ambient_rules = vec![];
 
-      final_token_logic.check(ambient_facts, ambient_rules).unwrap();
+      let res = final_token_logic.check(ambient_facts, ambient_rules);
+      println!("res2: {:#?}", res);
+      res.unwrap();
     }
 
     panic!()

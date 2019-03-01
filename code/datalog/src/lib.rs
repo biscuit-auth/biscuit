@@ -510,7 +510,7 @@ impl SymbolTable {
           }
         }
       }).collect::<Vec<_>>();
-    format!("{}({})", self.symbols[p.name as usize], strings.join(", "))
+    format!("{}({})", self.symbols.get(p.name as usize).map(|s| s.as_str()).unwrap_or("<?>"), strings.join(", "))
   }
 
   pub fn print_constraint(&self, c: &Constraint) -> String {
