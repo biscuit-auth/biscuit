@@ -10,11 +10,13 @@ extern crate nom;
 use curve25519_dalek::ristretto::RistrettoPoint;
 use serde::{Serialize, Deserialize};
 use vrf::KeyPair;
-use datalog::*;
-use ser::SerializedBiscuit;
+use datalog::{World, Fact, Rule, ID, SymbolTable};
 use std::collections::HashSet;
+use ser::SerializedBiscuit;
+use builder::BlockBuilder;
 
 mod ser;
+mod builder;
 
 pub fn default_symbol_table() -> SymbolTable {
   let mut syms = SymbolTable::new();
@@ -24,6 +26,7 @@ pub fn default_symbol_table() -> SymbolTable {
   syms
 }
 
+#[derive(Clone,Debug)]
 pub struct Biscuit {
   authority: Block,
   blocks: Vec<Block>,
@@ -32,17 +35,28 @@ pub struct Biscuit {
 }
 
 impl Biscuit {
-  pub fn new(root: &KeyPair, authority: &Block) -> Biscuit {
+  pub fn new(root: &KeyPair, authority: &Block) -> Result<Biscuit, String> {
     let mut authority = authority.clone();
-    let symbols = authority.symbols.clone();
 
-    Biscuit::adjust_authority_symbols(&mut authority);
+    let mut symbols = default_symbol_table();
+    let h1 = symbols.symbols.iter().collect::<HashSet<_>>();
+    let h2 = authority.symbols.symbols.iter().collect::<HashSet<_>>();
+
+    if !h1.is_disjoint(&h2) {
+      return Err(String::from("symbol tables should have no overlap"));
+    }
+
+    if authority.index as usize != 0 {
+      return Err(String::from("invalid block index"));
+    }
+
+    symbols.symbols.extend(authority.symbols.symbols.iter().cloned());
 
     let blocks = vec![];
 
     let container = SerializedBiscuit::new(root, &authority);
 
-    Biscuit { authority, blocks, symbols, container }
+    Ok(Biscuit { authority, blocks, symbols, container })
   }
 
   pub fn from(slice: &[u8], root: RistrettoPoint) -> Result<Self, String> {
@@ -74,7 +88,7 @@ impl Biscuit {
       symbols.symbols.extend(block.symbols.symbols.iter().cloned());
     }
 
-    println!("Biscuit::from: symbols == {:#?}", symbols);
+    //println!("Biscuit::from: symbols == {:#?}", symbols);
 
     Ok(Biscuit { authority, blocks, symbols, container })
   }
@@ -154,7 +168,6 @@ impl Biscuit {
   pub fn append(&self, keypair: &KeyPair, block: Block) -> Result<Self, String> {
     let h1 = self.symbols.symbols.iter().collect::<HashSet<_>>();
     let h2 = block.symbols.symbols.iter().collect::<HashSet<_>>();
-    println!("h1: {:#?}\nh2: {:#?}", h1, h2);
 
     if !h1.is_disjoint(&h2) {
       return Err(String::from("symbol tables should have no overlap"));
@@ -163,7 +176,6 @@ impl Biscuit {
     if block.index as usize != 1 + self.blocks.len() {
       return Err(String::from("invalid block index"));
     }
-
 
     let authority = self.authority.clone();
     let mut blocks = self.blocks.clone();
@@ -185,10 +197,26 @@ impl Biscuit {
 
   pub fn adjust_block_symbols(&self, block: &mut Block) {
     let new_syms = block.symbols.symbols.split_off(self.symbols.symbols.len());
-    println!("adjusting block symbols from {:#?}\nto {:#?}", block.symbols, new_syms);
 
     block.symbols.symbols = new_syms;
   }
+
+  pub fn print(&self) -> String {
+    let authority = print_block(&self.symbols, &self.authority);
+    let blocks: Vec<_> = self.blocks.iter().map(|b| print_block(&self.symbols, b)).collect();
+
+    format!("Biscuit {{\n\tsymbols: {:?}\n\tauthority:\n{}\n\tblocks: [\n\t\t{}]\n}}",
+      self.symbols.symbols, authority, blocks.join(",\n\t"))
+  }
+}
+
+fn print_block(symbols: &SymbolTable, block: &Block) -> String {
+  let facts: Vec<_> = block.facts.iter().map(|f| symbols.print_fact(f)).collect();
+  let rules: Vec<_> = block.caveats.iter().map(|r| symbols.print_rule(r)).collect();
+
+  format!("Block[{}] {{\n\t\tsymbols: {:?}\n\t\tfacts: [\n\t\t\t{}]\n\t\trules:[\n\t\t\t{}]\n}}",
+    block.index, block.symbols.symbols, facts.join(",\n\t\t\t"), rules.join(",\n\t\t\t"))
+
 }
 
 #[derive(Clone,Debug,Serialize,Deserialize)]
@@ -248,146 +276,116 @@ impl Block {
   }
 }
 
-#[derive(Clone,Debug,Serialize,Deserialize)]
-pub struct BlockBuilder {
-  pub index: u32,
-  pub symbols_start: usize,
-  pub symbols: SymbolTable,
-  pub facts: Vec<Fact>,
-  pub caveats: Vec<Rule>,
-}
-
-impl BlockBuilder {
-  pub fn new(index: u32, base_symbols: SymbolTable) -> BlockBuilder {
-    BlockBuilder {
-      index,
-      symbols_start: base_symbols.symbols.len(),
-      symbols: base_symbols,
-      facts: vec![],
-      caveats: vec![],
-    }
-  }
-
-  pub fn symbol_add(&mut self, s: &str) -> ID {
-    self.symbols.add(s)
-  }
-
-  pub fn symbol_insert(&mut self, s: &str) -> u64 {
-    self.symbols.insert(s)
-  }
-
-  pub fn to_block(mut self) -> Block {
-    let new_syms = self.symbols.symbols.split_off(self.symbols_start);
-
-    self.symbols.symbols = new_syms;
-
-    Block {
-      index: self.index,
-      symbols: self.symbols,
-      facts: self.facts,
-      caveats: self.caveats,
-    }
-  }
-}
-
-
 #[cfg(test)]
 mod tests {
   use super::*;
   use rand::prelude::*;
   use crate::ser::SerializedBiscuit;
+  use crate::builder::{BlockBuilder,fact,rule,pred,int,string,date,var,s};
   use nom::HexDisplay;
   use vrf::KeyPair;
 
   #[test]
   fn basic() {
     let mut rng: StdRng = SeedableRng::seed_from_u64(0);
-
-    let symbols = default_symbol_table();
-    let mut authority_block = Block::new(0, symbols);
-
-    let authority = authority_block.symbols.add("authority");
-    let ambient = authority_block.symbols.add("ambient");
-    let file1 = authority_block.symbols.add("file1");
-    let file2 = authority_block.symbols.add("file2");
-    let read = authority_block.symbols.add("read");
-    let write = authority_block.symbols.add("write");
-    let right = authority_block.symbols.insert("right");
-    println!("authority symbols: {:#?}", authority_block.symbols);
-    authority_block.facts = vec![
-      fact(right, &[&authority, &file1, &read]),
-      fact(right, &[&authority, &file2, &read]),
-      fact(right, &[&authority, &file1, &write]),
-    ];
-
-    Biscuit::adjust_authority_symbols(&mut authority_block);
-
     let root = KeyPair::new(&mut rng);
 
-    let biscuit1 = Biscuit::new(&root, &authority_block);
-    let serialized1 = biscuit1.to_vec();
+    let serialized1 = {
+      let symbols = default_symbol_table();
+      let mut authority_block = BlockBuilder::new(0, symbols);
 
-    println!("generated biscuit token: {} bytes:\n{}", serialized1.len(), serialized1.to_hex(16));
+      authority_block.add_fact(&fact("right", &[s("authority"), s("file1"), s("read")]));
+      authority_block.add_fact(&fact("right", &[s("authority"), s("file2"), s("read")]));
+      authority_block.add_fact(&fact("right", &[s("authority"), s("file1"), s("write")]));
 
-    let biscuit1_deser = Biscuit::from(&serialized1, root.public).unwrap();
+      let biscuit1 = Biscuit::new(&root, &authority_block.to_block()).unwrap();
 
-    // new caveat: can only have read access1
-    let mut block2 = biscuit1_deser.create_block();
-    let resource = block2.symbols.insert("resource");
-    let operation = block2.symbols.insert("operation");
-    let caveat1 = block2.symbols.insert("caveat1");
+      println!("biscuit1 (authority): {}", biscuit1.print());
 
-    block2.caveats.push(rule(caveat1, &[var("X")], &[
-      pred(resource, &[&ambient, &var("X")]),
-      pred(operation, &[&ambient, &read]),
-      pred(right, &[&authority, &var("X"), &read])
-    ]));
+      biscuit1.to_vec()
+    };
 
-    let keypair2 = KeyPair::new(&mut rng);
-    let biscuit2 = biscuit1_deser.append(&keypair2, block2.to_block()).unwrap();
+    //println!("generated biscuit token: {} bytes:\n{}", serialized1.len(), serialized1.to_hex(16));
+    println!("generated biscuit token: {} bytes", serialized1.len());
 
-    let serialized2 = biscuit2.to_vec();
+    let serialized2 = {
+      let biscuit1_deser = Biscuit::from(&serialized1, root.public).unwrap();
 
-    println!("generated biscuit token 2: {} bytes\n{}", serialized2.len(), serialized2.to_hex(16));
+      // new caveat: can only have read access1
+      let mut block2 = biscuit1_deser.create_block();
 
-    let biscuit2_deser = Biscuit::from(&serialized2, root.public).unwrap();
+      block2.add_caveat(&rule("caveat1", &[var(0)], &[
+        pred("resource", &[s("ambient"), var(0)]),
+        pred("operation", &[s("ambient"), s("read")]),
+        pred("right", &[s("authority"), var(0), s("read")])
+      ]));
 
-    // new caveat: can only access file1
-    let mut block3 = biscuit2_deser.create_block();
-    let caveat2 = block3.symbols.insert("caveat2");
+      let keypair2 = KeyPair::new(&mut rng);
+      let biscuit2 = biscuit1_deser.append(&keypair2, block2.to_block()).unwrap();
 
-    block3.caveats.push(rule(caveat2, &[&file1], &[
-      pred(resource, &[&ambient, &file1])
-    ]));
+      println!("biscuit2 (1 caveat): {}", biscuit2.print());
 
-    let keypair3 = KeyPair::new(&mut rng);
-    let biscuit3 = biscuit2_deser.append(&keypair3, block3.to_block()).unwrap();
+      biscuit2.to_vec()
+    };
 
-    let serialized3 = biscuit3.to_vec();
+    //println!("generated biscuit token 2: {} bytes\n{}", serialized2.len(), serialized2.to_hex(16));
+    println!("generated biscuit token 2: {} bytes", serialized2.len());
 
-    println!("generated biscuit token 3: {} bytes\n{}", serialized3.len(), serialized3.to_hex(16));
+    let serialized3 = {
+      let biscuit2_deser = Biscuit::from(&serialized2, root.public).unwrap();
 
+      // new caveat: can only access file1
+      let mut block3 = biscuit2_deser.create_block();
+
+      block3.add_caveat(&rule("caveat2", &[s("file1")], &[
+        pred("resource", &[s("ambient"), s("file1")])
+      ]));
+
+      let keypair3 = KeyPair::new(&mut rng);
+      let biscuit3 = biscuit2_deser.append(&keypair3, block3.to_block()).unwrap();
+
+      biscuit3.to_vec()
+    };
+
+    //println!("generated biscuit token 3: {} bytes\n{}", serialized3.len(), serialized3.to_hex(16));
+    println!("generated biscuit token 3: {} bytes", serialized3.len());
 
     let final_token = Biscuit::from(&serialized3, root.public).unwrap();
-
+    println!("final token:\n{}", final_token.print());
     {
-      let ambient_facts = vec![
-        fact(resource, &[&ambient, &file1]),
-        fact(operation, &[&ambient, &read]),
+      let mut symbols = final_token.symbols.clone();
+
+      let facts = vec![
+        fact("resource", &[s("ambient"), s("file1")]),
+        fact("operation", &[s("ambient"), s("read")]),
       ];
       let ambient_rules = vec![];
+      let mut ambient_facts = vec![];
 
+      for fact in facts.iter() {
+        ambient_facts.push(fact.convert(&mut symbols));
+      }
+
+      //println!("final token: {:#?}", final_token);
+      //println!("ambient facts: {:#?}", ambient_facts);
       let res = final_token.check(ambient_facts, ambient_rules);
       println!("res1: {:?}", res);
       res.unwrap();
     }
 
     {
-      let ambient_facts = vec![
-        fact(resource, &[&ambient, &file2]),
-        fact(operation, &[&ambient, &write]),
+      let mut symbols = final_token.symbols.clone();
+
+      let facts = vec![
+        fact("resource", &[s("ambient"), s("file2")]),
+        fact("operation", &[s("ambient"), s("write")]),
       ];
       let ambient_rules = vec![];
+      let mut ambient_facts = vec![];
+
+      for fact in facts.iter() {
+        ambient_facts.push(fact.convert(&mut symbols));
+      }
 
       let res = final_token.check(ambient_facts, ambient_rules);
       println!("res2: {:#?}", res);
