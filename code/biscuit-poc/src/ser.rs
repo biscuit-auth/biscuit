@@ -1,4 +1,3 @@
-use rand::prelude::*;
 use curve25519_dalek::ristretto::RistrettoPoint;
 use serde::{Serialize, Deserialize};
 use vrf::{KeyPair, TokenSignature};
@@ -14,6 +13,21 @@ pub struct SerializedBiscuit {
 }
 
 impl SerializedBiscuit {
+  pub fn from(slice: &[u8], public_key: RistrettoPoint) -> Result<Self, String> {
+    let deser: SerializedBiscuit = serde_cbor::from_slice(&slice)
+      .map_err(|e| format!("deserialization error: {:?}", e))?;
+
+    if !deser.verify(public_key) {
+      return Err(String::from("invalid signature"));
+    }
+
+    Ok(deser)
+  }
+
+  pub fn to_vec(&self) -> Vec<u8> {
+    serde_cbor::to_vec(self).unwrap()
+  }
+
   pub fn new(keypair: &KeyPair, authority: &Block) -> Self {
     let v = serde_cbor::to_vec(authority).unwrap();
     let signature = TokenSignature::new(keypair, &v);

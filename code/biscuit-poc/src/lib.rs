@@ -7,10 +7,7 @@ extern crate serde_cbor;
 #[macro_use]
 extern crate nom;
 
-use rand::prelude::*;
-use curve25519_dalek::ristretto::RistrettoPoint;
 use serde::{Serialize, Deserialize};
-use vrf::{KeyPair, TokenSignature};
 use datalog::*;
 
 mod ser;
@@ -43,7 +40,6 @@ impl BiscuitLogic {
     }
 
     BiscuitLogic { authority, blocks, symbols }
-
   }
 
   pub fn check(&self, mut ambient_facts: Vec<Fact>, mut ambient_rules: Vec<Rule>) -> Result<(), Vec<String>> {
@@ -190,8 +186,10 @@ impl Block {
 #[cfg(test)]
 mod tests {
   use super::*;
+  use rand::prelude::*;
   use crate::ser::SerializedBiscuit;
   use nom::HexDisplay;
+  use vrf::KeyPair;
 
   #[test]
   fn basic() {
@@ -219,12 +217,11 @@ mod tests {
     let root = KeyPair::new(&mut rng);
 
     let biscuit1 = SerializedBiscuit::new(&root, &authority_block);
-    let serialized1 = serde_cbor::to_vec(&biscuit1).unwrap();
+    let serialized1 = biscuit1.to_vec();
 
     println!("generated biscuit token: {} bytes:\n{}", serialized1.len(), serialized1.to_hex(16));
 
-    let biscuit1_deser: SerializedBiscuit = serde_cbor::from_slice(&serialized1).unwrap();
-    assert!(biscuit1_deser.verify(root.public));
+    let biscuit1_deser = SerializedBiscuit::from(&serialized1, root.public).unwrap();
     let biscuit1_logic = biscuit1_deser.deserialize_logic().unwrap();
 
     // new caveat: can only have read access1
@@ -244,12 +241,11 @@ mod tests {
     let keypair2 = KeyPair::new(&mut rng);
     let biscuit2 = biscuit1_deser.append(&keypair2, &block2);
 
-    let serialized2 = serde_cbor::to_vec(&biscuit2).unwrap();
+    let serialized2 = biscuit2.to_vec();
 
     println!("generated biscuit token 2: {} bytes\n{}", serialized2.len(), serialized2.to_hex(16));
 
-    let biscuit2_deser: SerializedBiscuit = serde_cbor::from_slice(&serialized2).unwrap();
-    assert!(biscuit2_deser.verify(root.public));
+    let biscuit2_deser = SerializedBiscuit::from(&serialized2, root.public).unwrap();
     let biscuit2_logic = biscuit2_deser.deserialize_logic().unwrap();
 
     // new caveat: can only access file1
@@ -265,13 +261,12 @@ mod tests {
     let keypair3 = KeyPair::new(&mut rng);
     let biscuit3 = biscuit2_deser.append(&keypair3, &block3);
 
-    let serialized3 = serde_cbor::to_vec(&biscuit3).unwrap();
+    let serialized3 = biscuit3.to_vec();
 
     println!("generated biscuit token 3: {} bytes\n{}", serialized3.len(), serialized3.to_hex(16));
 
 
-    let final_token: SerializedBiscuit = serde_cbor::from_slice(&serialized3).unwrap();
-    assert!(final_token.verify(root.public));
+    let final_token = SerializedBiscuit::from(&serialized3, root.public).unwrap();
 
     let final_token_logic = final_token.deserialize_logic().unwrap();
 
