@@ -1,4 +1,4 @@
-use datalog::{SymbolTable, ID};
+use datalog::{SymbolTable, ID, Constraint, ConstraintKind, DateConstraint, StrConstraint};
 use super::Block;
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -51,6 +51,68 @@ impl BlockBuilder {
       facts: self.facts,
       caveats: self.caveats,
     }
+  }
+
+  pub fn add_right(&mut self, resource: &str, right: &str) -> bool {
+    if self.index != 0 {
+      false
+    } else {
+      self.add_fact(&fact("right", &[s("authority"), string(resource), s(right)]));
+      true
+    }
+  }
+
+  pub fn check_right(&mut self, right: &str) {
+    let caveat = rule("check_right", &[s(right)], &[
+      pred("resource", &[s("ambient"), Atom::Variable(0)]),
+      pred("operation", &[s("ambient"), s(right)]),
+      pred("right", &[s("authority"), Atom::Variable(0), s(right)])
+    ]);
+
+    self.add_caveat(&caveat);
+  }
+
+  pub fn resource_prefix(&mut self, prefix: &str) {
+    let caveat = constrained_rule("prefix", &[Atom::Variable(0)],
+      &[pred("resource", &[s("ambient"), Atom::Variable(0)])],
+      &[Constraint {
+        id: 0,
+        kind: ConstraintKind::Str(StrConstraint::Prefix(prefix.to_string()))
+      }]
+    );
+
+    self.add_caveat(&caveat);
+  }
+
+  pub fn resource_suffix(&mut self, suffix: &str) {
+    let caveat = constrained_rule("suffix", &[Atom::Variable(0)],
+      &[pred("resource", &[s("ambient"), Atom::Variable(0)])],
+      &[Constraint {
+        id: 0,
+        kind: ConstraintKind::Str(StrConstraint::Suffix(suffix.to_string()))
+      }]
+    );
+
+    self.add_caveat(&caveat);
+  }
+
+  pub fn expiration_date(&mut self, date: SystemTime) {
+    let dur = date.duration_since(UNIX_EPOCH).unwrap();
+    let d = dur.as_secs();
+
+    let caveat = constrained_rule("expiration", &[Atom::Variable(0)],
+      &[pred("time", &[s("ambient"), Atom::Variable(0)])],
+      &[Constraint {
+        id: 0,
+        kind: ConstraintKind::Date(DateConstraint::Before(d))
+      }]
+    );
+
+    self.add_caveat(&caveat);
+  }
+
+  pub fn revocation_id(&mut self, id: i64) {
+    self.add_fact(&fact("revocation_id", &[int(id)]));
   }
 }
 

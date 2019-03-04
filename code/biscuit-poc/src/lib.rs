@@ -14,14 +14,21 @@ use datalog::{World, Fact, Rule, ID, SymbolTable};
 use std::collections::HashSet;
 use ser::SerializedBiscuit;
 use builder::BlockBuilder;
+use verifier::Verifier;
 
 mod ser;
 mod builder;
+mod verifier;
 
 pub fn default_symbol_table() -> SymbolTable {
   let mut syms = SymbolTable::new();
   syms.insert("authority");
   syms.insert("ambient");
+  syms.insert("resource");
+  syms.insert("operation");
+  syms.insert("right");
+  syms.insert("current_time");
+  syms.insert("revocation_id");
 
   syms
 }
@@ -97,7 +104,9 @@ impl Biscuit {
     self.container.to_vec()
   }
 
-  pub fn check(&self, mut ambient_facts: Vec<Fact>, ambient_rules: Vec<Rule>) -> Result<(), Vec<String>> {
+  pub fn check(&self, mut ambient_facts: Vec<Fact>, ambient_rules: Vec<Rule>, ambient_caveats: Vec<Rule>)
+    -> Result<(), Vec<String>> {
+
     let mut world = World::new();
 
     let authority_index = self.symbols.get("authority").unwrap();
@@ -146,7 +155,7 @@ impl Biscuit {
     for (i, block) in self.blocks.iter().enumerate() {
       let w = world.clone();
 
-      match block.check(i, w, &self.symbols) {
+      match block.check(i, w, &self.symbols, &ambient_caveats) {
         Err(mut e) => {
           errors.extend(e.drain(..));
         },
@@ -245,7 +254,8 @@ impl Block {
     self.symbols.insert(s)
   }
 
-  pub fn check(&self, i: usize, mut world: World, symbols: &SymbolTable) -> Result<(), Vec<String>> {
+  pub fn check(&self, i: usize, mut world: World, symbols: &SymbolTable, verifier_caveats: &[Rule])
+    -> Result<(), Vec<String>> {
     let authority_index = symbols.get("authority").unwrap();
     let ambient_index = symbols.get("ambient").unwrap();
 
@@ -268,6 +278,14 @@ impl Block {
       }
     }
 
+    for (i, caveat) in verifier_caveats.iter().enumerate() {
+      let res = world.query_rule(caveat.clone());
+      if res.is_empty() {
+        errors.push(format!("Verifier caveat {} failed: {}", i, symbols.print_rule(caveat)));
+      }
+    }
+
+
     if errors.is_empty() {
       Ok(())
     } else {
@@ -282,8 +300,10 @@ mod tests {
   use rand::prelude::*;
   use crate::ser::SerializedBiscuit;
   use crate::builder::{BlockBuilder,fact,rule,pred,int,string,date,var,s};
+  use crate::verifier::Verifier;
   use nom::HexDisplay;
   use vrf::KeyPair;
+  use std::time::{Duration, SystemTime};
 
   #[test]
   fn basic() {
@@ -359,7 +379,6 @@ mod tests {
         fact("resource", &[s("ambient"), s("file1")]),
         fact("operation", &[s("ambient"), s("read")]),
       ];
-      let ambient_rules = vec![];
       let mut ambient_facts = vec![];
 
       for fact in facts.iter() {
@@ -368,7 +387,7 @@ mod tests {
 
       //println!("final token: {:#?}", final_token);
       //println!("ambient facts: {:#?}", ambient_facts);
-      let res = final_token.check(ambient_facts, ambient_rules);
+      let res = final_token.check(ambient_facts, vec![], vec![]);
       println!("res1: {:?}", res);
       res.unwrap();
     }
@@ -380,20 +399,133 @@ mod tests {
         fact("resource", &[s("ambient"), s("file2")]),
         fact("operation", &[s("ambient"), s("write")]),
       ];
-      let ambient_rules = vec![];
       let mut ambient_facts = vec![];
 
       for fact in facts.iter() {
         ambient_facts.push(fact.convert(&mut symbols));
       }
 
-      let res = final_token.check(ambient_facts, ambient_rules);
+      let res = final_token.check(ambient_facts, vec![], vec![]);
       println!("res2: {:#?}", res);
       assert_eq!(res,
         Err(vec![
           "Block 0: caveat 0 failed: caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ".to_string(),
           "Block 1: caveat 0 failed: caveat2(#file1) <- resource(#ambient, #file1) | ".to_string()
         ]));
+    }
+  }
+
+  #[test]
+  fn folders() {
+    let mut rng: StdRng = SeedableRng::seed_from_u64(0);
+    let root = KeyPair::new(&mut rng);
+
+    let symbols = default_symbol_table();
+    let mut authority_block = BlockBuilder::new(0, symbols);
+
+    authority_block.add_right("/folder1/file1", "read");
+    authority_block.add_right("/folder1/file1", "write");
+    authority_block.add_right("/folder1/file2", "read");
+    authority_block.add_right("/folder1/file2", "write");
+    authority_block.add_right("/folder2/file3", "read");
+
+    let biscuit1 = Biscuit::new(&root, &authority_block.to_block()).unwrap();
+
+    println!("biscuit1 (authority): {}", biscuit1.print());
+
+    let mut block2 = biscuit1.create_block();
+
+    block2.resource_prefix("/folder1/");
+    block2.check_right("read");
+
+    let keypair2 = KeyPair::new(&mut rng);
+    let biscuit2 = biscuit1.append(&keypair2, block2.to_block()).unwrap();
+
+    {
+      let mut verifier = Verifier::new();
+      verifier.resource("/folder1/file1");
+      verifier.operation("read");
+
+      let res = verifier.verify(biscuit2.clone());
+      println!("res1: {:?}", res);
+      res.unwrap();
+    }
+
+    {
+      let mut verifier = Verifier::new();
+      verifier.resource("/folder2/file3");
+      verifier.operation("read");
+
+      let res = verifier.verify(biscuit2.clone());
+      println!("res2: {:?}", res);
+      assert_eq!(res,
+        Err(vec![
+          "Block 0: caveat 0 failed: prefix(0?) <- resource(#ambient, 0?) | 0? matches /folder1/*".to_string(),
+        ]));
+    }
+
+    {
+      let mut verifier = Verifier::new();
+      verifier.resource("/folder2/file1");
+      verifier.operation("write");
+
+      let res = verifier.verify(biscuit2.clone());
+      println!("res3: {:?}", res);
+      assert_eq!(res,
+        Err(vec![
+          "Block 0: caveat 0 failed: prefix(0?) <- resource(#ambient, 0?) | 0? matches /folder1/*".to_string(),
+          "Block 0: caveat 1 failed: check_right(#read) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ".to_string()
+        ]));
+    }
+  }
+
+  #[test]
+  fn constraints() {
+    let mut rng: StdRng = SeedableRng::seed_from_u64(0);
+    let root = KeyPair::new(&mut rng);
+
+    let symbols = default_symbol_table();
+    let mut authority_block = BlockBuilder::new(0, symbols);
+
+    authority_block.add_right("file1", "read");
+    authority_block.add_right("file2", "read");
+
+    let biscuit1 = Biscuit::new(&root, &authority_block.to_block()).unwrap();
+
+    println!("biscuit1 (authority): {}", biscuit1.print());
+
+    let mut block2 = biscuit1.create_block();
+
+    block2.expiration_date(SystemTime::now()+Duration::from_secs(30));
+    block2.revocation_id(1234);
+
+    let keypair2 = KeyPair::new(&mut rng);
+    let biscuit2 = biscuit1.append(&keypair2, block2.to_block()).unwrap();
+
+    {
+      let mut verifier = Verifier::new();
+      verifier.resource("file1");
+      verifier.operation("read");
+      verifier.time();
+
+      let res = verifier.verify(biscuit2.clone());
+      println!("res1: {:?}", res);
+      res.unwrap();
+    }
+
+    {
+      let mut verifier = Verifier::new();
+      verifier.resource("file1");
+      verifier.operation("read");
+      verifier.time();
+      verifier.revocation_check(&[0, 1, 2, 5, 1234]);
+
+      let res = verifier.verify(biscuit2.clone());
+      println!("res3: {:?}", res);
+
+      // error message should be like this:
+      //"Verifier caveat 0 failed: revocation_check(0?) <- revocation_id(0?) | 0? not in {2, 1234, 1, 5, 0}"
+      assert!(res.is_err());
     }
   }
 }
