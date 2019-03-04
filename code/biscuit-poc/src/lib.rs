@@ -36,7 +36,7 @@ pub struct Biscuit {
 
 impl Biscuit {
   pub fn new(root: &KeyPair, authority: &Block) -> Result<Biscuit, String> {
-    let mut authority = authority.clone();
+    let authority = authority.clone();
 
     let mut symbols = default_symbol_table();
     let h1 = symbols.symbols.iter().collect::<HashSet<_>>();
@@ -389,9 +389,11 @@ mod tests {
 
       let res = final_token.check(ambient_facts, ambient_rules);
       println!("res2: {:#?}", res);
-      res.unwrap();
+      assert_eq!(res,
+        Err(vec![
+          "Block 0: caveat 0 failed: caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ".to_string(),
+          "Block 1: caveat 0 failed: caveat2(#file1) <- resource(#ambient, #file1) | ".to_string()
+        ]));
     }
-
-    panic!()
   }
 }
