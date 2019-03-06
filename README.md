@@ -16,9 +16,8 @@ architectures with the following properties:
 - capabilities based: authorization in microservices should be tied to rights
   related to the request, instead of relying to an identity that might not make
   sense to the verifier;
-- flexible rights managements: the token specifies a pattern based right
-  specification and attenuation syntax that can map to other rights management
-  systems;
+- flexible rights managements: the token uses a logic language to specify attenuation
+  and add bounds on ambient data;
 - small enough to fit anywhere (cookies, etc).
 
 Non goals:

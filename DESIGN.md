@@ -68,158 +68,164 @@ A biscuit is structured as a cryptographic, append-only list; its elements are
 called *caveats*, and describe authorization properties.  As with Macaroons,
 an operation must comply with all caveats in order to be allowed by the biscuit.
 
-Caveats describe which operations are authorized by providing predicates over
-the operation's attributes.
+Caveats are written as queries defined in a flavor of Datalog that supports
+constraints on some data types ( https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf ),
+without support for negation. This simplifies its implementation and makes
+the caveat more precise.
 
-Attributes are data, associated with the operation,
-that is known when the policy is evaluated, such as an identifier for the
-ressource being accessed, the type of the operation (read, write, append, ...),
-the operation's parameters (if any), the client's IP address or a
-channel-binding value (like the TLS transcript hash).
+### Terminology
 
-Available attributes, and their type, are known ahead of time by the verifier.
-Some of those attributes are *critical*, and all caveats must provide a *bound*
-for each critical attribute.
+A Biscuit Datalog program contains *facts* and *rules*, which are made of *predicates*
+over the following types: *symbol*, *variable*, *integer*, *string* and *date*.
+While Biscuit does not use a textual representation for storage, we will use
+one for this specification and for pretty printing of caveats.
+A *predicate* has the form `Predicate(v0, v1, ..., vn)`.
+A *fact* is a *predicate* that does not contain any *variable*.
+A *rule* has the form:
+`Pr(r0, r1, ..., rk) <- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0), ..., Cx(vx)`.
+The part of the left of the arrow is called the *head* and on the right, the *body*.
+In a *rule*, each of the `ri` or `ti_j` terms can be of any type. A *rule* is safe
+if all of the variables in the head appear somewhere in the body.
+We also define a *constraint* `Cx` over the variable `vx`. *Constraints* define
+a check of a variable's value when applying the *rule*. If the *constraint* returns
+`false`, the *rule* application fails.
+A *query* is a type of *rule* that has no head. It has the following form:
+`?- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0), ..., Cx(vx)`.
+When applying a *rule*, if there is a combination of *facts* that matches the body's
+predicates, we generate a new *fact* corresponding to the head (with the variables
+bound to the corresponding values).
+We will represent the various types as follows:
+- symbol: `#a`
+- variable: `v?`
+- integer: `12`
+- string: `"hello"`
+- date in RFC 3339 format
 
-Bounds are a subset of predicates, that only allow the following:
-- `any`: all values match;
-- `in <subset>`: only elements in `subset` match; this can be an explicit
-  enumeration, or a (non-infinite) range in the case of numeric types.
+As an example, assuming we have the following facts: `parent(#a, #b)`, `parent(#b, #c)`, `#parent(#c, #d)`.
+If we apply the rule `grandparent(x?, z?) <- parent(x?, y?), parent(y? z?)`, we will
+try to replace the predicates in the body by matching facts. We will get the following combinations:
+- `grandparent(#a, #c) <- parent(#a, #b), parent(#b, #c)`
+- `grandparent(#b, #d) <- parent(#b, #c), parent(#c, #d)`
 
+The system will now contain the two new facts `grandparent(#a, #c)` and `grandparent(#b, #d)`.
+Whenever we generate new facts, we have to reapply all of the system's rules on the facts,
+because some rules might give a new result. Once rules application does not generate any new facts,
+we can stop.
 
-### Rationale
+### Data types
 
-Some attributes grant authority (such as ressource identifiers, operation type,
-...), and failing to include a caveat limiting acceptable values is a common
-failure with Macaroons, resulting in authority being accidentally granted.
+A *symbol* indicates a value that supports equality, set inclusion and set exclusion constraints.
+Its internal representation has no specific meaning.
 
-By marking them critical, two things are achieved:
-- They must be bound by caveats, preventing accidental authority grants when new
-  values are added.
-- Their presence is required in all caveats for a biscuit to be valid; as such:
-  - if developers accidentally fail to provide a bound, the biscuit is invalid;
-  - biscuits issued before the attribute was defined are implicitely revoked.
+An *integer* is a signed 64 bits integer. It supports the following constraints: lower, larger,
+lower or equal, larger or equal, equal, set inclusion and set exclusion.
 
-For example, consider a data store, which initially only provides read access.
-Assume I was granted a biscuit for ressources in it, before a developper
-implemented read-write access, along with a `type` attribute (which can be
-`Read` or `Write`).  My biscuit suddenly grants me read-write access.
+A *string* is a suite of UTF-8 characters. It supports the following constraints: prefix, suffix,
+equak, set inclusion, set exclusion.
 
-Marking the `type` attribute as critical means that I must request a new
-biscuit, that properly specifies whether my access is read and/or write.
+A *date* is a 64 bit unsigned integer representing a TAI64. It supports the following constraints:
+before, after.
 
-Now, if I was to be issued a biscuit with the caveat `type != Write`, before the
-types `Append`, `Create`, and `Delete` were added, my the biscuit would again go
-from granting read-only access to granting write access; this is why critical
-attributes must use bounds.
+### Usage
 
+A biscuit token defines some scopes for facts and rules. The *authority* scope is defined in the first
+block of the token. It provides a set of facts and rules indicating the starting rights of the token.
+An *authority* fact will be defined as `predicate(#authority, t0, t1, ..., tn)`. *Authority* facts can
+only be defined by *authority* rules.
+The *ambient* scope is provided by the verifier. It contains facts corresponding to the query, like
+which resource we try to access, with which operation (read, write, etc), the current time, the source IP, etc.
+*Ambient* facts can only be defined by the verifier.
+The *local* scope contains facts specific to one block of the token. Between each block evaluation,
+we do not keep the *local* facts, instead restarting from the *authority* and *ambient* facts.
+Each block can contain caveats, which are *queries* that must all succeed for the token to be valid.
+Additionally, the verifier can have its own set of queries that must succeed to validate the token.
 
-By requiring that all caveats provide a bound for each critical attribute, we
-can guarantee that a biscuit does not gain unintended authority when new
-attributes, or new values for them, are added in the system.  (The use of `any`
-is considered intentional.)
+#### Examples
 
-
-### Interpretation
-
-Given an operation's `attributes`, the set of `critical` attributes, a given
-`biscuit` is evaluated as follows:
-
-```python3
-for caveat in biscuit:
-  bounds = set()
-  for predicate in caveat:
-    if not predicate.eval(attributes):
-      return False
-    if predicate.isbound:
-      bounds.add(predicate.attribute)
-
-  if not bounds.contains(critical):
-    return False
-
-return True
-```
-
-
-## Format
-
-XXXTODO: Update for caveats
-
-A biscuit token is an ordered list of key and value tuples, stored in HPACK
-format. HPACK was chosen to avoid specifying yet another serialization format,
-and reusing its data compression features to make tokens small enough to
-fit in a cookie.
+This first token defines a list of authority facts giving `read` and `write` rights on `file1`, `read`
+on `file2`. The first caveat checks that the operation is `read` (and will not allow any other `operation` fact),
+and then that we have the `read` right over the resource.
+The second caveat checks that the resource is `file1`.
 
 ```
-biscuit := block\*, signature
-block := HPACK{ kv\* }
-kv := ["rights", rights] | ["pub", pubkey] | [TEXT, TEXT]
-TEXT := characters (UTF-8 or ASCII?)
-pubkey := base64(public key)
-rights := namespace { right,\* }
-namespace := TEXT
-right := (+|-) tag : feature(options)
-tag := TEXT | /regexp/ | *
-feature := TEXT | /regexp/ | *
-options := (r|w|e),\*
+authority=[right(#authority, #file1, #read), right(#authority, #file2, #read), right(#authority, #file1, #write)]
+----------
+caveat1 = resource(#ambient, X?), operation(#ambient, #read), right(#authority, X?, #read)  // restrict to read operations
+----------
+caveat2 = resource(#ambient, #file1)  // restrict to file1 resource
 ```
 
-Example:
+##### broad authority rules
+
+In this example, we have a token with very large rights, that will be attenuated before giving to a user:
 
 ```
-[
-issuer = Clever Cloud
-user = user_id_123
-rights = clevercloud{-/.*prod/ : *(*) +/org_456-*/: *(*)  +lapin-prod:log(r) +sozu-prod:metric(r)}
+authority_rules = [
+  right(#authority, X?, #read) <- resource(#ambient, X?), owner(#ambient, Y?, X?), // if there is an ambient resource and we own it, we can read it
+  right(#authority, X?, #write) <- resource(#ambient, X?), owner(#ambient, Y?, X?) // if there is an ambient resource and we own it, we can write to it
 ]
-<signature = base_64(64 bytes signature)>
+----------
+caveat1 = right(#authority, X?, Y?), resource(#ambient, X?), operation(#ambient, Y?)
+----------
+caveat2 = resource(#ambient, X?), owner(#alice, X?) // defines a token only usable by alice
 ```
 
-This token was issued by "Clever Cloud" for user "user_id_123".
-It defines the following capabilities, applied in order:
-- remove all rights from any tag with the "prod" suffix
-- give all rights on any tag that has the "org_456" prefix (even those with "prod" suffix)
-- add on the "lapin-prod" tag the "log" feature with right "r"
-- add on the "sozu-prod" tag the "metric" feature with right "r"
+These rules will define authority facts depending on ambient data.
+If we had the ambient facts `resource(#ambient, #file1)` and `owner(#ambient, #alice, #file1)`,
+the authority rules will define `right(#authority, #file1, #read)` and `right(#authority, #file1, #write)`,
+which will allow caveat 1 and caveat 2 to succeed.
 
-Example of attenuated token:
+If the owner ambient fact does not match the restriction in caveat2, the token check will fail.
+
+##### Constraints
+
+We can define queries or rules with constraints on some predicate values, and restrict usage
+based on ambient values:
 
 ```
-[
-issuer = Clever Cloud
-user = user_id_123
-organization = org_456
-rights = clevercloud{-/.*prod/ : *(*) +/org_456-*/: *(*)  +lapin-prod:log(r) +sozu-prod:metric(r)}
-]
-[
-pub = base64(128 bytes key)
-rights = clevercloud { -/org_456-*/: *(*) +/org_456-test/ database(*) }
-]
-<signature = base_64(new 64 bytes signature)>
+authority=[right(#authority, "/folder/file1", #read), right(#authority, "/folder/file2", #read),
+  right(#authority, "/folder2/file3", #read)]
+----------
+caveat1 = resource(#ambient, X?), right(#authority, X?, Y?)
+----------
+caveat2 = time(#ambient, T?), T? < 2019-02-05T23:00:00Z // expiration date
+----------
+caveat3 = source_IP(#ambient, X?) | X? in ["1.2.3.4", "5.6.7.8"] // set membership
+----------
+caveat4 = resource(#ambient, X?) | prefix(X?, "/folder/") // prefix or suffix match
 ```
 
-This new token starts from the same rights as the previous one, but attenuates it
-that way:
-- all access to tags with "org_456-" prefix is removed
-- except that "org_456-test" tag, on which we activate the "database" feature with all accesses
+## Implementation
 
-The new token has a signature derived from the previous one and the second block.
+A biscuit token has the following operations:
+- token = create(authority_facts, authority_rules, root_private_key)
+- new_token = append(token, local_facts, caveats, current_public_key)
+- verify(token, ambient_facts, verifier_queries, root_public_key)
 
-### Common keys and values
+### Caveat creation API
 
-Key-value tuples can contain arbitrary data, but some of them have predefined
-semantics (and could be part of HPACK's static tables to reduce the size of
-the token):
-- issuer: original creator of the token (validators are able to look up the root public key from the issuer field). Appears in the first block
-- holder: current holder of the token (will be used for audit purpose). Can appear once per block
-- pub: public key used to sign the current block. Appears in every block except the first
-- created-on: creation date, in ISO 8601 format. Can appear once per block
-- expires-on: expiration date, in ISO 8601 format. Can appear once per block. Must be lower than the expiration dates from previous blocks if present
-- restricts: comma separated list of public keys. Any future block can only be signed by one of those keys
-- sealed: if present, stops delegation (no further block can be added). Its only value is "true"
-- rights: string specifying the rights restriction for this block
+Rights and attenuation could be written directly as datalog rules,
+but it would be useful to provide a high level API that defines
+some usual facts and rules without errors.
 
-Those common keys and values will be present in the HPACK static table
+### Format
+
+TODO: no specified format for now, as it depends on finding a proper
+serialization for the datalog language, and choosing which cryptographic
+solution we're going for
+
+ideas:
+- add a symbol table to the token, which is a map symbol(number) -> name, that
+will be used to compress information and improve pretty printing. Possible
+issue: the symbol table should not be easy to modify from one block to the
+next (so that a same symbol does not refer to two different things).
+so either the symbol table is predefined in the authority part, or
+each caveat could have its own local symbol table that is appended to the
+global one
+- the symbol table could contain some common predicate names and values, like
+`authority`, `ambient`, `issuer`, `holder`, `revocation-id`, `right`, `read`,
+`write`.
+
 
 
 ## Cryptography
