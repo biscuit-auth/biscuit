@@ -4,6 +4,8 @@ extern crate rand;
 extern crate curve25519_dalek;
 extern crate serde;
 extern crate serde_cbor;
+extern crate sha2;
+extern crate hmac;
 #[macro_use]
 extern crate nom;
 
@@ -19,6 +21,7 @@ use verifier::Verifier;
 mod ser;
 mod builder;
 mod verifier;
+mod sealed;
 
 pub fn default_symbol_table() -> SymbolTable {
   let mut syms = SymbolTable::new();
@@ -38,7 +41,7 @@ pub struct Biscuit {
   authority: Block,
   blocks: Vec<Block>,
   symbols: SymbolTable,
-  container: SerializedBiscuit,
+  container: Option<SerializedBiscuit>,
 }
 
 impl Biscuit {
@@ -61,13 +64,13 @@ impl Biscuit {
 
     let blocks = vec![];
 
-    let container = SerializedBiscuit::new(root, &authority);
+    let container = Some(SerializedBiscuit::new(root, &authority));
 
     Ok(Biscuit { authority, blocks, symbols, container })
   }
 
   pub fn from(slice: &[u8], root: RistrettoPoint) -> Result<Self, String> {
-    let container = SerializedBiscuit::from(slice, root)?;
+    let container = SerializedBiscuit::from_slice(slice, root)?;
 
     let authority: Block = serde_cbor::from_slice(&container.authority).map_err(|e| format!("error deserializing authority block: {:?}", e))?;
 
@@ -95,13 +98,52 @@ impl Biscuit {
       symbols.symbols.extend(block.symbols.symbols.iter().cloned());
     }
 
-    //println!("Biscuit::from: symbols == {:#?}", symbols);
+    let container = Some(container);
 
     Ok(Biscuit { authority, blocks, symbols, container })
   }
 
-  pub fn to_vec(&self) -> Vec<u8> {
-    self.container.to_vec()
+  pub fn from_sealed(slice: &[u8], secret: &[u8]) -> Result<Self, String> {
+    let container = sealed::SealedBiscuit::from_slice(slice, secret)?;
+
+    let authority: Block = serde_cbor::from_slice(&container.authority).map_err(|e| format!("error deserializing authority block: {:?}", e))?;
+
+    if authority.index != 0 {
+      return Err(String::from("authority block should have index 0"));
+    }
+
+    let mut blocks = vec![];
+
+    let mut index = 1;
+    for block in container.blocks.iter() {
+      let deser:Block = serde_cbor::from_slice(&block).map_err(|e| format!("error deserializing block: {:?}", e))?;
+      if deser.index != index {
+        return Err(format!("invalid index {} for block n°{}", deser.index, index));
+      }
+      blocks.push(deser);
+
+      index += 1;
+    }
+
+    let mut symbols = default_symbol_table();
+    symbols.symbols.extend(authority.symbols.symbols.iter().cloned());
+
+    for block in blocks.iter() {
+      symbols.symbols.extend(block.symbols.symbols.iter().cloned());
+    }
+
+    let container = None;
+
+    Ok(Biscuit { authority, blocks, symbols, container })
+  }
+
+  pub fn to_vec(&self) -> Option<Vec<u8>> {
+    self.container.as_ref().map(|c| c.to_vec())
+  }
+
+  pub fn seal(&self, secret: &[u8]) -> Vec<u8> {
+    let sealed = sealed::SealedBiscuit::from_token(self, secret);
+    sealed.to_vec()
   }
 
   pub fn check(&self, mut ambient_facts: Vec<Fact>, ambient_rules: Vec<Rule>, ambient_caveats: Vec<Rule>)
@@ -175,6 +217,10 @@ impl Biscuit {
   }
 
   pub fn append(&self, keypair: &KeyPair, block: Block) -> Result<Self, String> {
+    if self.container.is_none() {
+      return Err(String::from("cannot append a bock to a sealed token"));
+    }
+
     let h1 = self.symbols.symbols.iter().collect::<HashSet<_>>();
     let h2 = block.symbols.symbols.iter().collect::<HashSet<_>>();
 
@@ -189,7 +235,7 @@ impl Biscuit {
     let authority = self.authority.clone();
     let mut blocks = self.blocks.clone();
     let mut symbols = self.symbols.clone();
-    let container = self.container.append(keypair, &block);
+    let container = self.container.as_ref().map(|c| c.append(keypair, &block));
     symbols.symbols.extend(block.symbols.symbols.iter().cloned());
     blocks.push(block);
 
@@ -322,11 +368,13 @@ mod tests {
 
       println!("biscuit1 (authority): {}", biscuit1.print());
 
-      biscuit1.to_vec()
+      biscuit1.to_vec().unwrap()
     };
 
-    //println!("generated biscuit token: {} bytes:\n{}", serialized1.len(), serialized1.to_hex(16));
+    println!("generated biscuit token: {} bytes:\n{}", serialized1.len(), serialized1.to_hex(16));
     println!("generated biscuit token: {} bytes", serialized1.len());
+    //println!("parsed: {:#?}", serde_cbor::from_slice::<serde_cbor::Value>(&serialized1));
+    //panic!();
 
     let serialized2 = {
       let biscuit1_deser = Biscuit::from(&serialized1, root.public).unwrap();
@@ -345,10 +393,10 @@ mod tests {
 
       println!("biscuit2 (1 caveat): {}", biscuit2.print());
 
-      biscuit2.to_vec()
+      biscuit2.to_vec().unwrap()
     };
 
-    //println!("generated biscuit token 2: {} bytes\n{}", serialized2.len(), serialized2.to_hex(16));
+    println!("generated biscuit token 2: {} bytes\n{}", serialized2.len(), serialized2.to_hex(16));
     println!("generated biscuit token 2: {} bytes", serialized2.len());
 
     let serialized3 = {
@@ -362,13 +410,14 @@ mod tests {
       ]));
 
       let keypair3 = KeyPair::new(&mut rng);
-      let biscuit3 = biscuit2_deser.append(&keypair3, block3.to_block()).unwrap();
+      let biscuit3 = biscuit2_deser.append(&keypair3, block3.clone().to_block()).unwrap();
 
-      biscuit3.to_vec()
+      biscuit3.to_vec().unwrap()
     };
 
-    //println!("generated biscuit token 3: {} bytes\n{}", serialized3.len(), serialized3.to_hex(16));
+    println!("generated biscuit token 3: {} bytes\n{}", serialized3.len(), serialized3.to_hex(16));
     println!("generated biscuit token 3: {} bytes", serialized3.len());
+    //panic!();
 
     let final_token = Biscuit::from(&serialized3, root.public).unwrap();
     println!("final token:\n{}", final_token.print());
@@ -526,6 +575,62 @@ mod tests {
       // error message should be like this:
       //"Verifier caveat 0 failed: revocation_check(0?) <- revocation_id(0?) | 0? not in {2, 1234, 1, 5, 0}"
       assert!(res.is_err());
+    }
+  }
+
+  #[test]
+  fn sealed_token() {
+    let mut rng: StdRng = SeedableRng::seed_from_u64(0);
+    let root = KeyPair::new(&mut rng);
+
+    let symbols = default_symbol_table();
+    let mut authority_block = BlockBuilder::new(0, symbols);
+
+    authority_block.add_right("/folder1/file1", "read");
+    authority_block.add_right("/folder1/file1", "write");
+    authority_block.add_right("/folder1/file2", "read");
+    authority_block.add_right("/folder1/file2", "write");
+    authority_block.add_right("/folder2/file3", "read");
+
+    let biscuit1 = Biscuit::new(&root, &authority_block.to_block()).unwrap();
+
+    println!("biscuit1 (authority): {}", biscuit1.print());
+
+    let mut block2 = biscuit1.create_block();
+
+    block2.resource_prefix("/folder1/");
+    block2.check_right("read");
+
+    let keypair2 = KeyPair::new(&mut rng);
+    let biscuit2 = biscuit1.append(&keypair2, block2.to_block()).unwrap();
+
+    {
+      let mut verifier = Verifier::new();
+      verifier.resource("/folder1/file1");
+      verifier.operation("read");
+
+      let res = verifier.verify(biscuit2.clone());
+      println!("res1: {:?}", res);
+      res.unwrap();
+    }
+
+    let serialized = biscuit2.to_vec().unwrap();
+    println!("biscuit2 serialized ({} bytes):\n{}", serialized.len(), serialized.to_hex(16));
+
+    let secret = b"secret key";
+    let sealed = biscuit2.seal(&secret[..]);
+    println!("biscuit2 sealed ({} bytes):\n{}", sealed.len(), sealed.to_hex(16));
+
+    let biscuit3 = Biscuit::from_sealed(&sealed, &secret[..]).unwrap();
+
+    {
+      let mut verifier = Verifier::new();
+      verifier.resource("/folder1/file1");
+      verifier.operation("read");
+
+      let res = verifier.verify(biscuit3.clone());
+      println!("res1: {:?}", res);
+      res.unwrap();
     }
   }
 }
