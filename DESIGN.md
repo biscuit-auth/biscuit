@@ -576,6 +576,39 @@ v = W * gamma_agg * h_0^S * ... * h_n^S
 - `C = ECVRF_hash_points(h_n, pk_0 * ... pk_n, U, V)`
 - verify that `C == c_n`
 
+### Challenge tokens
+
+Another method based on a more classical PKI, where the token contains
+the secret key of the last caveat. To send the token for verification,
+that key is used to sign the token with a nonce and current time, to
+prove that we own it. We send the token without the key, but with the
+signature. The verification token cannot be further attenuated.
+
+Here's a description of the scheme:
+
+```
+(pk1, sk1) = keygen()
+(pk2, sk2) = keygen()
+s1 = sign(sk1, caveat1+pk2)
+token1=caveat1+pk2+s1+sk2
+```
+
+Minting a new token
+```
+(pk3, sk3) = keygen()
+s2 = sign(sk2, caveat2+pk3)
+token2=caveat1+pk2+s1+caveat2+pk3+s2+sk3
+```
+
+Sending token2 for verification:
+```
+verif_token2=caveat1+pk2+s1+caveat2+pk3+s2
+h = sign(sk3, nonce+time+verif_token2)
+sending verif_token2+h
+```
+
+The verifier knows pk1 and can check the chain, and h allows checking that we hold sk3
+
 ### Gamma signatures
 
 proposed by @bascule
