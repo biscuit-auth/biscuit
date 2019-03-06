@@ -13,7 +13,7 @@ pub struct SerializedBiscuit {
 }
 
 impl SerializedBiscuit {
-  pub fn from(slice: &[u8], public_key: RistrettoPoint) -> Result<Self, String> {
+  pub fn from_slice(slice: &[u8], public_key: RistrettoPoint) -> Result<Self, String> {
     let deser: SerializedBiscuit = serde_cbor::from_slice(&slice)
       .map_err(|e| format!("deserialization error: {:?}", e))?;
 
@@ -25,11 +25,11 @@ impl SerializedBiscuit {
   }
 
   pub fn to_vec(&self) -> Vec<u8> {
-    serde_cbor::to_vec(self).unwrap()
+    serde_cbor::ser::to_vec_packed(self).unwrap()
   }
 
   pub fn new(keypair: &KeyPair, authority: &Block) -> Self {
-    let v = serde_cbor::to_vec(authority).unwrap();
+    let v: Vec<u8> = serde_cbor::ser::to_vec_packed(authority).unwrap();
     let signature = TokenSignature::new(keypair, &v);
 
     SerializedBiscuit {
@@ -41,7 +41,7 @@ impl SerializedBiscuit {
   }
 
   pub fn append(&self, keypair: &KeyPair, block: &Block) -> Self {
-    let v = serde_cbor::to_vec(block).unwrap();
+    let v: Vec<u8> = serde_cbor::ser::to_vec_packed(block).unwrap();
 
     let mut blocks = Vec::new();
     blocks.push(self.authority.clone());
