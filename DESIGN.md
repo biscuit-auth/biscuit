@@ -198,15 +198,81 @@ caveat4 = resource(#ambient, X?) | prefix(X?, "/folder/") // prefix or suffix ma
 ## Implementation
 
 A biscuit token has the following operations:
-- token = create(authority_facts, authority_rules, root_private_key)
-- new_token = append(token, local_facts, caveats, current_public_key)
-- verify(token, ambient_facts, verifier_queries, root_public_key)
+```
+Token {
+  create(authority: Block, root: PrivateKey) -> Token
+  append(&self, block: Block, key: PrivateKey) -> Token
+  deserialize(data: [u8], root: PublicKey) -> Result<Token, String>
+  deserialize_sealed(data: [u8], secret: SymmetricKey) -> Result<Token, String>
+  serialize(&self) -> [u8]
+  serialize_sealed(&self, secret: SymmetricKey) -> [u8]
+}
+
+Verifier {
+  add_fact(&mut self, fact: Fact)
+  add_rule(&mut self, rule: Rule)
+  add_caveat(&mut self, caveat: Rule)
+  verify(&self, token: Token) -> Result<(), Vec<String>> // errors are aggregated strings indicating which caveats failed
+}
+
+Block {
+  create(index: u32, base_symbols: SymbolTable) -> Block
+  add_symbol(&mut self, s: string) -> Symbol
+  add_fact(&mut self, fact: Fact)
+  add_rule(&mut self, caveat: Rule)
+}
+```
 
 ### Caveat creation API
 
 Rights and attenuation could be written directly as datalog rules,
 but it would be useful to provide a high level API that defines
 some usual facts and rules without errors.
+
+```
+Token {
+  create_block(&self) -> BlockBuilder
+}
+
+BlockBuilder {
+  create(index: u32, base_symbols: SymbolTable) -> Block
+  add_symbol(&mut self, s: string) -> Symbol
+  add_fact(&mut self, fact: Fact)
+  add_rule(&mut self, caveat: Rule)
+  add_right(&mut self, resource: string, right: string)
+  check_right(&mut self, right: string)
+  resource_prefix(&mut self, prefix: string)
+  resource_suffix(&mut self, suffix: string)
+  expiration_date(&mut self, expires_on: date)
+  revocation_id(&mut self, id: i64)
+}
+```
+
+- `add_right(&mut self, resource: string, right: string)` will generate the fact: `right(#authority, resource, right)`
+- `check_right(&mut self, right: string)` will generate the caveat:
+`check_right(X?) <- resource(#ambient, Y?), operation(#ambient, X?), right(#authority, Y?, X?)`
+- `resource_prefix(&mut self, prefix: string)` will generate the caveat:
+`prefix(X?) <- resource(#ambient, X?) | prefix_constraint(X?, prefix)
+- `resource_suffix(&mut self, suffix: string)` will generate the caveat:
+`suffix(X?) <- resource(#ambient, X?) | suffix_constraint(X?, prefix)
+- `expiration_date(&mut self, expires_on: date)` will generate the caveat:
+`expiration(X?) <- time(#ambient, X?) | before_constraint(X?, expires_on)
+- `revocation_id(&mut self, id: i64)` will generate the fact: `revocation_id(id)`
+
+```
+Verifier {
+  resource(&mut self, resource: string)
+  operation(&mut self, operation: string)
+  time(&mut self)
+  revocation_check(&mut self, set: [i64])
+}
+```
+
+- `resource(&mut self, resource: string)` will generate the fact: `resource(#ambient, resource)`
+- `operation(&mut self, operation: string)` will generate the fact: `operation(#ambient, operation)`
+- `time(&mut self)` will calculate the current time `now` and generate the fact: `time(#ambient, now)`
+- `revocation_check(&mut self, set: [i64])` will add the verifier specific caveat as follows:
+`revocation_check(X?) <- revocation_id(X?) | X? not in set`
 
 ### Format
 
