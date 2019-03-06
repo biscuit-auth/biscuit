@@ -1,0 +1,16 @@
+[package]
+name = "biscuit-implementation"
+version = "0.1.0"
+authors = ["Geoffroy Couprie <geo.couprie@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+datalog_with_constraints = { path = "../datalog/" }
+biscuit-vrf = { path = "../vrf/biscuit-vrf" }
+curve25519-dalek = "^1.0"
+rand = "^0.6"
+serde = { version = "1.0", features = ["derive"] }
+serde_cbor = "0.9"
+nom = "4.2"
+sha2 = "^0.8"
+hmac = "^0.7"
