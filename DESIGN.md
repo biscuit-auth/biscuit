@@ -888,13 +888,13 @@ The verifier knows pk1 and can check the chain, and h allows checking that we ho
 
 ### Gamma signatures
 
-proposed by @bascule
+proposed by @tarcieri
 
 Yao, A. C.-C., & Yunlei Zhao. (2013). Online/Offline Signatures for Low-Power Devices. IEEE Transactions on Information Forensics and Security, 8(2), 283–294.
 Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao https://eprint.iacr.org/2018/414.pdf
 
 ### BIP32 derived keys
 
-proposed by @bascule
+proposed by @tarcieri
 https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
 
