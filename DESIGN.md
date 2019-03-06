@@ -210,23 +210,218 @@ some usual facts and rules without errors.
 
 ### Format
 
-TODO: no specified format for now, as it depends on finding a proper
-serialization for the datalog language, and choosing which cryptographic
-solution we're going for
+A Biscuit token relies on [packed CBOR (Compact Binary Object Representation)](https://tools.ietf.org/html/rfc7049)
+encoding as base format.
 
-ideas:
-- add a symbol table to the token, which is a map symbol(number) -> name, that
-will be used to compress information and improve pretty printing. Possible
-issue: the symbol table should not be easy to modify from one block to the
-next (so that a same symbol does not refer to two different things).
-so either the symbol table is predefined in the authority part, or
-each caveat could have its own local symbol table that is appended to the
-global one
-- the symbol table could contain some common predicate names and values, like
-`authority`, `ambient`, `issuer`, `holder`, `revocation-id`, `right`, `read`,
-`write`.
+Basic elements:
+- u8: 8 bits unsigned integer
+- u32: 32 bits unsigned integer
+- `[u8]`: byte array of unspecified length
+- `string`: UTF-8 string of unspecified length
+- `date`: TAI64 label, as specified in https://cr.yp.to/libtai/tai64.html
+- `Symbol`: 64 bits unsigned integer. Index of a string inside the symbol table
 
 
+Here is the "on the wire" format:
+
+```
+Biscuit {
+  authority: [u8],
+  blocks: [[u8]], // array of byte arrays
+  signature: // NOT SPECIFIED, PENDING CHOICE OF CRYPTOGRAPHIC SCHEME
+}
+```
+
+The `signature` field can contain the aggregated public key signatures
+in the case of the main token, or the symmetric signature data, in the
+case of the sealed token.
+The `signature` applies to the content of the `authority` block, and
+the content of each element of `blocks`.
+
+Once the signature is verified, the `authority` and `blocks` elements
+can be further deserialized. They represent a `Block` structure in CBOR
+encoding:
+
+```
+Block {
+  index: u32,
+  symbols: SymbolTable,
+  facts: [Fact],
+  caveats: [Rule]
+}
+```
+
+Each `Block` has a unique index field, to check their order of appearance.
+The `authority` block always has index 0.
+The symbol table contains an array of UTF-8 strings. It indicates a mapping
+index -> string to avoid repeating some strings in the token:
+
+```
+SymbolTable {
+  symbols: [string]
+}
+```
+
+When deserializing the token, the token's symbol table is created as follows:
+- start from the default symbol table, which contains the common symbols:
+`authority`, `ambient`, `resource`, `operation`, `right`, `current_time`, `revocation_id`
+- append the symbol table of the `authority` block
+- append the symbol table of each block of `blocks`, in order
+
+The datalog implementation relies on the `ID` and `Predicate` basic types:
+
+```
+ID = Symbol | Variable | Integer | Str | Date
+Variable = u32
+Integer = i64
+Str = string
+Date = date
+```
+
+```
+Predicate {
+  name: Symbol,
+  ids: [ID]
+}
+```
+
+Datalog facts are specified as follows:
+
+```
+Fact = Predicate
+```
+
+a `Fact` cannot contain a `Variable` `ID`.
+
+Datalog rules are specified as follows:
+
+```
+Rule {
+  head: Predicate,
+  body: [Predicate],
+  constraints: [Constraint],
+}
+```
+
+any `Variable` appearing in the  `head` of a `Rule` must also appear
+in one of the predicates of its `body`
+
+Constraints express some restrictions on the rules, without having to
+implement negation in the datalog engine.
+
+```
+Constraint {
+  id: u32,
+  kind: ConstraintKind,
+}
+
+ConstraintKind = IntConstraint | StrConstraint | DateConstraint | SymbolConstraint
+```
+
+The `id` field of a constraint must match a `Variable` in the rule.
+
+Integer constraints can have the following values:
+
+```
+IntConstraint = Lower | Larger | LowerOrEqual | LargerOrEqual | Equal | In | NotIn
+
+Lower {
+  bound: i64
+}
+
+Larger {
+  bound: i64
+}
+
+LowerOrEqual {
+  bound: i64
+}
+
+LargerOrEqual {
+  bound: i64
+}
+
+Equal {
+  bound: i64
+}
+
+In {
+  set: [i64]
+}
+
+NotIn {
+  set: [i64]
+}
+```
+
+The `set` parameter of `In` and `NotIn` constraints is an array of unique values.
+
+String constraints:
+
+```
+StrConstraint = Prefix | Suffix | Equal | In | NotIn
+
+Prefix {
+  bound: string
+}
+
+Suffix {
+  bound: string
+}
+
+Equal {
+  bound: string
+}
+
+In {
+  set: [string]
+}
+
+NotIn {
+  set: [string]
+}
+```
+
+Date constraints:
+
+```
+DateConstraint = Before | After
+
+Before {
+  bound: date
+}
+
+After {
+  bound: date
+}
+```
+
+Symbol constraints:
+
+```
+StrConstraint = In | NotIn
+
+In {
+  set: [Symbol]
+}
+
+NotIn {
+  set: [Symbol]
+}
+```
+
+#### Adding a new block
+
+A new block will have an index that increments on the last block's index.
+It reuses the token's symbol table. If new symbols must be added to the
+table when adding facts and rules, the new block will only hold the new
+symbols.
+When serializing the new token, the new block must first be serialized
+to a byte array via CBOR encoding. Then a new aggregated signature is created
+from the previous blocks, the previous aggregated signature and the
+new key pair for this block. The new serialized token will have the same
+authority block as the previous one, its blocks field will have the previous
+one's blocks with the new block appended, and the new signature.
 
 ## Cryptography
 
