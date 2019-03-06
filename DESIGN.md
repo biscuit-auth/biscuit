@@ -479,9 +479,102 @@ V = W* gamma_0^-c_0 * h_0^S * .. * gamma_n^-c_n * h_n^S
 - `C = ECVRF_hash_points(h_n, gamma_0 * .. * gamma_n, U, V)`
 - verify that `C == c_n`
 
-Note: we could probably store the product of gamma points instead
-of the list. This would avoid some calculations and make signatures
-smaller
+### Elliptic curve verifiable random functions: second method
+
+This is a variant of the previous scheme, for which the product of
+gamma points is precalculated, so that we do not need to do it to
+aggregate a new signature or verify it. This also reduces the size
+of the signature.
+
+Same primitives as before:
+
+```
+F - finite field
+2n - length, in octets, of a field element in F
+E - elliptic curve (EC) defined over F
+m - length, in octets, of an EC point encoded as an octet string
+G - subgroup of E of large prime order
+q - prime order of group G
+cofactor - number of points on E divided by q
+g - generator of group G
+Hash - cryptographic hash function
+hLen - output length in octets of Hash
+```
+
+Constraints on options:
+
+Field elements in F have bit lengths divisible by 16
+
+hLen is equal to 2n
+
+Steps:
+
+Keygen:
+`(pk, sk) <- Keygen()`: sk random x with 0 < x < q
+
+#### Aggregating signatures
+
+Sign:
+
+First block: Sign0(pk, sk, message)
+- `h = ECVRF_hash_to_curve(pk, message)`
+- `gamma = h^sk`
+- `k = ECVRF_nonce(pk, h)`
+- `c = ECVRF_hash_points(h, pk, g^k, h^k)`
+- `s = k + c * sk mod q`
+- `W = 1`
+- `S = s`
+- `PI_0 = (-c * gamma, [c], S, W)`
+
+Block n+1: Sign( pk_(n+1), sk_(n+1), message_(n+1), PI_n):
+- `(gamma_agg, [c_i], S_n, W_n) = PI_n`
+- `h_(n+1) = ECVRF_hash_to_curve(pk_(n+1), message_(n+1))`
+- `gamma_(n+1) = h_(n+1)^sk_(n+1)`
+- `k = ECVRF_nonce(pk, h)`
+```
+u_n = pk_0^-c_0 * .. * pk_n^-c_n * g^S
+  = g^(sk_0*-c_0) * .. * g^(sk_n*-c_n) * g^(k_0 + sk0*c_0 + .. + k_n + sk_n*c_n)
+  = g^(k_0 + .. + k_n)
+```
+
+```
+v_n = W * gamma_agg * h_0^S * ... * h_n^S
+    = W * gamma_0^-c_0 * h_0^S * .. * gamma_n^-c_n * h_n^S
+    = h_0^(s_0 - S) * .. * h_n^(s_0 - S) * h_0^(sk_0*-c_0 + S) * .. * h_n^(sk_n*-c_n + S)
+    = h_0^(k_0 + sk_0*c_0 - S - sk_0*c_0 + S) * .. * h_n^(k_n + sk_n*c_n - S - sk_n*c_n + S)
+    = h_0^k_0 * .. * h_n^k_n
+```
+```
+c_(n+1) = ECVRF_hash_points(g, h_(n+1), pk_0 * .. * pk_(n+1) ,
+    u_n * g^k, v_n * h^k)
+```
+- `s_(n+1) = k_(n+1) - c_(n+1) * sk_(n+1) mod q`
+- `S_(n+1) = S_n + s_(n+1)`
+- `W_(n+1) = W_n * (h_0 * .. * h_n)^(-s_(n+1)) * h_(n+1)^(-Sn) == h_0^(s_0 - S_(n+1)) * .. * h_(n+1)^(s_(n+1) - S_(n+1))`
+- `PI_(n+1) = (gamma_agg * (-c_(n+1) * gamma_(n+1)), [c_i], S_(n+1), W_(n+1))`
+
+
+Verify([pk], PI, [message]) (with n blocks):
+
+
+Aggregate(pk', pi', [pk], PI) with [pk] list of public keys and PI aggregated signature:
+- `([gamma], [c], S, W, C) = PI`
+- check that `n = |[pk]| == |[message]| == |[gamma]| == |[c]|`
+```
+u = pk_0^-c_0 * .. * pk_n^-c_n * g^S
+  = g^(sk_0*-c_0) * .. * g^(sk_n*-c_n) * g^(k_0 + sk0*c_0 + .. + k_n + sk_n*c_n)
+  = g^(k_0 + .. + k_n)
+```
+
+```
+v = W * gamma_agg * h_0^S * ... * h_n^S
+  = W * gamma_0^-c_0 * h_0^S * .. * gamma_n^-c_n * h_n^S
+  = h_0^(s_0 - S) * .. * h_n^(s_0 - S) * h_0^(sk_0*-c_0 + S) * .. * h_n^(sk_n*-c_n + S)
+  = h_0^(k_0 + sk_0*c_0 - S - sk_0*c_0 + S) * .. * h_n^(k_n + sk_n*c_n - S - sk_n*c_n + S)
+  = h_0^k_0 * .. * h_n^k_n
+```
+- `C = ECVRF_hash_points(h_n, pk_0 * ... pk_n, U, V)`
+- verify that `C == c_n`
 
 ### Gamma signatures
 
