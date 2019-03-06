@@ -295,6 +295,16 @@ could also be present in the list of common keys and values
 - if `b` is true, the signature is valid
 - proceed to validating rights
 
+### Sealed Biscuit scheme
+
+In some cases, we might want to convert the token to a symmetric key based
+token that cannot be attenuated further. Common use case: contact the verifier
+once, the verifier checks the signature, and generates from it a short lived
+token with the same authorization, but that can be checked much faster than
+public key based tokens.
+
+TODO: specify an AEAD scheme that would be usable for this
+
 ## Annex 1: Cryptographic design proposals
 
 ### Pairing based cryptography
