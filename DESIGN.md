@@ -722,9 +722,9 @@ hᵢ₊₁ = ECVRF_hash_to_curve(pkᵢ₊₁, messageᵢ₊₁)
 gammaᵢ₊₁ = hᵢ₊₁ˢᵏᵢ₊₁
 k = ECVRF_nonce(pk, h)
 
-u_n = pk_0^-c_0 * .. * pk_n^-c_n * g^S
-  = g^(sk_0*-c_0) * .. * g^(sk_n*-c_n) * g^(k_0 + sk0*c_0 + .. + k_n + sk_n*c_n)
-  = g^(k_0 + .. + k_n)
+uᵢ = gˢ * ∏ pkₓ⁻ᶜₓ
+uᵢ = ∏ g⁽ᵏₓ ⁺  ᶜₓ  ⃰ ˢᵏₓ⁾ * ∏  g⁽⁻ ᶜₓ  ⃰ ˢᵏₓ⁾
+uᵢ = ∏ gᵏₓ
 
 v_n = W* gamma_0^-c_0 * h_0^S * .. * gamma_n^-c_n * h_n^S
   = h_0^(s_0 - S) * .. * h_n^(s_0 - S) * h_0^(sk_0*-c_0 + S) * .. * h_n^(sk_n*-c_n + S)
