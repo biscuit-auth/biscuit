@@ -719,7 +719,7 @@ Block i+1: Sign( pkᵢ₊₁, skᵢ₊₁, messageᵢ₊₁, PIᵢ):
 ```
 ([gammaₓ], [cₓ], Sᵢ, Wᵢ) = PIᵢ
 hᵢ₊₁ = ECVRF_hash_to_curve(pkᵢ₊₁, messageᵢ₊₁)
-gammaᵢ₊₁ = hᵢ₊₁^skᵢ₊₁
+gammaᵢ₊₁ = hᵢ₊₁ˢᵏᵢ₊₁
 k = ECVRF_nonce(pk, h)
 
 u_n = pk_0^-c_0 * .. * pk_n^-c_n * g^S
