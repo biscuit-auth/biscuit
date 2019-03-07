@@ -672,29 +672,32 @@ Sign(pk, sk, message):
 
 creating a proof pi = ECVRF_prove(pk, sk, message):
 
-- h = ECVRF_hash_to_curve(pk, message)
-- gamma = hˢᵏ
-- k = ECVRF_nonce(pk, h)
-- c = ECVRF_hash_points(h, gamma, gᵏ, hᵏ)
-- s = k + c * sk mod q
-- pi = (gamma, c, s)
+```
+h = ECVRF_hash_to_curve(pk, message)
+gamma = hˢᵏ
+k = ECVRF_nonce(pk, h)
+c = ECVRF_hash_points(h, gamma, gᵏ, hᵏ)
+s = k + c * sk mod q
+pi = (gamma, c, s)
+```
 
 Verify(pk, pi, message) for one message and its signature:
 
-- (gamma, c, s) = pi
 ```
+(gamma, c, s) = pi
 u = pk⁻ᶜ * gˢ
   = g⁽⁻ ᶜ  ⃰ ˢᵏ⁾*g⁽ᵏ ⁺ ᶜ ⃰ˢᵏ⁾
   = gᵏ
-```
-- h = ECVRF_hash_to_curve(pk, message)
-```
-v = gamma^-c * h^s
+
+h = ECVRF_hash_to_curve(pk, message)
+
+v = gamma⁻ᶜ * hˢ
   = h⁽⁻ᶜ  ⃰ ˢᵏ⁾*h⁽ᵏ ⁺ ᶜ ⃰ˢᵏ⁾
   = hᵏ
+
+c' = ECVRF_hash_points(h, gamma, u, v)
+return c == c'
 ```
-- c' = ECVRF_hash_points(h, gamma, u, v)
-- return c == c'
 
 #### Aggregating signatures
 
@@ -702,7 +705,7 @@ Sign:
 
 First block: Sign0(pk, sk, message)
 - `h = ECVRF_hash_to_curve(pk, message)`
-- `gamma = h^sk`
+- `gamma = hˢᵏ`
 - `k = ECVRF_nonce(pk, h)`
 - `c = ECVRF_hash_points(h, gamma, g^k, h^k)`
 - `s = k + c * sk mod q`
