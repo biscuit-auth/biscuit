@@ -704,21 +704,24 @@ return c == c'
 Sign:
 
 First block: Sign0(pk, sk, message)
-- `h = ECVRF_hash_to_curve(pk, message)`
-- `gamma = hˢᵏ`
-- `k = ECVRF_nonce(pk, h)`
-- `c = ECVRF_hash_points(h, gamma, g^k, h^k)`
-- `s = k + c * sk mod q`
-- `W = 1`
-- `S = s`
-- `PI_0 = ([gamma], [c], S, W)`
-
-Block n+1: Sign( pk_(n+1), sk_(n+1), message_(n+1), PI_n):
-- `([gamma_i], [c_i], S_n, W_n) = PI_n`
-- `h_(n+1) = ECVRF_hash_to_curve(pk_(n+1), message_(n+1))`
-- `gamma_(n+1) = h_(n+1)^sk_(n+1)`
-- `k = ECVRF_nonce(pk, h)`
 ```
+h = ECVRF_hash_to_curve(pk, message)
+gamma = hˢᵏ
+k = ECVRF_nonce(pk, h)
+c = ECVRF_hash_points(h, gamma, gᵏ, hᵏ)
+s = k + c * sk mod q
+W = 1
+S = s
+PI_0 = ([gamma], [c], S, W)
+```
+
+Block i+1: Sign( pkᵢ₊₁, skᵢ₊₁, messageᵢ₊₁, PIᵢ):
+```
+([gammaₓ], [cₓ], Sᵢ, Wᵢ) = PIᵢ
+hᵢ₊₁ = ECVRF_hash_to_curve(pkᵢ₊₁, messageᵢ₊₁)
+gammaᵢ₊₁ = hᵢ₊₁^skᵢ₊₁
+k = ECVRF_nonce(pk, h)
+
 u_n = pk_0^-c_0 * .. * pk_n^-c_n * g^S
   = g^(sk_0*-c_0) * .. * g^(sk_n*-c_n) * g^(k_0 + sk0*c_0 + .. + k_n + sk_n*c_n)
   = g^(k_0 + .. + k_n)
