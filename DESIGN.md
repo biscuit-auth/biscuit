@@ -684,13 +684,13 @@ Verify(pk, pi, message) for one message and its signature:
 - (gamma, c, s) = pi
 ```
 u = pk⁻ᶜ * gˢ
-  = g⁽⁻ ᶜ * ˢᵏ⁾*g⁽ᵏ ⁺ ᶜ*ˢᵏ)
+  = g⁽⁻ ᶜ  ⃰ ˢᵏ⁾*g⁽ᵏ ⁺ ᶜ ⃰ˢᵏ⁾
   = gᵏ
 ```
 - h = ECVRF_hash_to_curve(pk, message)
 ```
 v = gamma^-c * h^s
-  = h⁽⁻ᶜ * ˢᵏ⁾*h⁽ᵏ ⁺ ᶜ*ˢᵏ)
+  = h⁽⁻ᶜ  ⃰ ˢᵏ⁾*h⁽ᵏ ⁺ ᶜ ⃰ˢᵏ⁾
   = hᵏ
 ```
 - c' = ECVRF_hash_points(h, gamma, u, v)
