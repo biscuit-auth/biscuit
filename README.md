@@ -25,3 +25,9 @@ Non goals:
   opaque tokens delivered by other systems such as OAuth.
 - Revocation: while tokens come with expiration dates, revocation requires
   external state management.
+
+You can follow the next setps on the [roadmap](https://github.com/CleverCloud/biscuit/issues/12).
+
+How to help us?
+- provide use cases that we can test the token on (some specific kind of caveats, auth delegation, etc)
+- cryptographic design audit: we need to decide on a cryptographic scheme that will be strong enough
