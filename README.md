@@ -26,8 +26,13 @@ Non goals:
 - Revocation: while tokens come with expiration dates, revocation requires
   external state management.
 
-You can follow the next setps on the [roadmap](https://github.com/CleverCloud/biscuit/issues/12).
+You can follow the next steps on the [roadmap](https://github.com/CleverCloud/biscuit/issues/12).
 
 How to help us?
 - provide use cases that we can test the token on (some specific kind of caveats, auth delegation, etc)
 - cryptographic design audit: we need to decide on a cryptographic scheme that will be strong enough
+
+Project organisation:
+- `DESIGN.md` holds the current ideas about what Biscuit should be
+- `SPECIFICATIONS.md` is the in progress description of Biscuit, its format and behaviour. The version on master is a placeholder, please see PR #20 for an updated version with comments
+- `experimentations/` holds code examples for the crypographic schemes and caveat language. `code/biscuit-poc/` contains an experimental version of Biscuit, built to explore API issues
