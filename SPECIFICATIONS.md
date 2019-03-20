@@ -8,8 +8,8 @@ for the current version of the specifications with comments.
 Biscuit is a bearer token that supports offline attenuation, can be verified
 by any system that would hold some public information, and provides a flexible
 caveat language based on logic programming. It is serialized as
-[Concise Binary Object Representation](https://tools.ietf.org/html/rfc7049),
-and designed to be small enough for storage HTTP cookies.
+Concise Binary Object Representation [CBOR], and designed to be small enough
+for storage HTTP cookies.
 
 ### Vocabulary
 
@@ -112,7 +112,69 @@ caveat3 = source_IP(#ambient, X?) | X? in ["1.2.3.4", "5.6.7.8"] // set membersh
 
 ## Semantics
 
+A biscuit is structured as an append-only list of blocks, containing *caveats*,
+and describing authorization properties.  As with Macaroons[MACAROONS],
+an operation must comply with all caveats in order to be allowed by the biscuit.
+
+Caveats are written as queries defined in a flavor of Datalog that supports
+constraints on some data types[DATALOG], without support for negation. This
+simplifies its implementation and makes
+the caveat more precise.
+
 ### Logic language
+
+#### Terminology
+
+A Biscuit Datalog program contains *facts* and *rules*, which are made of *predicates*
+over the following types: *symbol*, *variable*, *integer*, *string* and *date*.
+While Biscuit does not use a textual representation for storage, we will use
+one for this specification and for pretty printing of caveats.
+A *predicate* has the form `Predicate(v0, v1, ..., vn)`.
+A *fact* is a *predicate* that does not contain any *variable*.
+A *rule* has the form:
+`Pr(r0, r1, ..., rk) <- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0), ..., Cx(vx)`.
+The part of the left of the arrow is called the *head* and on the right, the *body*.
+In a *rule*, each of the `ri` or `ti_j` terms can be of any type. A *rule* is safe
+if all of the variables in the head appear somewhere in the body.
+We also define a *constraint* `Cx` over the variable `vx`. *Constraints* define
+a check of a variable's value when applying the *rule*. If the *constraint* returns
+`false`, the *rule* application fails.
+A *query* is a type of *rule* that has no head. It has the following form:
+`?- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0), ..., Cx(vx)`.
+When applying a *rule*, if there is a combination of *facts* that matches the body's
+predicates, we generate a new *fact* corresponding to the head (with the variables
+bound to the corresponding values).
+We will represent the various types as follows:
+- symbol: `#a`
+- variable: `v?`
+- integer: `12`
+- string: `"hello"`
+- date in RFC 3339 format
+
+As an example, assuming we have the following facts: `parent(#a, #b)`, `parent(#b, #c)`, `#parent(#c, #d)`.
+If we apply the rule `grandparent(x?, z?) <- parent(x?, y?), parent(y? z?)`, we will
+try to replace the predicates in the body by matching facts. We will get the following combinations:
+- `grandparent(#a, #c) <- parent(#a, #b), parent(#b, #c)`
+- `grandparent(#b, #d) <- parent(#b, #c), parent(#c, #d)`
+
+The system will now contain the two new facts `grandparent(#a, #c)` and `grandparent(#b, #d)`.
+Whenever we generate new facts, we have to reapply all of the system's rules on the facts,
+because some rules might give a new result. Once rules application does not generate any new facts,
+we can stop.
+
+#### Data types
+
+A *symbol* indicates a value that supports equality, set inclusion and set exclusion constraints.
+Its internal representation has no specific meaning.
+
+An *integer* is a signed 64 bits integer. It supports the following constraints: lower, larger,
+lower or equal, larger or equal, equal, set inclusion and set exclusion.
+
+A *string* is a suite of UTF-8 characters. It supports the following constraints: prefix, suffix,
+equak, set inclusion, set exclusion.
+
+A *date* is a 64 bit unsigned integer representing a TAI64. It supports the following constraints:
+before, after.
 
 ### Authority and ambient facts
 
@@ -129,5 +191,11 @@ caveat3 = source_IP(#ambient, X?) | X? in ["1.2.3.4", "5.6.7.8"] // set membersh
 
 ## Cryptography
 
+## References
 
+CBOR: https://tools.ietf.org/html/rfc7049
+DATALOG: "Datalog with Constraints: A Foundation for
+Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf
+MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
 ## Test cases
+
