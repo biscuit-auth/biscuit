@@ -8,8 +8,8 @@ for the current version of the specifications with comments.
 Biscuit is a bearer token that supports offline attenuation, can be verified
 by any system that would hold some public information, and provides a flexible
 caveat language based on logic programming. It is serialized as
-Concise Binary Object Representation [CBOR], and designed to be small enough
-for storage HTTP cookies.
+Protocol Buffers [Protobuf], and designed to be small enough for storage  in
+HTTP cookies.
 
 ### Vocabulary
 
@@ -211,6 +211,8 @@ current time, source IP address, revocation lists.
 
 ## Format
 
+The current version of the format is in [schema.proto](https://github.com/CleverCloud/biscuit/blob/master/schema.proto)
+
 ### Cryptographic wrapper
 
 ### Blocks
@@ -222,7 +224,7 @@ current time, source IP address, revocation lists.
 
 ## References
 
-CBOR: https://tools.ietf.org/html/rfc7049
+ProtoBuf: https://developers.google.com/protocol-buffers/
 DATALOG: "Datalog with Constraints: A Foundation for
 Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf
 MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892

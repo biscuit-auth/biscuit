@@ -276,8 +276,8 @@ Verifier {
 
 ### Format
 
-A Biscuit token relies on [packed CBOR (Compact Binary Object Representation)](https://tools.ietf.org/html/rfc7049)
-encoding as base format.
+A Biscuit token relies on [Protocol Buffers](https://developers.google.com/protocol-buffers/)
+encoding as base format. The current version of the schema is in [schema.proto](https://github.com/CleverCloud/biscuit/blob/master/schema.proto)
 
 Basic elements:
 - u8: 8 bits unsigned integer
@@ -305,7 +305,7 @@ The `signature` applies to the content of the `authority` block, and
 the content of each element of `blocks`.
 
 Once the signature is verified, the `authority` and `blocks` elements
-can be further deserialized. They represent a `Block` structure in CBOR
+can be further deserialized. They represent a `Block` structure in Protobuf
 encoding:
 
 ```
@@ -483,7 +483,7 @@ It reuses the token's symbol table. If new symbols must be added to the
 table when adding facts and rules, the new block will only hold the new
 symbols.
 When serializing the new token, the new block must first be serialized
-to a byte array via CBOR encoding. Then a new aggregated signature is created
+to a byte array via Protobuf encoding. Then a new aggregated signature is created
 from the previous blocks, the previous aggregated signature and the
 new key pair for this block. The new serialized token will have the same
 authority block as the previous one, its blocks field will have the previous
