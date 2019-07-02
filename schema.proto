@@ -1,0 +1,146 @@
+syntax = "proto2";
+
+package biscuit.format.schema;
+
+message Biscuit {
+  required bytes authority = 1;
+  repeated bytes blocks = 2;
+  repeated bytes keys = 3;
+  required Signature signature = 4;
+}
+
+message SealedBiscuit {
+  required bytes authority = 1;
+  repeated bytes blocks = 2;
+  required bytes signature = 3;
+}
+
+message Signature {
+  repeated bytes gamma = 1;
+  repeated bytes c = 2;
+  required bytes w = 3;
+  required bytes s = 4;
+}
+
+message Block {
+  required uint32 index = 1;
+  repeated string symbols = 2;
+  repeated Fact   facts = 3;
+  repeated Rule   caveats = 4;
+}
+
+message Fact {
+  required Predicate predicate = 1;
+}
+
+message Rule {
+  required Predicate head = 1;
+  repeated Predicate body = 2;
+  repeated Constraint constraints = 3;
+}
+
+message Predicate {
+  required uint64 name = 1;
+  repeated ID ids = 2;
+}
+
+
+message ID {
+  enum Kind {
+    SYMBOL = 0;
+    VARIABLE = 1;
+    INTEGER = 2;
+    STR = 3;
+    DATE = 4;
+  }
+
+  required Kind kind = 1;
+  optional uint64 symbol = 2;
+  optional uint32 variable = 3;
+  optional int64 integer = 4;
+  optional string str = 5;
+  optional uint64 date = 6;
+}
+
+message Constraint {
+  required uint32 id = 1;
+
+  enum Kind {
+    INT = 0;
+    STRING = 1;
+    DATE = 2;
+    SYMBOL = 3;
+  }
+
+  required Kind kind = 2;
+
+  optional IntConstraint int = 3;
+  optional StringConstraint str = 4;
+  optional DateConstraint date = 5;
+  optional SymbolConstraint symbol = 6;
+}
+
+message IntConstraint {
+  enum Kind {
+    LOWER = 0;
+    LARGER = 1;
+    LOWER_OR_EQUAL = 2;
+    LARGER_OR_EQUAL = 3;
+    EQUAL = 4;
+    IN = 5;
+    NOT_IN = 6;
+  }
+
+  required Kind kind = 1;
+
+  optional int64 lower = 2;
+  optional int64 larger = 3;
+  optional int64 lower_or_equal = 4;
+  optional int64 larger_or_equal = 5;
+  optional int64 equal = 6;
+  repeated int64 in_set = 7 [packed=true];
+  repeated int64 not_in_set = 8 [packed=true];
+}
+
+message StringConstraint {
+  enum Kind {
+    PREFIX = 0;
+    SUFFIX = 1;
+    EQUAL = 2;
+    IN = 3;
+    NOT_IN = 4;
+  }
+
+  required Kind kind = 1;
+
+  optional string prefix = 2;
+  optional string suffix = 3;
+  optional string equal = 4;
+  repeated string in_set = 5;
+  repeated string not_in_set = 6;
+}
+
+message DateConstraint {
+  enum Kind {
+    BEFORE = 0;
+    AFTER = 1;
+  }
+
+  required Kind kind = 1;
+
+  optional uint64 before = 2;
+  optional uint64 after = 3;
+}
+
+message SymbolConstraint {
+  enum Kind {
+    IN = 0;
+    NOT_IN = 1;
+  }
+
+  required Kind kind = 1;
+
+  repeated uint64 in_set = 2;
+  repeated uint64 not_in_set = 3;
+}
+
