@@ -674,7 +674,7 @@ creating a proof pi = ECVRF_prove(pk, sk, message):
 
 - h = ECVRF_hash_to_curve(pk, message)
 - gamma = h^sk
-- k = ECVRF_nonce(pk, h)
+- k = ECVRF_nonce(sk, h)
 - c = ECVRF_hash_points(h, gamma, g^k, h^k)
 - s = k + c * sk mod q
 - pi = (gamma, c, s)
@@ -703,7 +703,7 @@ Sign:
 First block: Sign0(pk, sk, message)
 - `h = ECVRF_hash_to_curve(pk, message)`
 - `gamma = h^sk`
-- `k = ECVRF_nonce(pk, h)`
+- `k = ECVRF_nonce(sk, h)`
 - `c = ECVRF_hash_points(h, gamma, g^k, h^k)`
 - `s = k + c * sk mod q`
 - `W = 1`
@@ -714,7 +714,7 @@ Block n+1: Sign( pk_(n+1), sk_(n+1), message_(n+1), PI_n):
 - `([gamma_i], [c_i], S_n, W_n) = PI_n`
 - `h_(n+1) = ECVRF_hash_to_curve(pk_(n+1), message_(n+1))`
 - `gamma_(n+1) = h_(n+1)^sk_(n+1)`
-- `k = ECVRF_nonce(pk, h)`
+- `k = ECVRF_nonce(sk, h)`
 ```
 u_n = pk_0^-c_0 * .. * pk_n^-c_n * g^S
   = g^(sk_0*-c_0) * .. * g^(sk_n*-c_n) * g^(k_0 + sk0*c_0 + .. + k_n + sk_n*c_n)
@@ -796,7 +796,7 @@ Sign:
 First block: Sign0(pk, sk, message)
 - `h = ECVRF_hash_to_curve(pk, message)`
 - `gamma = h^sk`
-- `k = ECVRF_nonce(pk, h)`
+- `k = ECVRF_nonce(sk, h)`
 - `c = ECVRF_hash_points(h, pk, g^k, h^k)`
 - `s = k + c * sk mod q`
 - `W = 1`
@@ -807,7 +807,7 @@ Block n+1: Sign( pk_(n+1), sk_(n+1), message_(n+1), PI_n):
 - `(gamma_agg, [c_i], S_n, W_n) = PI_n`
 - `h_(n+1) = ECVRF_hash_to_curve(pk_(n+1), message_(n+1))`
 - `gamma_(n+1) = h_(n+1)^sk_(n+1)`
-- `k = ECVRF_nonce(pk, h)`
+- `k = ECVRF_nonce(sk, h)`
 ```
 u_n = pk_0^-c_0 * .. * pk_n^-c_n * g^S
   = g^(sk_0*-c_0) * .. * g^(sk_n*-c_n) * g^(k_0 + sk0*c_0 + .. + k_n + sk_n*c_n)
