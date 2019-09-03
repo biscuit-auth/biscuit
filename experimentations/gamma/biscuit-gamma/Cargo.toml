@@ -1,0 +1,13 @@
+[package]
+name = "biscuit-gamma"
+version = "0.1.0"
+authors = ["Geoffroy Couprie <geo.couprie@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+curve25519-dalek = { version = "^1.0", features = ["serde"] }
+rand = "^0.6"
+sha2 = "^0.8"
+hmac = "^0.7"
+serde = { version = "1.0", features = ["derive"] }
+

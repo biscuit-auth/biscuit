@@ -175,6 +175,40 @@ It has som slight differences in behaviour with the other methods, though:
 - generating a verif token requires access to the token (ie no HttpOnly cookies)
 - once a challenge token is generated, it cannot be attenuated again (might be a good thing or bad thing depending on the context)
 
+### Aggregated gamma signatures
+
+implementation of the scheme from https://eprint.iacr.org/2018/414.pdf
+
+
+#### Performance
+
+Performance is on par with the VRF solution (it can be further optimized):
+
+```
+test bench::sign_first_block    ... bench:     104,957 ns/iter (+/- 14,308)
+test bench::sign_second_block   ... bench:     106,246 ns/iter (+/- 17,039)
+test bench::sign_third_block    ... bench:     106,122 ns/iter (+/- 10,631)
+test bench::verify_one_block    ... bench:     280,323 ns/iter (+/- 48,385)
+test bench::verify_two_blocks   ... bench:     466,553 ns/iter (+/- 136,446)
+test bench::verify_three_blocks ... bench:     644,827 ns/iter (+/- 108,173)
+```
+
+#### Signature overhead
+
+a Ristretto point can be stored in 32 bytes, a Scalar can be stored in 32 bytes
+
+we will store 2 points (public key and "A" parameter) per block,
+and one scalar in the signature
+
+
+So, for the first method:
+- 1 block: 1 * 64 + 32 = 96 bytes
+- 2 blocks: 2 * 64 + 32 = 160 bytes
+- 5 blocks: 5 * 64 + 32 = 352 bytes
+- 10 blocks: 10 * 64 + 32 = 672 bytes
+- 20 blocks: 20 * 64 + 32 = 1312 bytes
+
+
 ## Benchmarks summary
 
 ### Signing
@@ -185,6 +219,7 @@ It has som slight differences in behaviour with the other methods, though:
 | VRF 1     |  254 μs |  690 μs  | 844 μs   |
 | VRF 2     |  325 μs |  678 μs  | 866 μs   |
 | challenge |  325 μs |  402 μs  | 405 μs   |
+| gamma     |  104 μs |  106 μs  | 106 μs   |
 
 ### Verifying
 
@@ -194,6 +229,7 @@ It has som slight differences in behaviour with the other methods, though:
 | VRF 1     |   322 μs |   548 μs |   748 μs |
 | VRF 2     |   264 μs |   322 μs |   418 μs |
 | challenge |   308 μs |   472 μs |   624 μs |
+| gamma     |   280 μs |   466 μs |   644 μs |
 
 ### Size overhead
 
@@ -205,4 +241,5 @@ It has som slight differences in behaviour with the other methods, though:
 | VRF 1                       | 160     | 256      | 544      | 1024      | 1984      |
 | VRF 2                       | 160     | 224      | 416      | 736       | 1376      |
 | challenge (base token)      | 128     | 224      | 512      | 992       | 1952      |
-| challenge (challenge token) | 192     |  288     | 576      | 1056      | 2016      |
+| challenge (challenge token) | 192     | 288      | 576      | 1056      | 2016      |
+| gamma                       | 96      | 160      | 352      | 672       | 1312      |
