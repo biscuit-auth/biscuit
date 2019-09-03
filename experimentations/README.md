@@ -48,6 +48,8 @@ Pairing based crypto libraries are not frequent, so it might be hard to implemen
 
 ### Verifiable random functions
 
+**This solution is currently rejected, as a serious vulnerability was found**
+
 By reusing primitives from https://tools.ietf.org/html/draft-irtf-cfrg-vrf-04#section-5 , we can generate
 aggregated non interactive proof of discrete logarithms, that match our requirements.
 
