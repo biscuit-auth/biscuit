@@ -189,12 +189,12 @@ implementation of the scheme from https://eprint.iacr.org/2018/414.pdf
 Performance is on par with the VRF solution (it can be further optimized):
 
 ```
-test bench::sign_first_block    ... bench:     104,957 ns/iter (+/- 14,308)
-test bench::sign_second_block   ... bench:     106,246 ns/iter (+/- 17,039)
-test bench::sign_third_block    ... bench:     106,122 ns/iter (+/- 10,631)
-test bench::verify_one_block    ... bench:     280,323 ns/iter (+/- 48,385)
-test bench::verify_two_blocks   ... bench:     466,553 ns/iter (+/- 136,446)
-test bench::verify_three_blocks ... bench:     644,827 ns/iter (+/- 108,173)
+test bench::sign_first_block    ... bench:      81,759 ns/iter (+/- 13,909)
+test bench::sign_second_block   ... bench:      82,587 ns/iter (+/- 6,963)
+test bench::sign_third_block    ... bench:      83,048 ns/iter (+/- 12,164)
+test bench::verify_one_block    ... bench:     209,257 ns/iter (+/- 30,426)
+test bench::verify_two_blocks   ... bench:     352,418 ns/iter (+/- 32,345)
+test bench::verify_three_blocks ... bench:     511,629 ns/iter (+/- 65,295)
 ```
 
 #### Signature overhead
@@ -223,7 +223,7 @@ So, for the first method:
 | VRF 1     |  254 μs |  690 μs  | 844 μs   |
 | VRF 2     |  325 μs |  678 μs  | 866 μs   |
 | challenge |  325 μs |  402 μs  | 405 μs   |
-| gamma     |  104 μs |  106 μs  | 106 μs   |
+| gamma     |   81 μs |   82 μs  |  83 μs   |
 
 ### Verifying
 
@@ -233,7 +233,7 @@ So, for the first method:
 | VRF 1     |   322 μs |   548 μs |   748 μs |
 | VRF 2     |   264 μs |   322 μs |   418 μs |
 | challenge |   308 μs |   472 μs |   624 μs |
-| gamma     |   280 μs |   466 μs |   644 μs |
+| gamma     |   280 μs |   352 μs |   511 μs |
 
 ### Size overhead
 

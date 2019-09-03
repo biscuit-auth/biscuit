@@ -102,8 +102,7 @@ impl TokenSignature {
     let r = Scalar::random(rng);
     let A = r * RISTRETTO_BASEPOINT_POINT;
     let d = ECVRF_hash_points(&[A]);
-    // FIXME: maybe there's a simpler hashing process
-    let e = ECVRF_hash_points(&[keypair.public, ECVRF_hash_to_curve(RISTRETTO_BASEPOINT_POINT, message)]);
+    let e = hash_message(keypair.public, message);
     let z = r*d - e * keypair.private;
 
     TokenSignature {
@@ -117,8 +116,7 @@ impl TokenSignature {
     let r = Scalar::random(rng);
     let A = r * RISTRETTO_BASEPOINT_POINT;
     let d = ECVRF_hash_points(&[A]);
-    // FIXME: maybe there's a simpler hashing process
-    let e = ECVRF_hash_points(&[keypair.public, ECVRF_hash_to_curve(RISTRETTO_BASEPOINT_POINT, message)]);
+    let e = hash_message(keypair.public, message);
     let z = r*d - e * keypair.private;
 
     let mut t = TokenSignature {
@@ -139,7 +137,7 @@ impl TokenSignature {
 
     let zP = self.z * RISTRETTO_BASEPOINT_POINT;
     let eiXi = public_keys.iter().zip(messages).map(|(pubkey, message)| {
-      let e = ECVRF_hash_points(&[*pubkey, ECVRF_hash_to_curve(RISTRETTO_BASEPOINT_POINT, message)]);
+      let e = hash_message(*pubkey, message);
       e * pubkey
     }).fold(RistrettoPoint::identity(), |acc, point| acc + point);
 
@@ -150,11 +148,13 @@ impl TokenSignature {
 
     let res = zP + eiXi - diAi;
 
+    /*
     println!("verify identity={:?}", RistrettoPoint::identity());
     println!("verify res={:?}", res);
     println!("verify identity={:?}", RistrettoPoint::identity().compress());
     println!("verify res={:?}", res.compress());
     println!("returning: {:?}", RistrettoPoint::identity() == res);
+    */
 
     RistrettoPoint::identity() == res
   }
@@ -180,6 +180,15 @@ pub fn ECVRF_hash_points(points: &[RistrettoPoint]) -> Scalar {
 
   Scalar::from_hash(h)
 }
+
+pub fn hash_message(point: RistrettoPoint, data: &[u8]) -> Scalar {
+  let h = Sha512::new()
+    .chain(point.compress().as_bytes())
+    .chain(data);
+
+  Scalar::from_hash(h)
+}
+
 
 pub fn add_points(points: &[RistrettoPoint]) -> RistrettoPoint {
   assert!(points.len() > 0);
