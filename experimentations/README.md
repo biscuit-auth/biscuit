@@ -138,12 +138,14 @@ The verifier knows pk1 and can check the chain, and h allows checking that we ho
 
 Here are some benchmarks for this approach:
 
+```
 test bench::sign_first_block    ... bench:     325,113 ns/iter (+/- 22,812)
 test bench::sign_second_block   ... bench:     402,085 ns/iter (+/- 36,133)
 test bench::sign_third_block    ... bench:     405,621 ns/iter (+/- 28,162)
 test bench::verify_one_block    ... bench:     308,992 ns/iter (+/- 32,920)
 test bench::verify_two_blocks   ... bench:     472,676 ns/iter (+/- 97,749)
 test bench::verify_three_blocks ... bench:     624,811 ns/iter (+/- 63,081)
+```
 
 #### Signature overhead
 
