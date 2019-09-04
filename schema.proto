@@ -16,10 +16,8 @@ message SealedBiscuit {
 }
 
 message Signature {
-  repeated bytes gamma = 1;
-  repeated bytes c = 2;
-  required bytes w = 3;
-  required bytes s = 4;
+  repeated bytes parameters = 1;
+  required bytes z = 2;
 }
 
 message Block {
