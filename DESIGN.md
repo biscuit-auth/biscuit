@@ -200,10 +200,10 @@ caveat4 = resource(#ambient, X?) | prefix(X?, "/folder/") // prefix or suffix ma
 A biscuit token has the following operations:
 ```
 Token {
-  create(authority: Block, root: PrivateKey) -> Token
-  append(&self, block: Block, key: PrivateKey) -> Token
-  deserialize(data: [u8], root: PublicKey) -> Result<Token, String>
-  deserialize_sealed(data: [u8], secret: SymmetricKey) -> Result<Token, String>
+  create(rng: Rng, root: PrivateKey, authority: Block) -> Token
+  append(&self, rng: Rng, key: PrivateKey, block: Block) -> Token
+  deserialize(data: [u8], root: PublicKey) -> Result<Token, Error>
+  deserialize_sealed(data: [u8], secret: SymmetricKey) -> Result<Token, Error>
   serialize(&self) -> [u8]
   serialize_sealed(&self, secret: SymmetricKey) -> [u8]
 }
@@ -231,15 +231,21 @@ some usual facts and rules without errors.
 
 ```
 Token {
+  builder() -> BiscuitBuilder
   create_block(&self) -> BlockBuilder
+}
+
+BiscuitBuilder {
+  create(rng: Rng, root: PrivateKey, base_symbols: SymbolTable) -> Result<Biscuit, Error>
+  add_authority_fact(&mut self, fact: Fact)
+  add_authority_rule(&mut self, caveat: Rule)
+  add_right(&mut self, resource: string, right: string)
 }
 
 BlockBuilder {
   create(index: u32, base_symbols: SymbolTable) -> Block
-  add_symbol(&mut self, s: string) -> Symbol
   add_fact(&mut self, fact: Fact)
-  add_rule(&mut self, caveat: Rule)
-  add_right(&mut self, resource: string, right: string)
+  add_caveat(&mut self, caveat: Rule)
   check_right(&mut self, right: string)
   resource_prefix(&mut self, prefix: string)
   resource_suffix(&mut self, suffix: string)
