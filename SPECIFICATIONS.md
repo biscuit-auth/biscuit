@@ -229,14 +229,139 @@ The verifier can also provide its own caveats.
 
 The current version of the format is in [schema.proto](https://github.com/CleverCloud/biscuit/blob/master/schema.proto)
 
-### Cryptographic wrapper
+The token contains two levels of serialization. The main structure that will be
+transmitted over the wire is either the normal Biscuit wrapper:
+
+```proto
+message Biscuit {
+  required bytes authority = 1;
+  repeated bytes blocks = 2;
+  repeated bytes keys = 3;
+  required Signature signature = 4;
+}
+
+message Signature {
+  repeated bytes parameters = 1;
+  required bytes z = 2;
+}
+```
+
+or the "sealed" Biscuit wrapper (a token that cannot be attenuated offline):
+
+```proto
+message SealedBiscuit {
+  required bytes authority = 1;
+  repeated bytes blocks = 2;
+  required bytes signature = 3;
+}
+```
+
+The signature part of those tokens covers the content of authority and
+blocks members.
+
+Those members are byte arrays, containing `Block` structures serialized
+in Protobuf format as well:
+
+```proto
+message Block {
+  required uint32 index = 1;
+  repeated string symbols = 2;
+  repeated Fact   facts = 3;
+  repeated Rule   caveats = 4;
+}
+```
+
+### Cryptography
+
+#### Attenuable tokens
+
+Those tokens are based on public key cryptography, specifically aggregated
+gamma signatures[Aggregated Gamma Signatures]. Signature aggregation allows
+Biscuit to make a new token with a valid signature from an existing one,
+by signing the new data and adding the new signature to the old one.
+
+Every public key operation in Biscuit is defined over the Ristretto prime
+order group, that is designed to prevent some implementation mistakes.
+
+Definitions:
+- `R`: Ristretto group
+- `l`: order of the Ristretto group
+- `Z/l`: scalar of order `l` associated to the Ristretto group
+- `P`: Ristretto base point
+- `H1`: point hashing function
+- `H2`: message hashing function
+
+##### Key generation
+
+Private key:
+`x <- Z/l*` chosen at random
+
+Public key:
+`X = sk * P`
+
+##### Signature (one block)
+
+With secret key `x`, public key `X`, message `message`:
+
+* `r <- Z/l*` chosen at random
+* `A = r * P`
+* `d = H1(A)`
+* `e = H2(X, message)`
+* `z = rd - ex mod l`
+
+The signature is `([A], z)`
+
+#### Signature (appending)
+With `([A0, ..., An], s)` the current signature:
+
+Same process as the signature for a single block,
+with secret key `x`, public key `X`, message `message`:
+
+* `r <- Z/l*` chosen at random
+* `A = r * P`
+* `d = H1(A)`
+* `e = H2(X, message)`
+* `z = rd - ex mod l`
+
+The new signature is `([A0, ..., An, A], s + z)`
+
+#### Verifying
+
+With:
+
+* `([A0, ..., An], s)` the current signature
+* `[P0, ..., Pn]` the list of public keys
+* `[m0, ..., mn]` the list of messages
+
+We verify as follows:
+* check that `|[A0, ..., An]| == |[P0, ..., Pn]| == |[m0, ..., mn]|`
+* check that `P0` is the root public key we are expecting
+* check that `[A0, ..., An]` are distinct
+* check that `[(P0, m0), ..., (Pn, mn)]` are distinct
+* `X = H2(P0, m0) * P0 + ... + H2(Pn, mn) * Pn - ( H1(A0) * A0 + ... + H1(An) * An )`
+* if `s * P + X` is the point at infinite, the signature is verified
+
+##### Point hashing
+
+`H1(X) = Scalar::from_hash(sha512(X.compress().to_bytes()))`
+
+##### Message hashing
+
+`H2(X, message) = Scalar::from_hash(sha512(X.compress().to_bytes()|message))` (with `|` the concatenation operator)
+
+#### Sealed tokens
+
+A sealed token contains the same kind of block as regular tokens,
+but it cannot be attenuated offline, and can only be verified by
+knowing the secret used to create it.
+
+The signature is the HMAC-SHA256 hashof the secret key and the
+concatenation of all the blocks.
 
 ### Blocks
 
 ### Symbol table
 
-
-## Cryptography
 
 ## References
 
@@ -244,5 +369,8 @@ ProtoBuf: https://developers.google.com/protocol-buffers/
 DATALOG: "Datalog with Constraints: A Foundation for
 Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf
 MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
+Aggregated Gamma Signatures: "Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao" https://eprint.iacr.org/2018/414.pdf
+Ristretto: "Ristretto: prime order elliptic curve groups with non-malleable encodings" https://ristretto.group
+
 ## Test cases
 
