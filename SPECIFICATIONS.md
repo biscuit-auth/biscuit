@@ -1,14 +1,11 @@
 # Biscuit, a bearer token with offline attenuation and decentralized verification
 
-placeholder: please see [PR 20](https://github.com/CleverCloud/biscuit/pull/20)
-for the current version of the specifications with comments.
-
 ## Introduction
 
 Biscuit is a bearer token that supports offline attenuation, can be verified
-by any system that would hold some public information, and provides a flexible
+by any system that knows the root public key, and provides a flexible
 caveat language based on logic programming. It is serialized as
-Protocol Buffers [Protobuf], and designed to be small enough for storage  in
+Protocol Buffers [Protobuf], and designed to be small enough for storage in
 HTTP cookies.
 
 ### Vocabulary
@@ -28,9 +25,10 @@ the current date, or revocation lists
 
 ### Overview
 
-Biscuit holds a set of rights, defined in its authority block, and a list of
-caveats (restrictions) to those rights or to the accompanying operation, in the form
-of logic queries. The holder of a biscuit token can at any time create a new
+A Biscuit token is defined as a serie of blocks. The first one, named "authority block",
+contains rights given to the token holder. The following blocks contain caveats that
+reduce the token's scope, in the form of logic queries that must succeed.
+The holder of a biscuit token can at any time create a new
 token by adding more caveats, but they cannot remove existing caveats.
 
 The token is protected by public key cryptography operations: the initial creator
@@ -45,7 +43,10 @@ to generate a token that cannot be further attenuated, but is faster to verify.
 The logic language used to design rights, caveats and operation data is a
 variant of datalog that accepts constraints on some data types.
 
-### Examples
+### Caveat language examples
+
+Caveats are written as queries in the logic language, ie rules that must produce
+something to succeed. Here are some examples of writing caveats:
 
 #### Basic token
 
@@ -56,19 +57,32 @@ the `read` right over the resource.
 The second caveat checks that the resource is `file1`.
 
 ```
-authority=[right(#authority, #file1, #read), right(#authority, #file2, #read),
-  right(#authority, #file1, #write)]
+authority=[right(#authority, "file1", #read), right(#authority, "file2", #read),
+  right(#authority, "file1", #write)]
 ----------
 caveat1 = resource(#ambient, X?), operation(#ambient, #read),
   right(#authority, X?, #read)  // restrict to read operations
 ----------
-caveat2 = resource(#ambient, #file1)  // restrict to file1 resource
+caveat2 = resource(#ambient, "file1")  // restrict to file1 resource
 ```
+
+The facts with the `authority` tag can only be defined in the `authority` part of
+the token.
+The verifier side provides the `resource` and `operation` facts with the `ambient`
+fact, with information from the request.
+
+If the verifier provided the facts `resource(#ambient, "file2")` and `operation(#ambient, #read)`,
+the rule application of `caveat1` would see `resource(#ambient, "file2"), operation(#ambient, #read), right(#authority, "file2", #read)` with `X = "file2"`, so it would succeed, but `caveat2` would fail
+because it expects `resource(#ambient, "file1")`.
+
+If the verifier provided the facts `resource(#ambient, "file1")` and `operation(#ambient, #read)`,
+both caveats would succeed.
 
 #### Broad authority rules
 
 In this example, we have a token with very large rights, that will be attenuated
-before giving to a user:
+before giving to a user. The authority block can define rules that will generate
+facts depending on ambient data. This helps reduce the size of the token.
 
 ```
 authority_rules = [
@@ -84,15 +98,15 @@ caveat2 = resource(#ambient, X?), owner(#alice, X?) // defines a token only usab
 ```
 
 These rules will define authority facts depending on ambient data.
-If we had the ambient facts `resource(#ambient, #file1)` and
-`owner(#ambient, #alice, #file1)`, the authority rules will define
-`right(#authority, #file1, #read)` and `right(#authority, #file1, #write)`,
+If we had the ambient facts `resource(#ambient, "file1")` and
+`owner(#ambient, #alice, "file1")`, the authority rules will define
+`right(#authority, "file1", #read)` and `right(#authority, "file1", #write)`,
 which will allow caveat 1 and caveat 2 to succeed.
 
-If the owner ambient fact does not match the restriction in caveat2, the token
+If the owner ambient fact does not match the restriction in `caveat2`, the token
 check will fail.
 
-##### Constraints
+#### Constraints
 
 We can define queries or rules with constraints on some predicate values, and
 restrict usage based on ambient values:
@@ -107,8 +121,8 @@ caveat2 = time(#ambient, T?), T? < 2019-02-05T23:00:00Z // expiration date
 ----------
 caveat3 = source_IP(#ambient, X?) | X? in ["1.2.3.4", "5.6.7.8"] // set membership
 ----------
+caveat4 = resource(#ambient, X?) | prefix(X?, "/folder/") // prefix operation on strings
 ```
-
 
 ## Semantics
 
@@ -118,8 +132,7 @@ an operation must comply with all caveats in order to be allowed by the biscuit.
 
 Caveats are written as queries defined in a flavor of Datalog that supports
 constraints on some data types[DATALOG], without support for negation. This
-simplifies its implementation and makes
-the caveat more precise.
+simplifies its implementation and makes the caveat more precise.
 
 ### Logic language
 
@@ -163,13 +176,15 @@ combinations:
 The system will now contain the two new facts `grandparent(#a, #c)` and
 `grandparent(#b, #d)`. Whenever we generate new facts, we have to reapply all of
 the system's rules on the facts, because some rules might give a new result. Once
-rules application does not generate any new facts,
-we can stop.
+rules application does not generate any new facts, we can stop.
 
 #### Data types
 
 A *symbol* indicates a value that supports equality, set inclusion and set
-exclusion constraints. Its internal representation has no specific meaning.
+exclusion constraints. Its internal representation is an index into the token's
+symbol table, which is a list of strings. The symbol table reduces the size of
+tokens by storing common symbols in a predefined table, and writing new symbols
+only once per token.
 
 An *integer* is a signed 64 bits integer. It supports the following
 constraints: lower, larger, lower or equal, larger or equal, equal, set
@@ -185,9 +200,9 @@ following constraints: before, after.
 
 Facts in Biscuit's language have some specific context.
 
-Authority facts can only be created in the authority block, and are
-represented by the `#authority` symbol as the first element of a fact. They
-hold the initial rights for the token.
+Authority facts can only be created in the authority block, either directly
+or from rules, and are represented by the `#authority` symbol as the first
+element of a fact. They hold the initial rights for the token.
 
 Ambient facts can only be created by the verifier, and are represented by the
 `#ambient` symbol as the first element of a fact. They indicate data related
@@ -208,19 +223,210 @@ One block can contain one or more caveats.
 The verifier provides information on the operation, such as the type of access
 ("read", "write", etc), the resource accessed, and more ambient data like the
 current time, source IP address, revocation lists.
+The verifier can also provide its own caveats.
 
 ## Format
 
 The current version of the format is in [schema.proto](https://github.com/CleverCloud/biscuit/blob/master/schema.proto)
 
-### Cryptographic wrapper
+The token contains two levels of serialization. The main structure that will be
+transmitted over the wire is either the normal Biscuit wrapper:
+
+```proto
+message Biscuit {
+  required bytes authority = 1;
+  repeated bytes blocks = 2;
+  repeated bytes keys = 3;
+  required Signature signature = 4;
+}
+
+message Signature {
+  repeated bytes parameters = 1;
+  required bytes z = 2;
+}
+```
+
+or the "sealed" Biscuit wrapper (a token that cannot be attenuated offline):
+
+```proto
+message SealedBiscuit {
+  required bytes authority = 1;
+  repeated bytes blocks = 2;
+  required bytes signature = 3;
+}
+```
+
+The signature part of those tokens covers the content of authority and
+blocks members.
+
+Those members are byte arrays, containing `Block` structures serialized
+in Protobuf format as well:
+
+```proto
+message Block {
+  required uint32 index = 1;
+  repeated string symbols = 2;
+  repeated Fact   facts = 3;
+  repeated Rule   caveats = 4;
+}
+```
+
+### Cryptography
+
+#### Attenuable tokens
+
+Those tokens are based on public key cryptography, specifically aggregated
+gamma signatures[Aggregated Gamma Signatures]. Signature aggregation allows
+Biscuit to make a new token with a valid signature from an existing one,
+by signing the new data and adding the new signature to the old one.
+
+Every public key operation in Biscuit is defined over the Ristretto prime
+order group, that is designed to prevent some implementation mistakes.
+
+Definitions:
+- `R`: Ristretto group
+- `l`: order of the Ristretto group
+- `Z/l`: scalar of order `l` associated to the Ristretto group
+- `P`: Ristretto base point
+- `H1`: point hashing function
+- `H2`: message hashing function
+
+##### Key generation
+
+Private key:
+`x <- Z/l*` chosen at random
+
+Public key:
+`X = sk * P`
+
+##### Signature (one block)
+
+With secret key `x`, public key `X`, message `message`:
+
+* `r <- Z/l*` chosen at random
+* `A = r * P`
+* `d = H1(A)`
+* `e = H2(X, message)`
+* `z = rd - ex mod l`
+
+The signature is `([A], z)`
+
+#### Signature (appending)
+With `([A0, ..., An], s)` the current signature:
+
+Same process as the signature for a single block,
+with secret key `x`, public key `X`, message `message`:
+
+* `r <- Z/l*` chosen at random
+* `A = r * P`
+* `d = H1(A)`
+* `e = H2(X, message)`
+* `z = rd - ex mod l`
+
+The new signature is `([A0, ..., An, A], s + z)`
+
+#### Verifying
+
+With:
+
+* `([A0, ..., An], s)` the current signature
+* `[P0, ..., Pn]` the list of public keys
+* `[m0, ..., mn]` the list of messages
+
+We verify as follows:
+* check that `|[A0, ..., An]| == |[P0, ..., Pn]| == |[m0, ..., mn]|`
+* check that `P0` is the root public key we are expecting
+* check that `[A0, ..., An]` are distinct
+* check that `[(P0, m0), ..., (Pn, mn)]` are distinct
+* `X = H2(P0, m0) * P0 + ... + H2(Pn, mn) * Pn - ( H1(A0) * A0 + ... + H1(An) * An )`
+* if `s * P + X` is the point at infinite, the signature is verified
+
+##### Point hashing
+
+`H1(X) = Scalar::from_hash(sha512(X.compress().to_bytes()))`
+
+##### Message hashing
+
+`H2(X, message) = Scalar::from_hash(sha512(X.compress().to_bytes()|message))` (with `|` the concatenation operator)
+
+#### Sealed tokens
+
+A sealed token contains the same kind of block as regular tokens,
+but it cannot be attenuated offline, and can only be verified by
+knowing the secret used to create it.
+
+The signature is the HMAC-SHA256 hashof the secret key and the
+concatenation of all the blocks.
 
 ### Blocks
 
+A block is defined as follows in the schema file:
+
+```proto
+message Block {
+  required uint32 index = 1;
+  repeated string symbols = 2;
+  repeated Fact   facts = 3;
+  repeated Rule   caveats = 4;
+}
+```
+
+The block index is incremented for each new block. The Block 0
+is the authority block.
+
+The authority block contains facts marked with the `#authority`
+symbol as first id, and rules that generate facts marked with
+the `#authority` symbol.
+
+In the following blocks, the rules are caveats that must succeed.
+Facts defined in a block are only usable by caveats from that
+block.
+
+That means that when using the Datalog engine, we do the following:
+- add the authority facts and rules
+- add the ambient facts and rules
+- run the engine until all the facts are produced
+- freeze the current state
+- for each block:
+  - start from the frozen state
+  - add the block's facts
+  - run the engine
+  - test all the caveats
+
 ### Symbol table
 
+To reduce token size and improve performance, Biscuit uses a symbol table,
+a list of strings that any fact or token can refer to by index. While
+running the logic engine does not need to know the content of that list,
+pretty printing facts, rules and results will use it.
 
-## Cryptography
+The symbol table is created from a default table containing, in order:
+- authority
+- ambient
+- resource
+- operation
+- right
+- time
+- revocation_id
+
+tokens can be created from a different default table, as long as the creator,
+the verifier, and any user attenuating tokens are starting from the same
+table.
+
+#### Adding content to the symbol table
+
+When creating a new block, we start from the current symbol table of the token.
+For each fact or rule that introduces a new symbol, we add the corresponding
+string to the table, and convert the fact or rule to use its index instead.
+
+Once every fact and rule has been integrated, we set as the block's symbol table
+(its `symbols` field) the symbols that were appended to the token's table.
+
+The new token's symbol table is the list from the default table, and for each
+block in order, the block's symbols.
+
+It is important to verify that different blocks do not contain the same symbol in
+their list.
 
 ## References
 
@@ -228,5 +434,8 @@ ProtoBuf: https://developers.google.com/protocol-buffers/
 DATALOG: "Datalog with Constraints: A Foundation for
 Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf
 MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
+Aggregated Gamma Signatures: "Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao" https://eprint.iacr.org/2018/414.pdf
+Ristretto: "Ristretto: prime order elliptic curve groups with non-malleable encodings" https://ristretto.group
+
 ## Test cases
 
