@@ -1,14 +1,11 @@
 # Biscuit, a bearer token with offline attenuation and decentralized verification
 
-placeholder: please see [PR 20](https://github.com/CleverCloud/biscuit/pull/20)
-for the current version of the specifications with comments.
-
 ## Introduction
 
 Biscuit is a bearer token that supports offline attenuation, can be verified
-by any system that would hold some public information, and provides a flexible
+by any system that knows the root public key, and provides a flexible
 caveat language based on logic programming. It is serialized as
-Protocol Buffers [Protobuf], and designed to be small enough for storage  in
+Protocol Buffers [Protobuf], and designed to be small enough for storage in
 HTTP cookies.
 
 ### Vocabulary
@@ -28,9 +25,10 @@ the current date, or revocation lists
 
 ### Overview
 
-Biscuit holds a set of rights, defined in its authority block, and a list of
-caveats (restrictions) to those rights or to the accompanying operation, in the form
-of logic queries. The holder of a biscuit token can at any time create a new
+A Biscuit token is defined as a serie of blocks. The first one, named "authority block",
+contains rights given to the token holder. The following blocks contain caveats that
+reduce the token's scope, in the form of logic queries that must succeed.
+The holder of a biscuit token can at any time create a new
 token by adding more caveats, but they cannot remove existing caveats.
 
 The token is protected by public key cryptography operations: the initial creator
@@ -45,7 +43,10 @@ to generate a token that cannot be further attenuated, but is faster to verify.
 The logic language used to design rights, caveats and operation data is a
 variant of datalog that accepts constraints on some data types.
 
-### Examples
+### Caveat language examples
+
+Caveats are written as queries in the logic language, ie rules that must produce
+something to succeed. Here are some examples of writing caveats:
 
 #### Basic token
 
@@ -56,19 +57,32 @@ the `read` right over the resource.
 The second caveat checks that the resource is `file1`.
 
 ```
-authority=[right(#authority, #file1, #read), right(#authority, #file2, #read),
-  right(#authority, #file1, #write)]
+authority=[right(#authority, "file1", #read), right(#authority, "file2", #read),
+  right(#authority, "file1", #write)]
 ----------
 caveat1 = resource(#ambient, X?), operation(#ambient, #read),
   right(#authority, X?, #read)  // restrict to read operations
 ----------
-caveat2 = resource(#ambient, #file1)  // restrict to file1 resource
+caveat2 = resource(#ambient, "file1")  // restrict to file1 resource
 ```
+
+The facts with the `authority` tag can only be defined in the `authority` part of
+the token.
+The verifier side provides the `resource` and `operation` facts with the `ambient`
+fact, with information from the request.
+
+If the verifier provided the facts `resource(#ambient, "file2")` and `operation(#ambient, #read)`,
+the rule application of `caveat1` would see `resource(#ambient, "file2"), operation(#ambient, #read), right(#authority, "file2", #read)` with `X = "file2"`, so it would succeed, but `caveat2` would fail
+because it expects `resource(#ambient, "file1")`.
+
+If the verifier provided the facts `resource(#ambient, "file1")` and `operation(#ambient, #read)`,
+both caveats would succeed.
 
 #### Broad authority rules
 
 In this example, we have a token with very large rights, that will be attenuated
-before giving to a user:
+before giving to a user. The authority block can define rules that will generate
+facts depending on ambient data. This helps reduce the size of the token.
 
 ```
 authority_rules = [
@@ -84,15 +98,15 @@ caveat2 = resource(#ambient, X?), owner(#alice, X?) // defines a token only usab
 ```
 
 These rules will define authority facts depending on ambient data.
-If we had the ambient facts `resource(#ambient, #file1)` and
-`owner(#ambient, #alice, #file1)`, the authority rules will define
-`right(#authority, #file1, #read)` and `right(#authority, #file1, #write)`,
+If we had the ambient facts `resource(#ambient, "file1")` and
+`owner(#ambient, #alice, "file1")`, the authority rules will define
+`right(#authority, "file1", #read)` and `right(#authority, "file1", #write)`,
 which will allow caveat 1 and caveat 2 to succeed.
 
-If the owner ambient fact does not match the restriction in caveat2, the token
+If the owner ambient fact does not match the restriction in `caveat2`, the token
 check will fail.
 
-##### Constraints
+#### Constraints
 
 We can define queries or rules with constraints on some predicate values, and
 restrict usage based on ambient values:
@@ -107,8 +121,8 @@ caveat2 = time(#ambient, T?), T? < 2019-02-05T23:00:00Z // expiration date
 ----------
 caveat3 = source_IP(#ambient, X?) | X? in ["1.2.3.4", "5.6.7.8"] // set membership
 ----------
+caveat4 = resource(#ambient, X?) | prefix(X?, "/folder/") // prefix operation on strings
 ```
-
 
 ## Semantics
 
@@ -118,8 +132,7 @@ an operation must comply with all caveats in order to be allowed by the biscuit.
 
 Caveats are written as queries defined in a flavor of Datalog that supports
 constraints on some data types[DATALOG], without support for negation. This
-simplifies its implementation and makes
-the caveat more precise.
+simplifies its implementation and makes the caveat more precise.
 
 ### Logic language
 
@@ -163,13 +176,15 @@ combinations:
 The system will now contain the two new facts `grandparent(#a, #c)` and
 `grandparent(#b, #d)`. Whenever we generate new facts, we have to reapply all of
 the system's rules on the facts, because some rules might give a new result. Once
-rules application does not generate any new facts,
-we can stop.
+rules application does not generate any new facts, we can stop.
 
 #### Data types
 
 A *symbol* indicates a value that supports equality, set inclusion and set
-exclusion constraints. Its internal representation has no specific meaning.
+exclusion constraints. Its internal representation is an index into the token's
+symbol table, which is a list of strings. The symbol table reduces the size of
+tokens by storing common symbols in a predefined table, and writing new symbols
+only once per token.
 
 An *integer* is a signed 64 bits integer. It supports the following
 constraints: lower, larger, lower or equal, larger or equal, equal, set
@@ -185,9 +200,9 @@ following constraints: before, after.
 
 Facts in Biscuit's language have some specific context.
 
-Authority facts can only be created in the authority block, and are
-represented by the `#authority` symbol as the first element of a fact. They
-hold the initial rights for the token.
+Authority facts can only be created in the authority block, either directly
+or from rules, and are represented by the `#authority` symbol as the first
+element of a fact. They hold the initial rights for the token.
 
 Ambient facts can only be created by the verifier, and are represented by the
 `#ambient` symbol as the first element of a fact. They indicate data related
@@ -208,6 +223,7 @@ One block can contain one or more caveats.
 The verifier provides information on the operation, such as the type of access
 ("read", "write", etc), the resource accessed, and more ambient data like the
 current time, source IP address, revocation lists.
+The verifier can also provide its own caveats.
 
 ## Format
 
