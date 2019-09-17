@@ -360,8 +360,73 @@ concatenation of all the blocks.
 
 ### Blocks
 
+A block is defined as follows in the schema file:
+
+```proto
+message Block {
+  required uint32 index = 1;
+  repeated string symbols = 2;
+  repeated Fact   facts = 3;
+  repeated Rule   caveats = 4;
+}
+```
+
+The block index is incremented for each new block. The Block 0
+is the authority block.
+
+The authority block contains facts marked with the `#authority`
+symbol as first id, and rules that generate facts marked with
+the `#authority` symbol.
+
+In the following blocks, the rules are caveats that must succeed.
+Facts defined in a block are only usable by caveats from that
+block.
+
+That means that when using the Datalog engine, we do the following:
+- add the authority facts and rules
+- add the ambient facts and rules
+- run the engine until all the facts are produced
+- freeze the current state
+- for each block:
+  - start from the frozen state
+  - add the block's facts
+  - run the engine
+  - test all the caveats
+
 ### Symbol table
 
+To reduce token size and improve performance, Biscuit uses a symbol table,
+a list of strings that any fact or token can refer to by index. While
+running the logic engine does not need to know the content of that list,
+pretty printing facts, rules and results will use it.
+
+The symbol table is created from a default table containing, in order:
+- authority
+- ambient
+- resource
+- operation
+- right
+- time
+- revocation_id
+
+tokens can be created from a different default table, as long as the creator,
+the verifier, and any user attenuating tokens are starting from the same
+table.
+
+#### Adding content to the symbol table
+
+When creating a new block, we start from the current symbol table of the token.
+For each fact or rule that introduces a new symbol, we add the corresponding
+string to the table, and convert the fact or rule to use its index instead.
+
+Once every fact and rule has been integrated, we set as the block's symbol table
+(its `symbols` field) the symbols that were appended to the token's table.
+
+The new token's symbol table is the list from the default table, and for each
+block in order, the block's symbols.
+
+It is important to verify that different blocks do not contain the same symbol in
+their list.
 
 ## References
 
