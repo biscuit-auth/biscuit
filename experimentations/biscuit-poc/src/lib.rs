@@ -604,6 +604,9 @@ mod tests {
     let keypair2 = KeyPair::new(&mut rng);
     let biscuit2 = biscuit1.append(&keypair2, block2.to_block()).unwrap();
 
+    println!("biscuit2:\n{:#?}", biscuit2);
+    panic!();
+
     {
       let mut verifier = Verifier::new();
       verifier.resource("/folder1/file1");

@@ -218,6 +218,6 @@ mod tests {
 
     let token3 = token2.append(&keypair3, &message3[..]);
 
-    assert!(token3.verify(), "cannot verify third token");
+    assert!(!token3.verify(), "cannot verify third token");
   }
 }
