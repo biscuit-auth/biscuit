@@ -330,3 +330,33 @@ Block[0] {
 ```
 
 validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 1, rule: "expiration(0?) <- time(#ambient, 0?) | 0? <= 1545264000" })])))`
+
+------------------------------
+
+## authority rules: test12_authority_rules.bc
+biscuit2 (1 caveat):
+```
+Biscuit {
+	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "owner", "write", "caveat1", "caveat2", "alice"]
+	authority:
+Block[0] {
+		symbols: ["read", "owner", "write"]
+		facts: [
+			]
+		rules:[
+			right(#authority, 1?, #read) <- resource(#ambient, 1?) && owner(#ambient, 0?, 1?) | ,
+			right(#authority, 1?, #write) <- resource(#ambient, 1?) && owner(#ambient, 0?, 1?) | ]
+}
+	blocks: [
+		Block[1] {
+		symbols: ["caveat1", "caveat2", "alice"]
+		facts: [
+			]
+		rules:[
+			caveat1(0?, 1?) <- right(#authority, 0?, 1?) && resource(#ambient, 0?) && operation(#ambient, 1?) | ,
+			caveat2(0?) <- resource(#ambient, 0?) && owner(#ambient, #alice, 0?) | ]
+}]
+}
+```
+
+validation: `Ok(())`
