@@ -36,3 +36,14 @@ Project organisation:
 - `DESIGN.md` holds the current ideas about what Biscuit should be
 - `SPECIFICATIONS.md` is the in progress description of Biscuit, its format and behaviour. The version on master is a placeholder, please see [PR 20](https://github.com/CleverCloud/biscuit/pull/20) for an updated version with comments
 - `experimentations/` holds code examples for the crypographic schemes and caveat language. `code/biscuit-poc/` contains an experimental version of Biscuit, built to explore API issues
+
+## License
+
+Licensed under Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally
+submitted for inclusion in the work by you, as defined in the Apache-2.0
+license, shall be licensed as above, without any additional terms or
+conditions.
