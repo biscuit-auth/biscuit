@@ -19,6 +19,8 @@ Block[0] {
 			right(#authority, "file1", #write)]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -26,6 +28,8 @@ Block[0] {
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
 }]
 }
@@ -47,6 +51,8 @@ Block[0] {
 			right(#authority, "file1", #read)]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -54,6 +60,8 @@ Block[0] {
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
 }]
 }
@@ -77,6 +85,8 @@ Block[0] {
 			right(#authority, "file1", #write)]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -84,6 +94,8 @@ Block[0] {
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
 }]
 }
@@ -107,6 +119,8 @@ Block[0] {
 			right(#authority, "file1", #write)]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -114,6 +128,8 @@ Block[0] {
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
 }]
 }
@@ -137,6 +153,8 @@ Block[0] {
 			right(#authority, "file1", #write)]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -144,6 +162,8 @@ Block[0] {
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
 }]
 }
@@ -167,6 +187,8 @@ Block[0] {
 			right(#authority, "file1", #write)]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -174,6 +196,8 @@ Block[0] {
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
 }]
 }
@@ -197,6 +221,8 @@ Block[0] {
 			right("file1", #write)]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -204,6 +230,8 @@ Block[0] {
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- operation(#ambient, #read) | ]
 }]
 }
@@ -225,6 +253,8 @@ Block[0] {
 			right(#authority, "file1", #read)]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -232,6 +262,8 @@ Block[0] {
 		facts: [
 			right(#authority, "file1", #write)]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- operation(#ambient, #read) | ]
 }]
 }
@@ -253,6 +285,8 @@ Block[0] {
 			right(#authority, "file1", #read)]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -260,6 +294,8 @@ Block[0] {
 		facts: [
 			right(#ambient, "file1", #write)]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- operation(#ambient, #read) | ]
 }]
 }
@@ -281,6 +317,8 @@ Block[0] {
 			]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -289,12 +327,16 @@ Block[0] {
 			test(#write)]
 		rules:[
 			]
+		caveats:[
+			]
 },
 	Block[2] {
 		symbols: ["caveat1"]
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?) <- test(0?) | ]
 }]
 }
@@ -316,6 +358,8 @@ Block[0] {
 			]
 		rules:[
 			]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -323,6 +367,8 @@ Block[0] {
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1("file1") <- resource(#ambient, "file1") | ,
 			expiration(0?) <- time(#ambient, 0?) | 0? <= 1545264000]
 }]
@@ -346,6 +392,8 @@ Block[0] {
 		rules:[
 			right(#authority, 1?, #read) <- resource(#ambient, 1?) && owner(#ambient, 0?, 1?) | ,
 			right(#authority, 1?, #write) <- resource(#ambient, 1?) && owner(#ambient, 0?, 1?) | ]
+		caveats:[
+			]
 }
 	blocks: [
 		Block[1] {
@@ -353,6 +401,8 @@ Block[0] {
 		facts: [
 			]
 		rules:[
+			]
+		caveats:[
 			caveat1(0?, 1?) <- right(#authority, 0?, 1?) && resource(#ambient, 0?) && operation(#ambient, 1?) | ,
 			caveat2(0?) <- resource(#ambient, 0?) && owner(#ambient, #alice, 0?) | ]
 }]
@@ -360,3 +410,87 @@ Block[0] {
 ```
 
 validation: `Ok(())`
+
+------------------------------
+
+## verifier authority caveats: test13_verifier_authority_caveats.bc
+biscuit:
+```
+Biscuit {
+	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read"]
+	authority:
+Block[0] {
+		symbols: ["read"]
+		facts: [
+			right(#authority, "file1", #read)]
+		rules:[
+			]
+		caveats:[
+			]
+}
+	blocks: [
+		]
+}
+```
+
+validation: `Err(FailedLogic(FailedCaveats([Verifier(FailedVerifierCaveat { block_id: 0, caveat_id: 0, rule: "caveat1(0?, 1?) <- right(#authority, 0?, 1?) && resource(#ambient, 0?) && operation(#ambient, 1?) | " })])))`
+
+------------------------------
+
+## authority caveats: test14_authority_caveats.bc
+biscuit:
+```
+Biscuit {
+	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "caveat1"]
+	authority:
+Block[0] {
+		symbols: ["caveat1"]
+		facts: [
+			]
+		rules:[
+			]
+		caveats:[
+			caveat1("file1") <- resource(#ambient, "file1") | ]
+}
+	blocks: [
+		]
+}
+```
+
+validation for "file1": `Ok(())`
+validation for "file2": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "caveat1(\"file1\") <- resource(#ambient, \"file1\") | " })])))`
+
+------------------------------
+
+## block rules: test14_block_rules.bc
+biscuit2 (1 caveat):
+```
+Biscuit {
+	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "valid_date", "time", "caveat1"]
+	authority:
+Block[0] {
+		symbols: ["read"]
+		facts: [
+			right(#authority, "file1", #read),
+			right(#authority, "file2", #read)]
+		rules:[
+			]
+		caveats:[
+			]
+}
+	blocks: [
+		Block[1] {
+		symbols: ["valid_date", "time", "caveat1"]
+		facts: [
+			]
+		rules:[
+			valid_date("file1") <- time(#ambient, 0?) && resource(#ambient, "file1") | 0? <= 1924952399,
+			valid_date(1?) <- time(#ambient, 0?) && resource(#ambient, 1?) | 0? <= 946645199 && 1? not in {"file1"}]
+		caveats:[
+			caveat1(0?) <- valid_date(0?) && resource(#ambient, 0?) | ]
+}]
+}
+```
+
+validation for "file1": `Ok(())`
+validation for "file2": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "caveat1(0?) <- valid_date(0?) && resource(#ambient, 0?) | " })])))`

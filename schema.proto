@@ -24,7 +24,8 @@ message Block {
   required uint32 index = 1;
   repeated string symbols = 2;
   repeated Fact   facts = 3;
-  repeated Rule   caveats = 4;
+  repeated Rule   rules = 4;
+  repeated Rule   caveats = 5;
 }
 
 message Fact {
