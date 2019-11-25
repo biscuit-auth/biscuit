@@ -26,6 +26,7 @@ message Block {
   repeated Fact   facts = 3;
   repeated Rule   rules = 4;
   repeated Rule   caveats = 5;
+  optional string context = 6;
 }
 
 message Fact {
@@ -108,6 +109,7 @@ message StringConstraint {
     EQUAL = 2;
     IN = 3;
     NOT_IN = 4;
+    REGEX = 5;
   }
 
   required Kind kind = 1;
@@ -117,6 +119,7 @@ message StringConstraint {
   optional string equal = 4;
   repeated string in_set = 5;
   repeated string not_in_set = 6;
+  optional string regex = 7;
 }
 
 message DateConstraint {
