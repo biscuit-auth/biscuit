@@ -462,7 +462,7 @@ validation for "file2": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat 
 
 ------------------------------
 
-## block rules: test14_block_rules.bc
+## block rules: test15_block_rules.bc
 biscuit2 (1 caveat):
 ```
 Biscuit {
@@ -494,3 +494,28 @@ Block[0] {
 
 validation for "file1": `Ok(())`
 validation for "file2": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "caveat1(0?) <- valid_date(0?) && resource(#ambient, 0?) | " })])))`
+
+------------------------------
+
+## regex_constraint: test16_regex_constraint.bc
+biscuit:
+```
+Biscuit {
+	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "resource_match"]
+	authority:
+Block[0] {
+		symbols: ["resource_match"]
+		facts: [
+			]
+		rules:[
+			]
+		caveats:[
+			resource_match(0?) <- resource(#ambient, 0?) | 0? matches /file[0-9]+.txt/]
+}
+	blocks: [
+		]
+}
+```
+
+validation for "file1": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "resource_match(0?) <- resource(#ambient, 0?) | 0? matches /file[0-9]+.txt/" })])))`
+validation for "file123.txt": `Ok(())`
