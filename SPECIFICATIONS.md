@@ -191,7 +191,7 @@ constraints: lower, larger, lower or equal, larger or equal, equal, set
 inclusion and set exclusion.
 
 A *string* is a suite of UTF-8 characters. It supports the following
-constraints: prefix, suffix, equal, set inclusion, set exclusion.
+constraints: prefix, suffix, equal, set inclusion, set exclusion, regular expression.
 
 A *date* is a 64 bit unsigned integer representing a TAI64. It supports the
 following constraints: before, after.

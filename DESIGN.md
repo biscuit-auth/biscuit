@@ -121,7 +121,7 @@ An *integer* is a signed 64 bits integer. It supports the following constraints:
 lower or equal, larger or equal, equal, set inclusion and set exclusion.
 
 A *string* is a suite of UTF-8 characters. It supports the following constraints: prefix, suffix,
-equak, set inclusion, set exclusion.
+equak, set inclusion, set exclusion, regular expression.
 
 A *date* is a 64 bit unsigned integer representing a TAI64. It supports the following constraints:
 before, after.
@@ -432,7 +432,7 @@ The `set` parameter of `In` and `NotIn` constraints is an array of unique values
 String constraints:
 
 ```
-StrConstraint = Prefix | Suffix | Equal | In | NotIn
+StrConstraint = Prefix | Suffix | Equal | In | NotIn | Regex
 
 Prefix {
   bound: string
@@ -452,6 +452,10 @@ In {
 
 NotIn {
   set: [string]
+}
+
+Regex {
+  bound: string
 }
 ```
 
