@@ -319,6 +319,7 @@ Block {
   index: u32,
   symbols: SymbolTable,
   facts: [Fact],
+  rules: [Rule],
   caveats: [Rule]
 }
 ```
