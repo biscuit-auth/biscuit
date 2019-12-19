@@ -43,86 +43,7 @@ to generate a token that cannot be further attenuated, but is faster to verify.
 The logic language used to design rights, caveats and operation data is a
 variant of datalog that accepts constraints on some data types.
 
-### Caveat language examples
 
-Caveats are written as queries in the logic language, ie rules that must produce
-something to succeed. Here are some examples of writing caveats:
-
-#### Basic token
-
-This first token defines a list of authority facts giving `read` and `write`
-rights on `file1`, `read` on `file2`. The first caveat checks that the operation
-is `read` (and will not allow any other `operation` fact), and then that we have
-the `read` right over the resource.
-The second caveat checks that the resource is `file1`.
-
-```
-authority=[right(#authority, "file1", #read), right(#authority, "file2", #read),
-  right(#authority, "file1", #write)]
-----------
-caveat1 = resource(#ambient, X?), operation(#ambient, #read),
-  right(#authority, X?, #read)  // restrict to read operations
-----------
-caveat2 = resource(#ambient, "file1")  // restrict to file1 resource
-```
-
-The facts with the `authority` tag can only be defined in the `authority` part of
-the token.
-The verifier side provides the `resource` and `operation` facts with the `ambient`
-fact, with information from the request.
-
-If the verifier provided the facts `resource(#ambient, "file2")` and `operation(#ambient, #read)`,
-the rule application of `caveat1` would see `resource(#ambient, "file2"), operation(#ambient, #read), right(#authority, "file2", #read)` with `X = "file2"`, so it would succeed, but `caveat2` would fail
-because it expects `resource(#ambient, "file1")`.
-
-If the verifier provided the facts `resource(#ambient, "file1")` and `operation(#ambient, #read)`,
-both caveats would succeed.
-
-#### Broad authority rules
-
-In this example, we have a token with very large rights, that will be attenuated
-before giving to a user. The authority block can define rules that will generate
-facts depending on ambient data. This helps reduce the size of the token.
-
-```
-authority_rules = [
-  // if there is an ambient resource and we own it, we can read it
-  right(#authority, X?, #read) <- resource(#ambient, X?), owner(#ambient, Y?, X?),
-  // if there is an ambient resource and we own it, we can write to it
-  right(#authority, X?, #write) <- resource(#ambient, X?), owner(#ambient, Y?, X?)
-]
-----------
-caveat1 = right(#authority, X?, Y?), resource(#ambient, X?), operation(#ambient, Y?)
-----------
-caveat2 = resource(#ambient, X?), owner(#alice, X?) // defines a token only usable by alice
-```
-
-These rules will define authority facts depending on ambient data.
-If we had the ambient facts `resource(#ambient, "file1")` and
-`owner(#ambient, #alice, "file1")`, the authority rules will define
-`right(#authority, "file1", #read)` and `right(#authority, "file1", #write)`,
-which will allow caveat 1 and caveat 2 to succeed.
-
-If the owner ambient fact does not match the restriction in `caveat2`, the token
-check will fail.
-
-#### Constraints
-
-We can define queries or rules with constraints on some predicate values, and
-restrict usage based on ambient values:
-
-```
-authority=[right(#authority, "/folder/file1", #read),
-  right(#authority, "/folder/file2", #read), right(#authority, "/folder2/file3", #read)]
-----------
-caveat1 = resource(#ambient, X?), right(#authority, X?, Y?)
-----------
-caveat2 = time(#ambient, T?), T? < 2019-02-05T23:00:00Z // expiration date
-----------
-caveat3 = source_IP(#ambient, X?) | X? in ["1.2.3.4", "5.6.7.8"] // set membership
-----------
-caveat4 = resource(#ambient, X?) | prefix(X?, "/folder/") // prefix operation on strings
-```
 
 ## Semantics
 
@@ -218,6 +139,83 @@ To validate an operation, all of a token's caveats must succeed.
 
 One block can contain one or more caveats.
 
+Here are some examples of writing caveats:
+
+#### Basic token
+
+This first token defines a list of authority facts giving `read` and `write`
+rights on `file1`, `read` on `file2`. The first caveat checks that the operation
+is `read` (and will not allow any other `operation` fact), and then that we have
+the `read` right over the resource.
+The second caveat checks that the resource is `file1`.
+
+```
+authority=[right(#authority, "file1", #read), right(#authority, "file2", #read),
+  right(#authority, "file1", #write)]
+----------
+caveat1 = resource(#ambient, X?), operation(#ambient, #read),
+  right(#authority, X?, #read)  // restrict to read operations
+----------
+caveat2 = resource(#ambient, "file1")  // restrict to file1 resource
+```
+
+The facts with the `authority` tag can only be defined in the `authority` part of
+the token.
+The verifier side provides the `resource` and `operation` facts with the `ambient`
+fact, with information from the request.
+
+If the verifier provided the facts `resource(#ambient, "file2")` and `operation(#ambient, #read)`,
+the rule application of `caveat1` would see `resource(#ambient, "file2"), operation(#ambient, #read), right(#authority, "file2", #read)` with `X = "file2"`, so it would succeed, but `caveat2` would fail
+because it expects `resource(#ambient, "file1")`.
+
+If the verifier provided the facts `resource(#ambient, "file1")` and `operation(#ambient, #read)`,
+both caveats would succeed.
+
+#### Broad authority rules
+
+In this example, we have a token with very large rights, that will be attenuated
+before giving to a user. The authority block can define rules that will generate
+facts depending on ambient data. This helps reduce the size of the token.
+
+```
+authority_rules = [
+  // if there is an ambient resource and we own it, we can read it
+  right(#authority, X?, #read) <- resource(#ambient, X?), owner(#ambient, Y?, X?),
+  // if there is an ambient resource and we own it, we can write to it
+  right(#authority, X?, #write) <- resource(#ambient, X?), owner(#ambient, Y?, X?)
+]
+----------
+caveat1 = right(#authority, X?, Y?), resource(#ambient, X?), operation(#ambient, Y?)
+----------
+caveat2 = resource(#ambient, X?), owner(#alice, X?) // defines a token only usable by alice
+```
+
+These rules will define authority facts depending on ambient data.
+If we had the ambient facts `resource(#ambient, "file1")` and
+`owner(#ambient, #alice, "file1")`, the authority rules will define
+`right(#authority, "file1", #read)` and `right(#authority, "file1", #write)`,
+which will allow caveat 1 and caveat 2 to succeed.
+
+If the owner ambient fact does not match the restriction in `caveat2`, the token
+check will fail.
+
+#### Constraints
+
+We can define queries or rules with constraints on some predicate values, and
+restrict usage based on ambient values:
+
+```
+authority=[right(#authority, "/folder/file1", #read),
+  right(#authority, "/folder/file2", #read), right(#authority, "/folder2/file3", #read)]
+----------
+caveat1 = resource(#ambient, X?), right(#authority, X?, Y?)
+----------
+caveat2 = time(#ambient, T?), T? < 2019-02-05T23:00:00Z // expiration date
+----------
+caveat3 = source_IP(#ambient, X?) | X? in ["1.2.3.4", "5.6.7.8"] // set membership
+----------
+caveat4 = resource(#ambient, X?) | prefix(X?, "/folder/") // prefix operation on strings
+```
 ### Verifier
 
 The verifier provides information on the operation, such as the type of access
