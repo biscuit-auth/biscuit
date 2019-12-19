@@ -327,6 +327,13 @@ message Block {
 }
 ```
 
+### Text format
+
+When transmitted as text, a Biscuit token should be serialized to a
+URLS safe base 64 string. When the context does not indicate that it
+is a Biscuit token, that base 64 string should be prefixed with `biscuit:`
+or `sealed-biscuit:` accordingly.
+
 ### Cryptography
 
 #### Attenuable tokens
