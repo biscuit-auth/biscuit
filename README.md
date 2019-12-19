@@ -34,7 +34,7 @@ How to help us?
 
 Project organisation:
 - `DESIGN.md` holds the current ideas about what Biscuit should be
-- `SPECIFICATIONS.md` is the in progress description of Biscuit, its format and behaviour. The version on master is a placeholder, please see [PR 20](https://github.com/CleverCloud/biscuit/pull/20) for an updated version with comments
+- `SPECIFICATIONS.md` is the in progress description of Biscuit, its format and behaviour
 - `experimentations/` holds code examples for the crypographic schemes and caveat language. `code/biscuit-poc/` contains an experimental version of Biscuit, built to explore API issues
 
 ## License
