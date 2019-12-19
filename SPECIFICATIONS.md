@@ -29,7 +29,8 @@ A Biscuit token is defined as a serie of blocks. The first one, named "authority
 contains rights given to the token holder. The following blocks contain caveats that
 reduce the token's scope, in the form of logic queries that must succeed.
 The holder of a biscuit token can at any time create a new
-token by adding more caveats, but they cannot remove existing caveats.
+token by adding a block with more caveats, but they cannot remove existing blocks
+without invalidating the signature.
 
 The token is protected by public key cryptography operations: the initial creator
 of a token holds a secret key, and any verifier for the token needs only know
@@ -42,7 +43,6 @@ to generate a token that cannot be further attenuated, but is faster to verify.
 
 The logic language used to design rights, caveats and operation data is a
 variant of datalog that accepts constraints on some data types.
-
 
 
 ## Semantics
@@ -125,12 +125,12 @@ Authority facts can only be created in the authority block, either directly
 or from rules, and are represented by the `#authority` symbol as the first
 element of a fact. They hold the initial rights for the token.
 
-Ambient facts can only be created by the verifier, and are represented by the
+Ambient facts can only be provided by the verifier, and are represented by the
 `#ambient` symbol as the first element of a fact. They indicate data related
-to the operation the token is authorizing, and are provided by the verifier.
+to the operation the token is authorizing.
 
-Facts can also be created in blocks other than the authority block, but they
-will only be valid when evaluating this block's caveats.
+Facts can also be created in blocks other than the authority block, but they cannot
+be authority or ambient facts.
 
 ### Caveats
 
@@ -164,12 +164,14 @@ the token.
 The verifier side provides the `resource` and `operation` facts with the `ambient`
 fact, with information from the request.
 
-If the verifier provided the facts `resource(#ambient, "file2")` and `operation(#ambient, #read)`,
-the rule application of `caveat1` would see `resource(#ambient, "file2"), operation(#ambient, #read), right(#authority, "file2", #read)` with `X = "file2"`, so it would succeed, but `caveat2` would fail
+If the verifier provided the facts `resource(#ambient, "file2")` and
+`operation(#ambient, #read)`, the rule application of `caveat1` would see
+`resource(#ambient, "file2"), operation(#ambient, #read), right(#authority, "file2", #read)`
+with `X = "file2"`, so it would succeed, but `caveat2` would fail
 because it expects `resource(#ambient, "file1")`.
 
-If the verifier provided the facts `resource(#ambient, "file1")` and `operation(#ambient, #read)`,
-both caveats would succeed.
+If the verifier provided the facts `resource(#ambient, "file1")` and
+`operation(#ambient, #read)`, both caveats would succeed.
 
 #### Broad authority rules
 
@@ -223,6 +225,60 @@ The verifier provides information on the operation, such as the type of access
 current time, source IP address, revocation lists.
 The verifier can also provide its own caveats.
 
+#### Deserializing the token
+
+The token must first be deserialized according to the protobuf format definition,
+of either a `Biscuit` or `SealedBiscuit`.
+The cryptographic signature must be checked immediately after deserializing. For the
+`Biscuit` with a public key signature, the verifier must check that the public key of the
+authority block is the root public key it is expecting.
+TODO: describe `Biscuit` crypto deserialize process
+
+The blocks can then be deserialized from the `authority` and `blocks` fields.
+
+#### Verification process
+
+The verifier will first create a default symbol table, and will append to that table the values
+from the `symbols` field of each block, starting from the `authority` block and all the
+following blocks, ordered by their index.
+
+The verifier will create a Datalog "world", and add to this world:
+- the facts from the authority block
+- the rules from the authority block
+- for each following block:
+  - add the facts from the block. If it finds an `authority` or `ambient` fact, it stops there and
+  returns an error
+  - add the rules from the block.  If it finds a rule generating `authority` or `ambient` facts, it
+  stops there and returns an error checking that those facts are not `authority` or `ambient` facts
+
+From there, the verifier can start loading ambient data. First, each block contains a `context`
+field that can give some information on the verifier to know which data to load (to avoid
+loading all of the users, groups, resources, etc). This field is a text field with no restriction
+on its format.
+The verifier then adds facts and rules obtained from looking up the context, and provides
+facts and rules with the `ambient` tag to describe the request.
+
+To check caveats, the verifier will:
+- run the Datalog engine ont he facts and rules that were loaded
+- create an error list
+- for each verifier caveat (caveat provided on the verifier side), check the caveat. If it fails,
+add an error to the error list
+- for each block:
+  - for each caveat, check the caveat. If it fails, add an error to the error list
+- if the error list is empty, verification succeeded, if it is not, return the error list
+
+#### Queries
+
+The verifier can also run queries over the loaded data. A query is a datalog rule,
+and the query's result are the produced facts.
+
+TODO: describe error codes
+
+### Appending
+
+#### deserializing
+TODO: same as the verifier, but we do not need to know the root key
+
 ## Format
 
 The current version of the format is in [schema.proto](https://github.com/CleverCloud/biscuit/blob/master/schema.proto)
@@ -267,6 +323,7 @@ message Block {
   repeated Fact   facts = 3;
   repeated Rule   rules = 4;
   repeated Rule   caveats = 5;
+  optional string context = 6;
 }
 ```
 
@@ -354,7 +411,7 @@ A sealed token contains the same kind of block as regular tokens,
 but it cannot be attenuated offline, and can only be verified by
 knowing the secret used to create it.
 
-The signature is the HMAC-SHA256 hashof the secret key and the
+The signature is the HMAC-SHA256 hash of the secret key and the
 concatenation of all the blocks.
 
 ### Blocks
@@ -368,6 +425,7 @@ message Block {
   repeated Fact   facts = 3;
   repeated Rule   rules = 4;
   repeated Rule   caveats = 5;
+  optional string context = 6;
 }
 ```
 
@@ -376,31 +434,9 @@ is the authority block.
 
 Each block can provide facts either from its facts list, or generate
 them with its rules list.
-The authority block contains facts marked with the `#authority`
+The authority block can contain facts marked with the `#authority`
 symbol as first id, and rules that generate facts marked with
-the `#authority` symbol. The authority facts are usable in the
-validation of other blocks, while facts generated by any other block
-are only used in their own validation.
-
-For each block, there is a list of caveats, which are rules that must
-produce something to succeed.
-
-That means that when using the Datalog engine, we do the following:
-- add the authority facts and rules
-- add the ambient facts and rules
-- run the engine until all the facts are produced
-- test the authority caveats
-- test the caveats provided by the verifier
-- freeze the current state
-- for each block:
-  - start from the frozen state
-  - add the block's facts
-  - add the block's rules
-  - run the engine
-  - test all of the block's caveats
-
-We run the validation for the entire token and accumulate all the errors
-in a format usable for pretty printing.
+the `#authority` symbol.
 
 ### Symbol table
 
@@ -437,6 +473,11 @@ block in order, the block's symbols.
 It is important to verify that different blocks do not contain the same symbol in
 their list.
 
+## Test cases
+
+We provide sample tokens and the expected result of their verification at
+[https://github.com/CleverCloud/biscuit/tree/master/samples](https://github.com/CleverCloud/biscuit/tree/master/samples)
+
 ## References
 
 ProtoBuf: https://developers.google.com/protocol-buffers/
@@ -445,6 +486,4 @@ Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdata
 MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
 Aggregated Gamma Signatures: "Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao" https://eprint.iacr.org/2018/414.pdf
 Ristretto: "Ristretto: prime order elliptic curve groups with non-malleable encodings" https://ristretto.group
-
-## Test cases
 
