@@ -1,7 +1,7 @@
 # Biscuit samples and expected results
 
-root secret key: 8a5234381a6fb0cfe5e734c647f4829d9de1707665225b22410d3b85a3f98302
-root public key: da905388864659eb785877a319fbc42c48e2f8a40af0c5baea0ef8ff7c795253
+root secret key: 79a33df5e9912e3fa1b7b7d87275c58dc7e8348f45ae783a5aaaf3bceb6bb10e
+root public key: 529e780f28d9181c968b0eab9977ed8494a27a4544c3adc1910f41bb3dc36958
 
 ------------------------------
 
@@ -9,33 +9,33 @@ root public key: da905388864659eb785877a319fbc42c48e2f8a40af0c5baea0ef8ff7c79525
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
-	authority:
-Block[0] {
-		symbols: ["read", "write"]
-		facts: [
-			right(#authority, "file1", #read),
-			right(#authority, "file2", #read),
-			right(#authority, "file1", #write)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
+    authority: Block[0] {
+            symbols: ["read", "write"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read),
+                right(#authority, "file2", #read),
+                right(#authority, "file1", #write)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | 
+            ]
+        }
+    ]
 }
 ```
 
-validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | " })])))`
+validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 1, caveat_id: 0, rule: "caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | " })])))`
 
 ------------------------------
 
@@ -43,27 +43,27 @@ validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "caveat1"]
-	authority:
-Block[0] {
-		symbols: ["read"]
-		facts: [
-			right(#authority, "file1", #read)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "caveat1"]
+    authority: Block[0] {
+            symbols: ["read"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | 
+            ]
+        }
+    ]
 }
 ```
 
@@ -75,29 +75,29 @@ validation: `Err(Format(UnknownPublicKey))`
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
-	authority:
-Block[0] {
-		symbols: ["read", "write"]
-		facts: [
-			right(#authority, "file1", #read),
-			right(#authority, "file2", #read),
-			right(#authority, "file1", #write)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
+    authority: Block[0] {
+            symbols: ["read", "write"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read),
+                right(#authority, "file2", #read),
+                right(#authority, "file1", #write)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | 
+            ]
+        }
+    ]
 }
 ```
 
@@ -109,29 +109,29 @@ validation: `Err(Format(DeserializationError("deserialization error: invalid siz
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
-	authority:
-Block[0] {
-		symbols: ["read", "write"]
-		facts: [
-			right(#authority, "file1", #read),
-			right(#authority, "file2", #read),
-			right(#authority, "file1", #write)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
+    authority: Block[0] {
+            symbols: ["read", "write"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read),
+                right(#authority, "file2", #read),
+                right(#authority, "file1", #write)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | 
+            ]
+        }
+    ]
 }
 ```
 
@@ -143,29 +143,29 @@ validation: `Err(Format(Signature(InvalidSignature)))`
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
-	authority:
-Block[0] {
-		symbols: ["read", "write"]
-		facts: [
-			right(#authority, "file1", #read),
-			right(#authority, "file2", #read),
-			right(#authority, "file1", #write)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
+    authority: Block[0] {
+            symbols: ["read", "write"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read),
+                right(#authority, "file2", #read),
+                right(#authority, "file1", #write)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | 
+            ]
+        }
+    ]
 }
 ```
 
@@ -177,29 +177,29 @@ validation: `Err(Format(Signature(InvalidSignature)))`
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
-	authority:
-Block[0] {
-		symbols: ["read", "write"]
-		facts: [
-			right(#authority, "file1", #read),
-			right(#authority, "file2", #read),
-			right(#authority, "file1", #write)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
+    authority: Block[0] {
+            symbols: ["read", "write"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read),
+                right(#authority, "file2", #read),
+                right(#authority, "file1", #write)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                caveat1(0?) <- resource(#ambient, 0?) && operation(#ambient, #read) && right(#authority, 0?, #read) | 
+            ]
+        }
+    ]
 }
 ```
 
@@ -207,65 +207,33 @@ validation: `Err(InvalidBlockIndex(InvalidBlockIndex { expected: 1, found: 2 }))
 
 ------------------------------
 
-## missing authority tag: test7_missing_authority_tag.bc
+## invalid block fact with authority tag: test7_invalid_block_fact_authority.bc
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1"]
-	authority:
-Block[0] {
-		symbols: ["read", "write"]
-		facts: [
-			right(#authority, "file1", #read),
-			right(#authority, "file2", #read),
-			right("file1", #write)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- operation(#ambient, #read) | ]
-}]
-}
-```
-
-validation: `Err(FailedLogic(InvalidAuthorityFact("right(\"file1\", #write)")))`
-
-------------------------------
-
-## invalid block fact with authority tag: test8_invalid_block_fact_authority.bc
-biscuit2 (1 caveat):
-```
-Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "caveat1", "write"]
-	authority:
-Block[0] {
-		symbols: ["read"]
-		facts: [
-			right(#authority, "file1", #read)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1", "write"]
-		facts: [
-			right(#authority, "file1", #write)]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- operation(#ambient, #read) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "caveat1", "write"]
+    authority: Block[0] {
+            symbols: ["read"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1", "write"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #write)
+            ]
+            rules: []
+            caveats: [
+                caveat1(0?) <- operation(#ambient, #read) | 
+            ]
+        }
+    ]
 }
 ```
 
@@ -273,31 +241,33 @@ validation: `Err(FailedLogic(InvalidBlockFact(0, "right(#authority, \"file1\", #
 
 ------------------------------
 
-## invalid block fact with ambient tag: test9_invalid_block_fact_ambient.bc
+## invalid block fact with ambient tag: test8_invalid_block_fact_ambient.bc
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "caveat1", "write"]
-	authority:
-Block[0] {
-		symbols: ["read"]
-		facts: [
-			right(#authority, "file1", #read)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1", "write"]
-		facts: [
-			right(#ambient, "file1", #write)]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- operation(#ambient, #read) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "caveat1", "write"]
+    authority: Block[0] {
+            symbols: ["read"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1", "write"]
+            context: ""
+            facts: [
+                right(#ambient, "file1", #write)
+            ]
+            rules: []
+            caveats: [
+                caveat1(0?) <- operation(#ambient, #read) | 
+            ]
+        }
+    ]
 }
 ```
 
@@ -305,107 +275,64 @@ validation: `Err(FailedLogic(InvalidBlockFact(0, "right(#ambient, \"file1\", #wr
 
 ------------------------------
 
-## separate block validation (facts from one block should not be usable in another one): test10_separate_block_validation.bc
-biscuit3:
-```
-Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "test", "write", "caveat1"]
-	authority:
-Block[0] {
-		symbols: []
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["test", "write"]
-		facts: [
-			test(#write)]
-		rules:[
-			]
-		caveats:[
-			]
-},
-	Block[2] {
-		symbols: ["caveat1"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?) <- test(0?) | ]
-}]
-}
-```
-
-validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 1, caveat_id: 0, rule: "caveat1(0?) <- test(0?) | " })])))`
-
-------------------------------
-
-## expired token: test11_expired_token.bc
+## expired token: test9_expired_token.bc
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "caveat1", "expiration", "time"]
-	authority:
-Block[0] {
-		symbols: []
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1", "expiration", "time"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1("file1") <- resource(#ambient, "file1") | ,
-			expiration(0?) <- time(#ambient, 0?) | 0? <= 1545264000]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "caveat1", "expiration", "time"]
+    authority: Block[0] {
+            symbols: []
+            context: ""
+            facts: []
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1", "expiration", "time"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                caveat1("file1") <- resource(#ambient, "file1") | ,
+                expiration(0?) <- time(#ambient, 0?) | 0? <= "2018-12-20T00:00:00+00:00"
+            ]
+        }
+    ]
 }
 ```
 
-validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 1, rule: "expiration(0?) <- time(#ambient, 0?) | 0? <= 1545264000" })])))`
+validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 1, caveat_id: 1, rule: "expiration(0?) <- time(#ambient, 0?) | 0? <= \"2018-12-20T00:00:00+00:00\"" })])))`
 
 ------------------------------
 
-## authority rules: test12_authority_rules.bc
+## authority rules: test10_authority_rules.bc
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "owner", "write", "caveat1", "caveat2", "alice"]
-	authority:
-Block[0] {
-		symbols: ["read", "owner", "write"]
-		facts: [
-			]
-		rules:[
-			right(#authority, 1?, #read) <- resource(#ambient, 1?) && owner(#ambient, 0?, 1?) | ,
-			right(#authority, 1?, #write) <- resource(#ambient, 1?) && owner(#ambient, 0?, 1?) | ]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["caveat1", "caveat2", "alice"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1(0?, 1?) <- right(#authority, 0?, 1?) && resource(#ambient, 0?) && operation(#ambient, 1?) | ,
-			caveat2(0?) <- resource(#ambient, 0?) && owner(#ambient, #alice, 0?) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "owner", "write", "caveat1", "caveat2", "alice"]
+    authority: Block[0] {
+            symbols: ["read", "owner", "write"]
+            context: ""
+            facts: []
+            rules: [
+                right(#authority, 1?, #read) <- resource(#ambient, 1?) && owner(#ambient, 0?, 1?) | ,
+                right(#authority, 1?, #write) <- resource(#ambient, 1?) && owner(#ambient, 0?, 1?) | 
+            ]
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["caveat1", "caveat2", "alice"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                caveat1(0?, 1?) <- right(#authority, 0?, 1?) && resource(#ambient, 0?) && operation(#ambient, 1?) | ,
+                caveat2(0?) <- resource(#ambient, 0?) && owner(#ambient, #alice, 0?) | 
+            ]
+        }
+    ]
 }
 ```
 
@@ -413,47 +340,47 @@ validation: `Ok(())`
 
 ------------------------------
 
-## verifier authority caveats: test13_verifier_authority_caveats.bc
+## verifier authority caveats: test11_verifier_authority_caveats.bc
 biscuit:
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read"]
-	authority:
-Block[0] {
-		symbols: ["read"]
-		facts: [
-			right(#authority, "file1", #read)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read"]
+    authority: Block[0] {
+            symbols: ["read"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        
+    ]
 }
 ```
 
-validation: `Err(FailedLogic(FailedCaveats([Verifier(FailedVerifierCaveat { block_id: 0, caveat_id: 0, rule: "caveat1(0?, 1?) <- right(#authority, 0?, 1?) && resource(#ambient, 0?) && operation(#ambient, 1?) | " })])))`
+validation: `Err(FailedLogic(FailedCaveats([Verifier(FailedVerifierCaveat { caveat_id: 0, rule: "caveat1(0?, 1?) <- right(#authority, 0?, 1?) && resource(#ambient, 0?) && operation(#ambient, 1?) | " })])))`
 
 ------------------------------
 
-## authority caveats: test14_authority_caveats.bc
+## authority caveats: test12_authority_caveats.bc
 biscuit:
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "caveat1"]
-	authority:
-Block[0] {
-		symbols: ["caveat1"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			caveat1("file1") <- resource(#ambient, "file1") | ]
-}
-	blocks: [
-		]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "caveat1"]
+    authority: Block[0] {
+            symbols: ["caveat1"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                caveat1("file1") <- resource(#ambient, "file1") | 
+            ]
+        }
+    blocks: [
+        
+    ]
 }
 ```
 
@@ -462,58 +389,60 @@ validation for "file2": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat 
 
 ------------------------------
 
-## block rules: test15_block_rules.bc
+## block rules: test13_block_rules.bc
 biscuit2 (1 caveat):
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "valid_date", "time", "caveat1"]
-	authority:
-Block[0] {
-		symbols: ["read"]
-		facts: [
-			right(#authority, "file1", #read),
-			right(#authority, "file2", #read)]
-		rules:[
-			]
-		caveats:[
-			]
-}
-	blocks: [
-		Block[1] {
-		symbols: ["valid_date", "time", "caveat1"]
-		facts: [
-			]
-		rules:[
-			valid_date("file1") <- time(#ambient, 0?) && resource(#ambient, "file1") | 0? <= 1924952399,
-			valid_date(1?) <- time(#ambient, 0?) && resource(#ambient, 1?) | 0? <= 946645199 && 1? not in {"file1"}]
-		caveats:[
-			caveat1(0?) <- valid_date(0?) && resource(#ambient, 0?) | ]
-}]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "valid_date", "time", "caveat1"]
+    authority: Block[0] {
+            symbols: ["read"]
+            context: ""
+            facts: [
+                right(#authority, "file1", #read),
+                right(#authority, "file2", #read)
+            ]
+            rules: []
+            caveats: []
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["valid_date", "time", "caveat1"]
+            context: ""
+            facts: []
+            rules: [
+                valid_date("file1") <- time(#ambient, 0?) && resource(#ambient, "file1") | 0? <= "2030-12-31T12:59:59+00:00",
+                valid_date(1?) <- time(#ambient, 0?) && resource(#ambient, 1?) | 0? <= "1999-12-31T12:59:59+00:00" && 1? not in {"file1"}
+            ]
+            caveats: [
+                caveat1(0?) <- valid_date(0?) && resource(#ambient, 0?) | 
+            ]
+        }
+    ]
 }
 ```
 
 validation for "file1": `Ok(())`
-validation for "file2": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "caveat1(0?) <- valid_date(0?) && resource(#ambient, 0?) | " })])))`
+validation for "file2": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 1, caveat_id: 0, rule: "caveat1(0?) <- valid_date(0?) && resource(#ambient, 0?) | " })])))`
 
 ------------------------------
 
-## regex_constraint: test16_regex_constraint.bc
+## regex_constraint: test14_regex_constraint.bc
 biscuit:
 ```
 Biscuit {
-	symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "resource_match"]
-	authority:
-Block[0] {
-		symbols: ["resource_match"]
-		facts: [
-			]
-		rules:[
-			]
-		caveats:[
-			resource_match(0?) <- resource(#ambient, 0?) | 0? matches /file[0-9]+.txt/]
-}
-	blocks: [
-		]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "resource_match"]
+    authority: Block[0] {
+            symbols: ["resource_match"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                resource_match(0?) <- resource(#ambient, 0?) | 0? matches /file[0-9]+.txt/
+            ]
+        }
+    blocks: [
+        
+    ]
 }
 ```
 
