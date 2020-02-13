@@ -575,3 +575,38 @@ World {
   rules: []
 }
 validation: `Ok(())`
+
+------------------------------
+
+## caveat head name should be independent from fact names: test16_caveat_head_name.bc
+biscuit: Biscuit {
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "caveat1", "test", "hello"]
+    authority: Block[0] {
+            symbols: ["caveat1", "test", "hello"]
+            context: ""
+            facts: []
+            rules: []
+            caveats: [
+                *caveat1(#test) <- !resource(#ambient, #hello)
+            ]
+        }
+    blocks: [
+        Block[1] {
+            symbols: []
+            context: ""
+            facts: [
+                !caveat1(#test)
+            ]
+            rules: []
+            caveats: []
+        }
+    ]
+}
+verifier world:
+World {
+  facts: [
+    "!caveat1(#test)",
+]
+  rules: []
+}
+validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "*caveat1(#test) <- !resource(#ambient, #hello)" })])))`
