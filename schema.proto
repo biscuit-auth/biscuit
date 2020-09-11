@@ -25,7 +25,7 @@ message Block {
   repeated string symbols = 2;
   repeated Fact   facts = 3;
   repeated Rule   rules = 4;
-  repeated Rule   caveats = 5;
+  repeated Caveat caveats = 5;
   optional string context = 6;
 }
 
@@ -37,6 +37,10 @@ message Rule {
   required Predicate head = 1;
   repeated Predicate body = 2;
   repeated Constraint constraints = 3;
+}
+
+message Caveat {
+  repeated Rule queries = 1;
 }
 
 message Predicate {
