@@ -76,7 +76,7 @@ the caveat more precise.
 ### Terminology
 
 A Biscuit Datalog program contains *facts* and *rules*, which are made of *predicates*
-over the following types: *symbol*, *variable*, *integer*, *string* and *date*.
+over the following types: *symbol*, *variable*, *integer*, *string*, *byte array* and *date*.
 While Biscuit does not use a textual representation for storage, we will use
 one for this specification and for pretty printing of caveats.
 A *predicate* has the form `Predicate(v0, v1, ..., vn)`.
@@ -99,7 +99,8 @@ We will represent the various types as follows:
 - variable: `v?`
 - integer: `12`
 - string: `"hello"`
-- date in RFC 3339 format
+- byte array: `hex:01A2`
+- date in RFC 3339 format: `1985-04-12T23:20:50.52Z`
 
 As an example, assuming we have the following facts: `parent(#a, #b)`, `parent(#b, #c)`, `#parent(#c, #d)`.
 If we apply the rule `grandparent(x?, z?) <- parent(x?, y?), parent(y? z?)`, we will
@@ -121,7 +122,10 @@ An *integer* is a signed 64 bits integer. It supports the following constraints:
 lower or equal, larger or equal, equal, set inclusion and set exclusion.
 
 A *string* is a suite of UTF-8 characters. It supports the following constraints: prefix, suffix,
-equak, set inclusion, set exclusion, regular expression.
+equal, set inclusion, set exclusion, regular expression.
+
+A *byte array* is a suite of bytes. It supports the following constraints: equal, set inclusion,
+set exclusion.
 
 A *date* is a 64 bit unsigned integer representing a TAI64. It supports the following constraints:
 before, after.
@@ -348,6 +352,7 @@ ID = Symbol | Variable | Integer | Str | Date
 Variable = u32
 Integer = i64
 Str = string
+Bytes = [u8]
 Date = date
 ```
 
@@ -456,6 +461,24 @@ NotIn {
 
 Regex {
   bound: string
+}
+```
+
+Bytes constraints:
+
+```
+BytesConstraint = Equal | In | NotIn
+
+Equal {
+  bound: string
+}
+
+In {
+  set: [string]
+}
+
+NotIn {
+  set: [string]
 }
 ```
 

@@ -61,9 +61,9 @@ simplifies its implementation and makes the caveat more precise.
 
 A Biscuit Datalog program contains *facts* and *rules*, which are made of
 *predicates* over the following types: *symbol*, *variable*, *integer*,
-*string* and *date*. While Biscuit does not use a textual representation for
-storage, we will use one for this specification and for pretty printing of
-caveats.
+*string*, *byte array* and *date*. While Biscuit does not use a textual
+representation for storage, we will use one for this specification and
+for pretty printing of caveats.
 A *predicate* has the form `Predicate(v0, v1, ..., vn)`.
 A *fact* is a *predicate* that does not contain any *variable*.
 A *rule* has the form:
@@ -84,7 +84,8 @@ We will represent the various types as follows:
 - variable: `$v`
 - integer: `12`
 - string: `"hello"`
-- date in RFC 3339 format
+- byte array: `hex:01A2`
+- date in RFC 3339 format: `1985-04-12T23:20:50.52Z`
 
 As an example, assuming we have the following facts: `parent(#a, #b)`,
 `parent(#b, #c)`, `#parent(#c, #d)`. If we apply the rule
@@ -113,6 +114,9 @@ inclusion and set exclusion.
 
 A *string* is a suite of UTF-8 characters. It supports the following
 constraints: prefix, suffix, equal, set inclusion, set exclusion, regular expression.
+
+A *byte array* is a suite of bytes. It supports the following
+constraints: equal, set inclusion, set exclusion.
 
 A *date* is a 64 bit unsigned integer representing a TAI64. It supports the
 following constraints: before, after.
