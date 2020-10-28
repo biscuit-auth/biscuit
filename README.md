@@ -1,4 +1,4 @@
-# Biscuit authentication token
+# Biscuit authentication/authorization token
 
 [![Join the chat at https://gitter.im/CleverCloud/biscuit](https://badges.gitter.im/CleverCloud/biscuit.svg)](https://gitter.im/CleverCloud/biscuit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -6,10 +6,10 @@
 
 ## Goals
 
-Biscuit is a (in development) authentication token for microservices
+Biscuit is an authentication and authorization token for microservices
 architectures with the following properties:
 
-- distributed authorization: any node could validate the token only with public
+- distributed authentication: any node could validate the token only with public
   information;
 - offline delegation: a new, valid token can be created from another one by
   attenuating its rights, by its holder, without communicating with anyone;
