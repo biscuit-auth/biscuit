@@ -159,6 +159,9 @@ or by the verifier, they cannot be added by attenuating the token.
 
 # Example tokens
 
+Let's make an example, from an S3 like application, on which we can store and
+retrieve files, with users having access to "buckets" holding a list of files.
+
 Here is a first example token, that will hold a user id. This token only
 contains one block, that has been signed with the root private key. The
 verifier's side knows the root public key and, upon receiving the request,
