@@ -6,7 +6,7 @@
 
 ## Goals
 
-Biscuit is a (in development) authentication token for microservices
+Biscuit is an authentication and authorization token for microservices
 architectures with the following properties:
 
 - distributed authorization: any node could validate the token only with public
@@ -32,7 +32,7 @@ You can follow the next steps on the [roadmap](https://github.com/CleverCloud/bi
 
 Current status:
 - the credential language, cryptographic primitives and serialization format are done
-- we have implementations in [Rust](https://github.com/clevercloud/biscuit-rust), [Java](https://github.com/clevercloud/biscuit-java) and [Web Assembly](https://github.com/clevercloud/biscuit-wasm) (based on the Rust version)
+- we have implementations in [Rust](https://github.com/clevercloud/biscuit-rust), [Java](https://github.com/clevercloud/biscuit-java), [Go](https://github.com/flynn/biscuit-go) and [Web Assembly](https://github.com/clevercloud/biscuit-wasm) (based on the Rust version)
 - Currently deploying to real world use cases such as [Apache Pulsar](https://github.com/clevercloud/biscuit-pulsar)
 - looking for an audit of the token's design, cryptographic primitives and implementations
 
@@ -43,8 +43,9 @@ Current status:
 
 ## Project organisation
 
+- `SUMMARY.md`: introduction to Biscuit from a user's perspective
 - `DESIGN.md` holds the current ideas about what Biscuit should be
-- `SPECIFICATIONS.md` is the in progress description of Biscuit, its format and behaviour
+- `SPECIFICATIONS.md` is the description of Biscuit, its format and behaviour
 - `experimentations/` holds code examples for the crypographic schemes and caveat language. `code/biscuit-poc/` contains an experimental version of Biscuit, built to explore API issues
 
 ## License
