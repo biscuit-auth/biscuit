@@ -152,7 +152,7 @@ In that caveat, the resource fact must have `#ambient` as ts first element.
 The `#` character indicates that it is of "symbol" type. There are two special
 symbols that can appear in facts:
 -`#ambient`: facts that are provided by the verifier, and that depend on the request, like which resource we want to access(file path, REST endpoint, etc), operation(read, write...), current date and time, source IP address, HTTP headers...
-- `#authority`: facts defined by the token's original creator or the verifier, that indicates the basic rights of the token. Every new attenation of the token will reduce those rights by adding caveats
+- `#authority`: facts defined by the token's original creator or the verifier, that indicates the basic rights of the token. Every new attenuation of the token will reduce those rights by adding caveats
 
 `#ambient` and `#authority` tokens can only be provided by the token's origin
 or by the verifier, they cannot be added by attenuating the token.
