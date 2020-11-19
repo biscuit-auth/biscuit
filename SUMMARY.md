@@ -47,14 +47,14 @@ This could be seen as a table in a relational database:
 We can then define rules to create new facts, like this one:
 
 ```
-*grandparent($0, $2) <- parent($0, $1), parent($1, $2)
+*grandparent($grandparent, $child) <- parent($grandparent, $parent), parent($parent, $child)
 ```
 
 Applying this rule will look at combinations of the `parent` facts
 as defined on the right side of the arrow (the "body" of the rule),
-and try to match them to the variables (`$0`, `$1`, `$2`):
-- `parent("Alice", "Bob"), parent("Bob", "Charles")` matches because we can replace `$0` with `"Alice"`, `$1` with `"Bob"`, `$2` with `"Charles"`
-- `parent("Alice", "Bob"), parent("Charles", "Denise")` does not match because we would get different values for the `$1` variable
+and try to match them to the variables (`$grandparent`, `$parent`, `$child`):
+- `parent("Alice", "Bob"), parent("Bob", "Charles")` matches because we can replace `$grandparent` with `"Alice"`, `$parent` with `"Bob"`, `$child` with `"Charles"`
+- `parent("Alice", "Bob"), parent("Charles", "Denise")` does not match because we would get different values for the `$parent` variable
 
 For each matching combination of facts in the body, we will then
 generate a fact, as defined on the left side of the arrow, the "head"
@@ -125,7 +125,7 @@ It has the following base types (for elements inside of a fact):
 
 Rules can have constraints on fact elements. The following rule will generate
 a fact only if there's a `file` fact and its value starts with `/folder/`:
-`*in_folder($0) <- file($0) @ $0 matches /folder/*`
+`*in_folder($path) <- file($path) @ $path matches /folder/*`
 
 Here are the possible constraints:
 - integer: <, >, <=, >=, ==, is in set, is not in set
@@ -145,7 +145,7 @@ resource, and verifies that its filename matches a specific pattern,
 using a string constraint:
 
 ```
-*resource_match($0) <- resource(#ambient, $0) @ $0 matches /file[0-9]+.txt/
+*resource_match($path) <- resource(#ambient, $path) @ $path matches /file[0-9]+.txt/
 ```
 
 In that caveat, the resource fact must have `#ambient` as ts first element.
@@ -209,15 +209,10 @@ the current ressource, or extracting the user id from the token with a query.
 The verifier can also load its own rules, like creating one specifying rights
 if we own a specific folder:
 ```
-right(#authority, $0, $1, $2) <- resource(#ambient, $0, $1), operation(#ambient, $2),
-    user_id(#authority, $3), owner(#authority, $3, $0)`
+right(#authority, $bucket, $path, $operation) <- resource(#ambient, $bucket, $path), operation(#ambient, $operation),
+    user_id(#authority, $id), owner(#authority, $id, $bucket)`
 ```
-This rule will generate a `right` fact if it finds data matching the following
-variables:
-- `$0`: bucket
-- `$1`: file path
-- `$2`: operation
-- `$3`: user id
+This rule will generate a `right` fact if it finds data matching the variables.
 
 We end up with a system with the following facts:
 
@@ -236,7 +231,7 @@ At last, the verifier provides a caveat to check that we have the rights for thi
 operation:
 
 ```
-caveat1() <- right(#authority, $0, $1, $2), resource(#ambient, $0, $1), operation(#ambient, $2)
+caveat1() <- right(#authority, $bucket, $path, $operation), resource(#ambient, $bucket, $path), operation(#ambient, $operation)
 ```
 
 Here we can find matching facts, so the request succeeds. If the request was
