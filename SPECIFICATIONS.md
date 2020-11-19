@@ -81,7 +81,7 @@ body's predicates, we generate a new *fact* corresponding to the head (with the
 variables bound to the corresponding values).
 We will represent the various types as follows:
 - symbol: `#a`
-- variable: `$v`
+- variable: `$variable` (the variable name is converted to an integer id through the symbol table)
 - integer: `12`
 - string: `"hello"`
 - byte array: `hex:01A2`
@@ -89,7 +89,7 @@ We will represent the various types as follows:
 
 As an example, assuming we have the following facts: `parent(#a, #b)`,
 `parent(#b, #c)`, `#parent(#c, #d)`. If we apply the rule
-`grandparent(x?, z?) <- parent(x?, y?), parent(y? z?)`, we will try to replace
+`grandparent($x, $z) <- parent($x, $y), parent($y, $z)`, we will try to replace
 the predicates in the body by matching facts. We will get the following
 combinations:
 - `grandparent(#a, #c) <- parent(#a, #b), parent(#b, #c)`
