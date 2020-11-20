@@ -126,7 +126,6 @@ ancestor("Alice", "Denise")
 
 Interactions with a Datalog program are done through queries: **a query contains
 a rule** that we apply over the system, and **it returns the generated facts**.
->>>>>>> 94e52e1... Typo fixes & clarity improvements
 
 # Datalog in Biscuit
 
@@ -185,7 +184,6 @@ There are two special symbols that can appear in facts:
 
 -`#ambient`: facts that are _provided by the verifier_, and that depend on the **request**, like which resource we want to access(file path, REST endpoint, etc), operation(read, write...), current date and time, source IP address, HTTP headers...
 - `#authority`: facts _defined by the token's original creator_ or _the verifier_, that indicates the basic rights of the **token**. Every new attenation of the token will reduce those rights by adding caveats
->>>>>>> 94e52e1... Typo fixes & clarity improvements
 
 `#ambient` and `#authority` tokens can only be provided by the token's origin
 or by the verifier, **they cannot be added by attenuating the token**.
@@ -218,9 +216,23 @@ Biscuit {
 }
 ```
 
+Let's unpack what's displayed here:
+
+ - `symbols` carries a list of symbols used in the biscuit.
+ - `authority` carries information provided by the token creator. It gives the initial scope of the bicuit.
+ - `blocks` carries a list of blocks, which can refine the scope of the macaroon.
+
+Here, `authority` provides the initial block, which can be refined in subsequent blocks.
+
 A block comes with new symbols it adds to the system (there's a default symbol
 table that already contains values like `#authority` or `#operation`). It can
-contain facts, rules and caveats.
+contain facts, rules and caveats. A block contains:
+
+ - `symbols`:  a block can introduce new symbols: these symbols are available in the current block, _and the following blocks_. **It is not possible to re-declare an existing symbol**.
+ - `context`: free form text used either for documentation purpose, or to give a hind about which facts should be retrieved from DB
+ - `facts`: each block can define new facts (but only `authority` can define facts mentioning `#authority`)
+ - `rules` each block can define new rules (but only `authority` can define rules deriving facts mentioning `#authority`)
+ - `caveats` each block can define new caveats (rules that need to match in order to make the biscuit valid)
 
 Let's assume the user is sending this token with a `PUT /bucket_5678/folder1/hello.txt` HTTP
 request. The verifier would then load the token's facts and rules, along with
