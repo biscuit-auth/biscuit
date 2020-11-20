@@ -80,8 +80,8 @@ A Fact can be created from multiple rules, and a rule can use facts
 generated from previous applications. If we added the following rules:
 
 ```
-*ancestor(0?, 1?) <- parent(0?, 1?)
-*ancestor(0?, 2?) <- parent(0?, 1?), ancestor(1?, 2?)
+*ancestor($parent, $child) <- parent($parent, $child)
+*ancestor($parent, $descendant) <- parent($parent, $child), ancestor($child, $descendant)
 ```
 
 It would generate the following facts from the first one:
@@ -109,7 +109,7 @@ ancestor("Bob", "Denise")
 Then we reapply the second rule:
 - `ancestor("Alice", "Denise") <- parent("Alice", "Bob"), ancestor("Bob", "Denise")`
 
-Interactions with a Datalog program are done throug queries: a query contains
+Interactions with a Datalog program are done through queries: a query contains
 a rule that we apply over the system, and it returns the generated facts.
 
 # Datalog in Biscuit
@@ -148,10 +148,11 @@ using a string constraint:
 *resource_match($path) <- resource(#ambient, $path) @ $path matches /file[0-9]+.txt/
 ```
 
-In that caveat, the resource fact must have `#ambient` as ts first element.
+In that caveat, the resource fact must have `#ambient` as its first element.
 The `#` character indicates that it is of "symbol" type. There are two special
 symbols that can appear in facts:
--`#ambient`: facts that are provided by the verifier, and that depend on the request, like which resource we want to access(file path, REST endpoint, etc), operation(read, write...), current date and time, source IP address, HTTP headers...
+
+- `#ambient`: facts that are provided by the verifier, and that depend on the request, like which resource we want to access (file path, REST endpoint, etc), operation (read, write...), current date and time, source IP address, HTTP headers...
 - `#authority`: facts defined by the token's original creator or the verifier, that indicates the basic rights of the token. Every new attenation of the token will reduce those rights by adding caveats
 
 `#ambient` and `#authority` tokens can only be provided by the token's origin
@@ -165,7 +166,7 @@ retrieve files, with users having access to "buckets" holding a list of files.
 Here is a first example token, that will hold a user id. This token only
 contains one block, that has been signed with the root private key. The
 verifier's side knows the root public key and, upon receiving the request,
-will deserialie the token and verify its signature, thus authenticating
+will deserialize the token and verify its signature, thus authenticating
 the token.
 
 ```
@@ -295,7 +296,7 @@ Biscuit {
 ```
 
 With that token, if the holder tried to do a `PUT /bucket_5678/folder1/hello.txt`
-request, we ould end up with the following facts:
+request, we would end up with the following facts:
 
 ```
 user_id(#authority, "user_1234")
