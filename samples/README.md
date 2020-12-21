@@ -38,12 +38,15 @@ Biscuit {
 verifier world:
 World {
   facts: [
-    "right(#authority, \"file2\", #read)",
-    "right(#authority, \"file1\", #write)",
-    "right(#authority, \"file1\", #read)",
     "resource(#ambient, \"file1\")",
+    "right(#authority, \"file1\", #read)",
+    "right(#authority, \"file1\", #write)",
+    "right(#authority, \"file2\", #read)",
 ]
   rules: []
+  caveats: [
+    "Block[1][0]: *caveat1($0) <- resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)",
+]
 }
 validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 1, caveat_id: 0, rule: "*caveat1($0) <- resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)" })])))`
 
@@ -221,7 +224,7 @@ validation: `Err(InvalidBlockIndex(InvalidBlockIndex { expected: 1, found: 2 }))
 biscuit2 (1 caveat):
 ```
 Biscuit {
-    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "caveat1", "0", "write"]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read"]
             context: ""
@@ -233,7 +236,7 @@ Biscuit {
         }
     blocks: [
         Block[1] {
-            symbols: ["caveat1", "0", "write"]
+            symbols: ["write", "caveat1", "0"]
             context: ""
             facts: [
                 right(#authority, "file1", #write)
@@ -255,7 +258,7 @@ validation: `Err(FailedLogic(InvalidBlockFact(0, "right(#authority, \"file1\", #
 biscuit2 (1 caveat):
 ```
 Biscuit {
-    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "caveat1", "0", "write"]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read"]
             context: ""
@@ -267,7 +270,7 @@ Biscuit {
         }
     blocks: [
         Block[1] {
-            symbols: ["caveat1", "0", "write"]
+            symbols: ["write", "caveat1", "0"]
             context: ""
             facts: [
                 right(#ambient, "file1", #write)
@@ -316,10 +319,14 @@ verifier world:
 World {
   facts: [
     "operation(#ambient, #read)",
-    "time(#ambient, SystemTime { tv_sec: 1605785159, tv_nsec: 0 })",
     "resource(#ambient, \"file1\")",
+    "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
 ]
   rules: []
+  caveats: [
+    "Block[1][0]: *caveat1(\"file1\") <- resource(#ambient, \"file1\")",
+    "Block[1][1]: *expiration($date) <- time(#ambient, $date) @ $date <= 2018-12-20T00:00:00+00:00",
+]
 }
 validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 1, caveat_id: 1, rule: "*expiration($date) <- time(#ambient, $date) @ $date <= 2018-12-20T00:00:00+00:00" })])))`
 
@@ -358,13 +365,17 @@ Biscuit {
 verifier world:
 World {
   facts: [
+    "operation(#ambient, #read)",
     "owner(#ambient, #alice, \"file1\")",
     "resource(#ambient, \"file1\")",
-    "operation(#ambient, #read)",
 ]
   rules: [
     "*right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
     "*right(#authority, $1, #write) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
+]
+  caveats: [
+    "Block[1][0]: *caveat1($0, $1) <- right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)",
+    "Block[1][1]: *caveat2($0) <- resource(#ambient, $0), owner(#ambient, #alice, $0)",
 ]
 }
 validation: `Ok(())`
@@ -394,11 +405,14 @@ Biscuit {
 verifier world:
 World {
   facts: [
+    "operation(#ambient, #read)",
     "resource(#ambient, \"file2\")",
     "right(#authority, \"file1\", #read)",
-    "operation(#ambient, #read)",
 ]
   rules: []
+  caveats: [
+    "Verifier[0]: *caveat1($0, $1) <- right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)",
+]
 }
 validation: `Err(FailedLogic(FailedCaveats([Verifier(FailedVerifierCaveat { caveat_id: 0, rule: "*caveat1($0, $1) <- right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)" })])))`
 
@@ -427,19 +441,25 @@ Biscuit {
 verifier world:
 World {
   facts: [
-    "resource(#ambient, \"file1\")",
     "operation(#ambient, #read)",
+    "resource(#ambient, \"file1\")",
 ]
   rules: []
+  caveats: [
+    "Block[0][0]: *caveat1(\"file1\") <- resource(#ambient, \"file1\")",
+]
 }
 validation for "file1": `Ok(())`
 verifier world:
 World {
   facts: [
-    "resource(#ambient, \"file2\")",
     "operation(#ambient, #read)",
+    "resource(#ambient, \"file2\")",
 ]
   rules: []
+  caveats: [
+    "Block[0][0]: *caveat1(\"file1\") <- resource(#ambient, \"file1\")",
+]
 }
 validation for "file2": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "*caveat1(\"file1\") <- resource(#ambient, \"file1\")" })])))`
 
@@ -480,14 +500,17 @@ Biscuit {
 verifier world:
 World {
   facts: [
-    "right(#authority, \"file1\", #read)",
-    "time(#ambient, SystemTime { tv_sec: 1605785159, tv_nsec: 0 })",
-    "right(#authority, \"file2\", #read)",
     "resource(#ambient, \"file1\")",
+    "right(#authority, \"file1\", #read)",
+    "right(#authority, \"file2\", #read)",
+    "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
 ]
   rules: [
     "*valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\") @ $0 <= 2030-12-31T12:59:59+00:00",
     "*valid_date($1) <- time(#ambient, $0), resource(#ambient, $1) @ $0 <= 1999-12-31T12:59:59+00:00, $1 not in {\"file1\"}",
+]
+  caveats: [
+    "Block[1][0]: *caveat1($0) <- valid_date($0), resource(#ambient, $0)",
 ]
 }
 validation for "file1": `Ok(())`
@@ -495,13 +518,16 @@ verifier world:
 World {
   facts: [
     "resource(#ambient, \"file2\")",
-    "right(#authority, \"file2\", #read)",
-    "time(#ambient, SystemTime { tv_sec: 1605785159, tv_nsec: 0 })",
     "right(#authority, \"file1\", #read)",
+    "right(#authority, \"file2\", #read)",
+    "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
 ]
   rules: [
     "*valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\") @ $0 <= 2030-12-31T12:59:59+00:00",
     "*valid_date($1) <- time(#ambient, $0), resource(#ambient, $1) @ $0 <= 1999-12-31T12:59:59+00:00, $1 not in {\"file1\"}",
+]
+  caveats: [
+    "Block[1][0]: *caveat1($0) <- valid_date($0), resource(#ambient, $0)",
 ]
 }
 validation for "file2": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 1, caveat_id: 0, rule: "*caveat1($0) <- valid_date($0), resource(#ambient, $0)" })])))`
@@ -534,6 +560,9 @@ World {
     "resource(#ambient, \"file1\")",
 ]
   rules: []
+  caveats: [
+    "Block[0][0]: *resource_match($0) <- resource(#ambient, $0) @ $0 matches /file[0-9]+.txt/",
+]
 }
 validation for "file1": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "*resource_match($0) <- resource(#ambient, $0) @ $0 matches /file[0-9]+.txt/" })])))`
 verifier world:
@@ -542,6 +571,9 @@ World {
     "resource(#ambient, \"file123.txt\")",
 ]
   rules: []
+  caveats: [
+    "Block[0][0]: *resource_match($0) <- resource(#ambient, $0) @ $0 matches /file[0-9]+.txt/",
+]
 }
 validation for "file123.txt": `Ok(())`
 
@@ -573,6 +605,9 @@ World {
     "must_be_present(#authority, \"hello\")",
 ]
   rules: []
+  caveats: [
+    "Verifier[0]: *test_must_be_present_authority($0) <- must_be_present(#authority, $0) || *test_must_be_present($0) <- must_be_present($0)",
+]
 }
 validation: `Ok(())`
 
@@ -608,5 +643,8 @@ World {
     "caveat1(#test)",
 ]
   rules: []
+  caveats: [
+    "Block[0][0]: *caveat1(#test) <- resource(#ambient, #hello)",
+]
 }
 validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "*caveat1(#test) <- resource(#ambient, #hello)" })])))`
