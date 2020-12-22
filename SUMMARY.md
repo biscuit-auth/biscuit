@@ -46,10 +46,10 @@ This could be seen as a table in a relational database:
 |        | Bob     | Charles |
 |        | Charles | Denise  |
 
-We can then define rules to create new facts, like this one: (a rule is introduced by the `*` sign, variables are introduced with the `$` sign)
+We can then define rules to create new facts, like this one: (a rule is made of a "head" on the left of `<-` indicating the data that is generated, variables are introduced with the `$` sign)
 
 ```
-*grandparent($grandparent, $child) <- parent($grandparent, $parent), parent($parent, $child)
+grandparent($grandparent, $child) <- parent($grandparent, $parent), parent($parent, $child)
 ```
 
 Applying this rule will look at combinations of the `parent` facts
@@ -82,8 +82,8 @@ A Fact can be created from multiple rules, and a rule can use facts
 generated from previous applications. If we added the following rules:
 
 ```
-*ancestor($parent, $child) <- parent($parent, $child)
-*ancestor($parent, $descendant) <- parent($parent, $child), ancestor($child, $descendant)
+ancestor($parent, $child) <- parent($parent, $child)
+ancestor($parent, $descendant) <- parent($parent, $child), ancestor($child, $descendant)
 ```
 
 It would generate the following facts from the first one:
@@ -143,7 +143,7 @@ Rules can have constraints on fact elements. The following rule will generate
 a fact only if there's a `file` fact and its value starts with `/folder/`:
 
  
-`*in_folder($path) <- file($path) @ $path matches /folder/*`
+`in_folder($path) <- file($path) @ $path matches /folder/*`
 
 Here are the possible constraints:
 
@@ -164,7 +164,7 @@ resource, and verifies that its filename matches a specific pattern,
 using a string constraint:
 
 ```
-*resource_match($path) <- resource(#ambient, $path) @ $path matches /file[0-9]+.txt/
+resource_match($path) <- resource(#ambient, $path) @ $path matches /file[0-9]+.txt/
 ```
 
 This rule matches only if `$path` matches a pattern, and if the fact `resource(#ambient, $path)` holds.
@@ -332,7 +332,7 @@ Biscuit {
             facts: []
             rules: []
             caveats: [
-                *caveat1() <- resource(#ambient, "bucket_5678", "/folder1/hello.txt"), operation(#ambient, #read)
+                caveat1() <- resource(#ambient, "bucket_5678", "/folder1/hello.txt"), operation(#ambient, #read)
             ]
         }
 

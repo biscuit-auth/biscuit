@@ -157,10 +157,10 @@ The second caveat checks that the resource is `file1`.
 authority = [right(#authority, "file1", #read), right(#authority, "file2", #read),
   right(#authority, "file1", #write)]
 ----------
-caveats = [*caveat() <- resource(#ambient, $0), operation(#ambient, #read),
+caveats = [caveat() <- resource(#ambient, $0), operation(#ambient, #read),
   right(#authority, $0, #read)]  // restrict to read operations
 ----------
-caveats = [*caveat() <- resource(#ambient, "file1")]  // restrict to file1 resource
+caveats = [caveat() <- resource(#ambient, "file1")]  // restrict to file1 resource
 ```
 
 The facts with the `authority` tag can only be defined in the `authority` part of
@@ -186,14 +186,14 @@ facts depending on ambient data. This helps reduce the size of the token.
 ```
 authority_rules = [
   // if there is an ambient resource and we own it, we can read it
-  *right(#authority, $0, #read) <- resource(#ambient, $0), owner(#ambient, $1, $0),
+  right(#authority, $0, #read) <- resource(#ambient, $0), owner(#ambient, $1, $0),
   // if there is an ambient resource and we own it, we can write to it
-  *right(#authority, $0, #write) <- resource(#ambient, $0), owner(#ambient, $1, $0)
+  right(#authority, $0, #write) <- resource(#ambient, $0), owner(#ambient, $1, $0)
 ]
 ----------
-caveats = [*caveat() <- right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)]
+caveats = [caveat() <- right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)]
 ----------
-caveats = [*caveat() <- resource(#ambient, $0), owner(#alice, $0)] // defines a token only usable by alice
+caveats = [caveat() <- resource(#ambient, $0), owner(#alice, $0)] // defines a token only usable by alice
 ```
 
 These rules will define authority facts depending on ambient data.
@@ -214,13 +214,13 @@ restrict usage based on ambient values:
 authority=[right(#authority, "/folder/file1", #read),
   right(#authority, "/folder/file2", #read), right(#authority, "/folder2/file3", #read)]
 ----------
-caveats = [*caveat() <- resource(#ambient, $0), right(#authority, $0, $1)]
+caveats = [caveat() <- resource(#ambient, $0), right(#authority, $0, $1)]
 ----------
-caveats = [*caveat() <- time(#ambient, $0) @ $0 < 2019-02-05T23:00:00Z] // expiration date
+caveats = [caveat() <- time(#ambient, $0) @ $0 < 2019-02-05T23:00:00Z] // expiration date
 ----------
-caveats = [*caveat() <- source_IP(#ambient, $0) @ $0 in ["1.2.3.4", "5.6.7.8"]] // set membership
+caveats = [caveat() <- source_IP(#ambient, $0) @ $0 in ["1.2.3.4", "5.6.7.8"]] // set membership
 ----------
-caveats = [*caveat() <- resource(#ambient, $0) @ prefix($0, "/folder/")] // prefix operation on strings
+caveats = [caveat() <- resource(#ambient, $0) @ prefix($0, "/folder/")] // prefix operation on strings
 ```
 ### Verifier
 
