@@ -27,6 +27,7 @@ message Block {
   repeated Rule   rules = 4;
   repeated Caveat caveats = 5;
   optional string context = 6;
+  optional uint32 version = 7;
 }
 
 message Fact {
