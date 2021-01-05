@@ -12,7 +12,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read", "write"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -25,7 +25,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["caveat1", "0"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -61,7 +61,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read)
@@ -72,7 +72,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["caveat1", "0"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -95,7 +95,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read", "write"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -108,7 +108,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["caveat1", "0"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -131,7 +131,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read", "write"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -144,7 +144,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["caveat1", "0"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -167,7 +167,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read", "write"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -180,7 +180,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["caveat1", "0"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -203,7 +203,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read", "write"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -216,7 +216,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["caveat1", "0"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -239,7 +239,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read)
@@ -250,7 +250,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["write", "caveat1", "0"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #write)
@@ -275,7 +275,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "caveat1", "0"]
     authority: Block[0] {
             symbols: ["read"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read)
@@ -286,7 +286,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["write", "caveat1", "0"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#ambient, "file1", #write)
@@ -311,7 +311,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "caveat1", "expiration", "date", "time"]
     authority: Block[0] {
             symbols: []
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -320,7 +320,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["caveat1", "expiration", "date", "time"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -357,7 +357,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "1", "read", "owner", "0", "write", "caveat1", "caveat2", "alice"]
     authority: Block[0] {
             symbols: ["1", "read", "owner", "0", "write"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: [
@@ -369,7 +369,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["caveat1", "caveat2", "alice"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -409,7 +409,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read"]
     authority: Block[0] {
             symbols: ["read"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read)
@@ -446,7 +446,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "caveat1"]
     authority: Block[0] {
             symbols: ["caveat1"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -494,7 +494,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "valid_date", "time", "0", "1", "caveat1"]
     authority: Block[0] {
             symbols: ["read"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -506,7 +506,7 @@ Biscuit {
     blocks: [
         Block[1] {
             symbols: ["valid_date", "time", "0", "1", "caveat1"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: [
@@ -565,7 +565,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "resource_match", "0"]
     authority: Block[0] {
             symbols: ["resource_match", "0"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -611,7 +611,7 @@ Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "must_be_present"]
     authority: Block[0] {
             symbols: ["must_be_present"]
-            version: 0
+            version: 1
             context: ""
             facts: [
                 must_be_present(#authority, "hello")
@@ -644,7 +644,7 @@ biscuit: Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "caveat1", "test", "hello"]
     authority: Block[0] {
             symbols: ["caveat1", "test", "hello"]
-            version: 0
+            version: 1
             context: ""
             facts: []
             rules: []
@@ -655,7 +655,7 @@ biscuit: Biscuit {
     blocks: [
         Block[1] {
             symbols: []
-            version: 0
+            version: 1
             context: ""
             facts: [
                 caveat1(#test)
