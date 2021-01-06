@@ -191,120 +191,85 @@ message PredicateV1 {
 }
 
 message IDV1 {
-  enum Kind {
-    SYMBOL = 0;
-    VARIABLE = 1;
-    INTEGER = 2;
-    STR = 3;
-    DATE = 4;
-    BYTES = 5;
+  oneof Content {
+    uint64 symbol = 1;
+    uint32 variable = 2;
+    int64 integer = 3;
+    string string = 4;
+    uint64 date = 5;
+    bytes bytes = 6;
   }
-
-  required Kind kind = 1;
-  optional uint64 symbol = 2;
-  optional uint32 variable = 3;
-  optional int64 integer = 4;
-  optional string str = 5;
-  optional uint64 date = 6;
-  optional bytes bytes = 7;
 }
 
 message ConstraintV1 {
   required uint32 id = 1;
 
-  enum Kind {
-    INT = 0;
-    STRING = 1;
-    DATE = 2;
-    SYMBOL = 3;
-    BYTES = 4;
+  oneof Constraint {
+    IntConstraintV1 int = 2;
+    StringConstraintV1 string = 3;
+    DateConstraintV1 date = 4;
+    SymbolConstraintV1 symbol = 5;
+    BytesConstraintV1 bytes = 6;
   }
-
-  required Kind kind = 2;
-
-  optional IntConstraintV1 int = 3;
-  optional StringConstraintV1 str = 4;
-  optional DateConstraintV1 date = 5;
-  optional SymbolConstraintV1 symbol = 6;
-  optional BytesConstraintV1 bytes = 7;
 }
 
 message IntConstraintV1 {
-  enum Kind {
-    LESS_THAN = 0;
-    GREATER_THAN = 1;
-    LESS_OR_EQUAL = 2;
-    GREATER_OR_EQUAL = 3;
-    EQUAL = 4;
-    IN = 5;
-    NOT_IN = 6;
+  oneof Constraint {
+    int64 less_than = 1;
+    int64 greater_than = 2;
+    int64 less_or_equal = 3;
+    int64 greater_or_equal = 4;
+    int64 equal = 5;
+    IntSet in_set = 6;
+    IntSet not_in_set = 7;
   }
+}
 
-  required Kind kind = 1;
-
-  optional int64 less_than = 2;
-  optional int64 greater_than = 3;
-  optional int64 less_or_equal = 4;
-  optional int64 greater_or_equal = 5;
-  optional int64 equal = 6;
-  repeated int64 in_set = 7 [packed=true];
-  repeated int64 not_in_set = 8 [packed=true];
+message IntSet {
+  repeated int64 set = 7 [packed=true];
 }
 
 message StringConstraintV1 {
-  enum Kind {
-    PREFIX = 0;
-    SUFFIX = 1;
-    EQUAL = 2;
-    IN = 3;
-    NOT_IN = 4;
-    REGEX = 5;
+  oneof Constraint {
+    string prefix = 1;
+    string suffix = 2;
+    string equal = 3;
+    StringSet in_set = 4;
+    StringSet not_in_set = 5;
+    string regex = 6;
   }
+}
 
-  required Kind kind = 1;
-
-  optional string prefix = 2;
-  optional string suffix = 3;
-  optional string equal = 4;
-  repeated string in_set = 5;
-  repeated string not_in_set = 6;
-  optional string regex = 7;
+message StringSet {
+  repeated string set = 1;
 }
 
 message DateConstraintV1 {
-  enum Kind {
-    BEFORE = 0;
-    AFTER = 1;
+  oneof Constraint {
+    uint64 before = 1;
+    uint64 after = 2;
   }
-
-  required Kind kind = 1;
-
-  optional uint64 before = 2;
-  optional uint64 after = 3;
 }
 
 message SymbolConstraintV1 {
-  enum Kind {
-    IN = 0;
-    NOT_IN = 1;
+  oneof Constraint {
+    SymbolSet in_set = 1;
+    SymbolSet not_in_set = 2;
   }
+}
 
-  required Kind kind = 1;
-
-  repeated uint64 in_set = 2;
-  repeated uint64 not_in_set = 3;
+message SymbolSet {
+  repeated uint64 set = 1 [packed=true];
 }
 
 message BytesConstraintV1 {
-  enum Kind {
-    EQUAL = 0;
-    IN = 1;
-    NOT_IN = 2;
+  oneof Constraint {
+    bytes equal = 1;
+    BytesSet in_set = 2;
+    BytesSet not_in_set = 3;
   }
+}
 
-  required Kind kind = 1;
-
-  optional bytes equal = 2;
-  repeated bytes in_set = 3;
-  repeated bytes not_in_set = 4;
+message BytesSet {
+  repeated bytes set = 1;
 }
