@@ -130,6 +130,8 @@ set exclusion.
 A *date* is a 64 bit unsigned integer representing a TAI64. It supports the following constraints:
 before, after.
 
+A *boolean* is `true` or `false`.
+
 ### Usage
 
 A biscuit token defines some scopes for facts and rules. The *authority* scope is defined in the first

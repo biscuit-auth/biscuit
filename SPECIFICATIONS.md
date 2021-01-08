@@ -121,6 +121,8 @@ constraints: equal, set inclusion, set exclusion.
 A *date* is a 64 bit unsigned integer representing a TAI64. It supports the
 following constraints: before, after.
 
+A *boolean* is `true` or `false`.
+
 ### Authority and ambient facts
 
 Facts in Biscuit's language have some specific context.

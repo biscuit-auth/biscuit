@@ -198,6 +198,7 @@ message IDV1 {
     string string = 4;
     uint64 date = 5;
     bytes bytes = 6;
+    bool bool = 7;
   }
 }
 
