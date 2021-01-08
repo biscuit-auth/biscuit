@@ -123,6 +123,9 @@ following constraints: before, after.
 
 A *boolean* is `true` or `false`.
 
+A *set* is a deduplicated list of terms of the same type. It cannot contain
+variables or other sets.
+
 ### Authority and ambient facts
 
 Facts in Biscuit's language have some specific context.

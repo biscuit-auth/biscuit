@@ -132,6 +132,9 @@ before, after.
 
 A *boolean* is `true` or `false`.
 
+A *set* is a deduplicated list of terms of the same type. It cannot contain
+variables or other sets.
+
 ### Usage
 
 A biscuit token defines some scopes for facts and rules. The *authority* scope is defined in the first
