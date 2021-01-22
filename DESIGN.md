@@ -82,12 +82,12 @@ one for this specification and for pretty printing of caveats.
 A *predicate* has the form `Predicate(v0, v1, ..., vn)`.
 A *fact* is a *predicate* that does not contain any *variable*.
 A *rule* has the form:
-`Pr(r0, r1, ..., rk) <- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0), ..., Cx(vx)`.
+`Pr(r0, r1, ..., rk) <- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0, ..., vi), ..., Cx(vx, ..., vy)`.
 The part of the left of the arrow is called the *head* and on the right, the *body*.
 In a *rule*, each of the `ri` or `ti_j` terms can be of any type. A *rule* is safe
 if all of the variables in the head appear somewhere in the body.
-We also define a *constraint* `Cx` over the variable `vx`. *Constraints* define
-a check of a variable's value when applying the *rule*. If the *constraint* returns
+We also define an *expression* `Cx` over the variables `vx` to `vy`. *Expressions*
+define a check of variable values when applying the *rule*. If the *expression* returns
 `false`, the *rule* application fails.
 A *query* is a type of *rule* that has no head. It has the following form:
 `?- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0), ..., Cx(vx)`.
@@ -115,19 +115,19 @@ we can stop.
 
 ### Data types
 
-A *symbol* indicates a value that supports equality, set inclusion and set exclusion constraints.
+A *symbol* indicates a value that supports equality, set inclusion and set exclusion checks.
 Its internal representation has no specific meaning.
 
-An *integer* is a signed 64 bits integer. It supports the following constraints: lower, larger,
+An *integer* is a signed 64 bits integer. It supports the following operations: lower, larger,
 lower or equal, larger or equal, equal, set inclusion and set exclusion.
 
-A *string* is a suite of UTF-8 characters. It supports the following constraints: prefix, suffix,
+A *string* is a suite of UTF-8 characters. It supports the following operations: prefix, suffix,
 equal, set inclusion, set exclusion, regular expression.
 
-A *byte array* is a suite of bytes. It supports the following constraints: equal, set inclusion,
+A *byte array* is a suite of bytes. It supports the following operations: equal, set inclusion,
 set exclusion.
 
-A *date* is a 64 bit unsigned integer representing a TAI64. It supports the following constraints:
+A *date* is a 64 bit unsigned integer representing a TAI64. It supports the following operations:
 before, after.
 
 A *boolean* is `true` or `false`.
@@ -186,9 +186,9 @@ which will allow caveat 1 and caveat 2 to succeed.
 
 If the owner ambient fact does not match the restriction in caveat2, the token check will fail.
 
-##### Constraints
+##### Expressions
 
-We can define queries or rules with constraints on some predicate values, and restrict usage
+We can define queries or rules with expressions on some predicate values, and restrict usage
 based on ambient values:
 
 ```
@@ -280,6 +280,9 @@ Verifier {
   operation(&mut self, operation: string)
   time(&mut self)
   revocation_check(&mut self, set: [i64])
+  add_rule
+  add_caveat
+  add_query
 }
 ```
 
@@ -382,138 +385,47 @@ Datalog rules are specified as follows:
 Rule {
   head: Predicate,
   body: [Predicate],
-  constraints: [Constraint],
+  expressions: [Expression],
 }
 ```
 
 any `Variable` appearing in the  `head` of a `Rule` must also appear
 in one of the predicates of its `body`
 
-Constraints express some restrictions on the rules, without having to
+Expressions express some restrictions on the rules, without having to
 implement negation in the datalog engine.
 
+They are encoded as bytecode for a stack machine with unary and binary operations.
+For the rule to succeed, an expression must have all of its variables bound to a
+value of the expected type (depending on the operations) and it must evaluate to
+`true`.
+
 ```
-Constraint {
-  id: u32,
-  kind: ConstraintKind,
+Expression {
+  ops: [Op],
 }
 
-ConstraintKind = IntConstraint | StrConstraint | DateConstraint | SymbolConstraint
+Op = Value | Unary | Binary
+
+Value = ID
+Unary = Negate
+Binary = LessThan | GreaterThan | LessOrEqual | GreaterOrEqual | Equal | In | NotIn | Prefix | Suffix | Regex | Add | Sub | Mul | Div | And | Or
 ```
 
 The `id` field of a constraint must match a `Variable` in the rule.
 
-Integer constraints can have the following values:
-
-```
-IntConstraint = Lower | Larger | LowerOrEqual | LargerOrEqual | Equal | In | NotIn
-
-Lower {
-  bound: i64
-}
-
-Larger {
-  bound: i64
-}
-
-LowerOrEqual {
-  bound: i64
-}
-
-LargerOrEqual {
-  bound: i64
-}
-
-Equal {
-  bound: i64
-}
-
-In {
-  set: [i64]
-}
-
-NotIn {
-  set: [i64]
-}
-```
+Integer values can be used with the following operations: Negate, Lower, Larger,
+LowerOrEqual, LargerOrEqual, Equal, In, NotIn, Add, Sub, Mul, Div
 
 The `set` parameter of `In` and `NotIn` constraints is an array of unique values.
 
-String constraints:
+String values can be used with the following operations: Prefix, Suffix, Equl In, NotIn, Regex
 
-```
-StrConstraint = Prefix | Suffix | Equal | In | NotIn | Regex
+Byte array values can be used with the following operations: Equal, In, NotIn
 
-Prefix {
-  bound: string
-}
+Date values can be used with the following operations: LessOrEqual, GreaterOrEqual
 
-Suffix {
-  bound: string
-}
-
-Equal {
-  bound: string
-}
-
-In {
-  set: [string]
-}
-
-NotIn {
-  set: [string]
-}
-
-Regex {
-  bound: string
-}
-```
-
-Bytes constraints:
-
-```
-BytesConstraint = Equal | In | NotIn
-
-Equal {
-  bound: string
-}
-
-In {
-  set: [string]
-}
-
-NotIn {
-  set: [string]
-}
-```
-
-Date constraints:
-
-```
-DateConstraint = Before | After
-
-Before {
-  bound: date
-}
-
-After {
-  bound: date
-}
-```
-
-Symbol constraints:
-
-```
-StrConstraint = In | NotIn
-
-In {
-  set: [Symbol]
-}
-
-NotIn {
-  set: [Symbol]
-}
-```
+Symbol values can be used with the following operations: In, NotIn
 
 #### Adding a new block
 

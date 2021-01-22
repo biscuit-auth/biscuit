@@ -67,12 +67,12 @@ for pretty printing of caveats.
 A *predicate* has the form `Predicate(v0, v1, ..., vn)`.
 A *fact* is a *predicate* that does not contain any *variable*.
 A *rule* has the form:
-`Pr(r0, r1, ..., rk) <- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0), ..., Cx(vx)`.
+`Pr(r0, r1, ..., rk) <- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0, ..., vi), ..., Cx(vx, ..., vy)`.
 The part of the left of the arrow is called the *head* and on the right, the
 *body*. In a *rule*, each of the `ri` or `ti_j` terms can be of any type. A
 *rule* is safe if all of the variables in the head appear somewhere in the body.
-We also define a *constraint* `Cx` over the variable `vx`. *Constraints* define
-a check of a variable's value when applying the *rule*. If the *constraint*
+We also define an *expression* `Cx` over the variables `v0` to `vi`. *Expressions*
+define a test of variable values when applying the *rule*. If the *expression*
 returns `false`, the *rule* application fails.
 A *query* is a type of *rule* that has no head. It has the following form:
 `?- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0), ..., Cx(vx)`.
@@ -103,23 +103,23 @@ rules application does not generate any new facts, we can stop.
 #### Data types
 
 A *symbol* indicates a value that supports equality, set inclusion and set
-exclusion constraints. Its internal representation is an index into the token's
+exclusion checks. Its internal representation is an index into the token's
 symbol table, which is a list of strings. The symbol table reduces the size of
 tokens by storing common symbols in a predefined table, and writing new symbols
 only once per token.
 
 An *integer* is a signed 64 bits integer. It supports the following
-constraints: lower, larger, lower or equal, larger or equal, equal, set
+operatios: lower, larger, lower or equal, larger or equal, equal, set
 inclusion and set exclusion.
 
 A *string* is a suite of UTF-8 characters. It supports the following
-constraints: prefix, suffix, equal, set inclusion, set exclusion, regular expression.
+operations: prefix, suffix, equal, set inclusion, set exclusion, regular expression.
 
 A *byte array* is a suite of bytes. It supports the following
-constraints: equal, set inclusion, set exclusion.
+operations: equal, set inclusion, set exclusion.
 
 A *date* is a 64 bit unsigned integer representing a TAI64. It supports the
-following constraints: before, after.
+following operations: before, after.
 
 A *boolean* is `true` or `false`.
 
@@ -210,9 +210,9 @@ which will allow caveat 1 and caveat 2 to succeed.
 If the owner ambient fact does not match the restriction in `caveat2`, the token
 check will fail.
 
-#### Constraints
+#### Expressions
 
-We can define queries or rules with constraints on some predicate values, and
+We can define queries or rules with expressions on some predicate values, and
 restrict usage based on ambient values:
 
 ```
@@ -221,12 +221,13 @@ authority=[right(#authority, "/folder/file1", #read),
 ----------
 caveats = [caveat() <- resource(#ambient, $0), right(#authority, $0, $1)]
 ----------
-caveats = [caveat() <- time(#ambient, $0) @ $0 < 2019-02-05T23:00:00Z] // expiration date
+caveats = [caveat() <- time(#ambient, $0), $0 < 2019-02-05T23:00:00Z] // expiration date
 ----------
-caveats = [caveat() <- source_IP(#ambient, $0) @ $0 in ["1.2.3.4", "5.6.7.8"]] // set membership
+caveats = [caveat() <- source_IP(#ambient, $0), $0 in ["1.2.3.4", "5.6.7.8"]] // set membership
 ----------
-caveats = [caveat() <- resource(#ambient, $0) @ prefix($0, "/folder/")] // prefix operation on strings
+caveats = [caveat() <- resource(#ambient, $0), prefix($0, "/folder/")] // prefix operation on strings
 ```
+
 ### Verifier
 
 The verifier provides information on the operation, such as the type of access

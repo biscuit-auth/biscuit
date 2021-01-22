@@ -326,7 +326,7 @@ Biscuit {
             rules: []
             caveats: [
                 caveat1("file1") <- resource(#ambient, "file1"),
-                expiration($date) <- time(#ambient, $date) @ $date <= 2018-12-20T00:00:00+00:00
+                expiration($date) <- time(#ambient, $date), $date <= 2018-12-20T00:00:00+00:00
             ]
         }
     ]
@@ -338,15 +338,15 @@ World {
   facts: [
     "operation(#ambient, #read)",
     "resource(#ambient, \"file1\")",
-    "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+    "time(#ambient, 2020-12-21T09:23:12+00:00)",
 ]
   rules: []
   caveats: [
     "Block[1][0]: caveat1(\"file1\") <- resource(#ambient, \"file1\")",
-    "Block[1][1]: expiration($date) <- time(#ambient, $date) @ $date <= 2018-12-20T00:00:00+00:00",
+    "Block[1][1]: expiration($date) <- time(#ambient, $date), $date <= 2018-12-20T00:00:00+00:00",
 ]
 }
-validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 1, caveat_id: 1, rule: "expiration($date) <- time(#ambient, $date) @ $date <= 2018-12-20T00:00:00+00:00" })])))`
+validation: `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 1, caveat_id: 1, rule: "expiration($date) <- time(#ambient, $date), $date <= 2018-12-20T00:00:00+00:00" })])))`
 
 ------------------------------
 
@@ -510,8 +510,8 @@ Biscuit {
             context: ""
             facts: []
             rules: [
-                valid_date("file1") <- time(#ambient, $0), resource(#ambient, "file1") @ $0 <= 2030-12-31T12:59:59+00:00,
-                valid_date($1) <- time(#ambient, $0), resource(#ambient, $1) @ $0 <= 1999-12-31T12:59:59+00:00, $1 not in {"file1"}
+                valid_date("file1") <- time(#ambient, $0), resource(#ambient, "file1"), $0 <= 2030-12-31T12:59:59+00:00,
+                valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, $1 not in ["\"file1\""]
             ]
             caveats: [
                 caveat1($0) <- valid_date($0), resource(#ambient, $0)
@@ -527,11 +527,11 @@ World {
     "resource(#ambient, \"file1\")",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file2\", #read)",
-    "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+    "time(#ambient, 2020-12-21T09:23:12+00:00)",
 ]
   rules: [
-    "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\") @ $0 <= 2030-12-31T12:59:59+00:00",
-    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1) @ $0 <= 1999-12-31T12:59:59+00:00, $1 not in {\"file1\"}",
+    "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
+    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, $1 not in [\"\\\"file1\\\"\"]",
 ]
   caveats: [
     "Block[1][0]: caveat1($0) <- valid_date($0), resource(#ambient, $0)",
@@ -544,11 +544,11 @@ World {
     "resource(#ambient, \"file2\")",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file2\", #read)",
-    "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+    "time(#ambient, 2020-12-21T09:23:12+00:00)",
 ]
   rules: [
-    "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\") @ $0 <= 2030-12-31T12:59:59+00:00",
-    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1) @ $0 <= 1999-12-31T12:59:59+00:00, $1 not in {\"file1\"}",
+    "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
+    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, $1 not in [\"\\\"file1\\\"\"]",
 ]
   caveats: [
     "Block[1][0]: caveat1($0) <- valid_date($0), resource(#ambient, $0)",
@@ -570,7 +570,7 @@ Biscuit {
             facts: []
             rules: []
             caveats: [
-                resource_match($0) <- resource(#ambient, $0) @ $0 matches /file[0-9]+.txt/
+                resource_match($0) <- resource(#ambient, $0), $0 matches "file[0-9]+.txt"
             ]
         }
     blocks: [
@@ -586,10 +586,10 @@ World {
 ]
   rules: []
   caveats: [
-    "Block[0][0]: resource_match($0) <- resource(#ambient, $0) @ $0 matches /file[0-9]+.txt/",
+    "Block[0][0]: resource_match($0) <- resource(#ambient, $0), $0 matches \"file[0-9]+.txt\"",
 ]
 }
-validation for "file1": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "resource_match($0) <- resource(#ambient, $0) @ $0 matches /file[0-9]+.txt/" })])))`
+validation for "file1": `Err(FailedLogic(FailedCaveats([Block(FailedBlockCaveat { block_id: 0, caveat_id: 0, rule: "resource_match($0) <- resource(#ambient, $0), $0 matches \"file[0-9]+.txt\"" })])))`
 verifier world:
 World {
   facts: [
@@ -597,7 +597,7 @@ World {
 ]
   rules: []
   caveats: [
-    "Block[0][0]: resource_match($0) <- resource(#ambient, $0) @ $0 matches /file[0-9]+.txt/",
+    "Block[0][0]: resource_match($0) <- resource(#ambient, $0), $0 matches \"file[0-9]+.txt\"",
 ]
 }
 validation for "file123.txt": `Ok(())`

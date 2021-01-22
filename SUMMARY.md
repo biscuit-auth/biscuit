@@ -139,13 +139,13 @@ It has the following base types (for elements inside of a fact):
 - byte array
 - symbol (interned strings that are stored in a dictionary to spare space)
 
-Rules can have constraints on fact elements. The following rule will generate
+Rules can cntain expressions on fact elements. The following rule will generate
 a fact only if there's a `file` fact and its value starts with `/folder/`:
 
  
-`in_folder($path) <- file($path) @ $path matches /folder/*`
+`in_folder($path) <- file($path), $path matches /folder/*`
 
-Here are the possible constraints:
+Here are the possible operations:
 
 - integer: <, >, <=, >=, ==, is in set, is not in set
 - string: prefix, suffix, ==, is in set, is not in set
@@ -161,10 +161,10 @@ must succeed.
 
 As an example, we could have a caveat that checks the presence of a file
 resource, and verifies that its filename matches a specific pattern,
-using a string constraint:
+using a string expression:
 
 ```
-resource_match($path) <- resource(#ambient, $path) @ $path matches /file[0-9]+.txt/
+resource_match($path) <- resource(#ambient, $path), $path matches /file[0-9]+.txt/
 ```
 
 This rule matches only if `$path` matches a pattern, and if the fact `resource(#ambient, $path)` holds.

@@ -178,7 +178,7 @@ message FactV1 {
 message RuleV1 {
   required PredicateV1 head = 1;
   repeated PredicateV1 body = 2;
-  repeated ConstraintV1 constraints = 3;
+  repeated ExpressionV1 expressions = 3;
 }
 
 message CaveatV1 {
@@ -278,4 +278,47 @@ message BytesConstraintV1 {
 
 message BytesSet {
   repeated bytes set = 1;
+}
+
+message ExpressionV1 {
+  repeated Op ops = 1;
+}
+
+message Op {
+  oneof Content {
+    IDV1 value = 1;
+    OpUnary unary = 2;
+    OpBinary Binary = 3;
+  }
+}
+
+message OpUnary {
+  enum Kind {
+    Negate = 0;
+  }
+
+  required Kind kind = 1;
+}
+
+message OpBinary {
+  enum Kind {
+    LessThan = 0;
+    GreaterThan = 1;
+    LessOrEqual = 2;
+    GreaterOrEqual = 3;
+    Equal = 4;
+    In = 5;
+    NotIn = 6;
+    Prefix = 7;
+    Suffix = 8;
+    Regex = 9;
+    Add = 10;
+    Sub = 11;
+    Mul = 12;
+    Div = 13;
+    And = 14;
+    Or = 15;
+  }
+
+  required Kind kind = 1;
 }
