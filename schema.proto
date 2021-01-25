@@ -30,7 +30,7 @@ message Block {
   optional uint32 version = 7;
   repeated FactV1 facts_v1 = 8;
   repeated RuleV1 rules_v1 = 9;
-  repeated CaveatV1 caveats_v1 = 10;
+  repeated CheckV1 checks_v1 = 10;
 }
 
 message FactV0 {
@@ -181,7 +181,7 @@ message RuleV1 {
   repeated ExpressionV1 expressions = 3;
 }
 
-message CaveatV1 {
+message CheckV1 {
   repeated RuleV1 queries = 1;
 }
 
