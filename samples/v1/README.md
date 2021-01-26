@@ -529,7 +529,7 @@ Biscuit {
             facts: []
             rules: [
                 valid_date("file1") <- time(#ambient, $0), resource(#ambient, "file1"), $0 <= 2030-12-31T12:59:59+00:00,
-                valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, $1 not in ["\"file1\""]
+                valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, !$1.contains(["\"file1\""])
             ]
             checks: [
                 check if valid_date($0), resource(#ambient, $0)
@@ -549,7 +549,7 @@ World {
 ]
   rules: [
     "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
-    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, $1 not in [\"\\\"file1\\\"\"]",
+    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, !$1.contains([\"\\\"file1\\\"\"])",
 ]
   checks: [
     "Block[1][0]: check if valid_date($0), resource(#ambient, $0)",
@@ -569,7 +569,7 @@ World {
 ]
   rules: [
     "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
-    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, $1 not in [\"\\\"file1\\\"\"]",
+    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, !$1.contains([\"\\\"file1\\\"\"])",
 ]
   checks: [
     "Block[1][0]: check if valid_date($0), resource(#ambient, $0)",
@@ -594,7 +594,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, $0), $0 matches "file[0-9]+.txt"
+                check if resource(#ambient, $0), $0.matches("file[0-9]+.txt")
             ]
         }
     blocks: [
@@ -610,13 +610,13 @@ World {
 ]
   rules: []
   checks: [
-    "Block[0][0]: check if resource(#ambient, $0), $0 matches \"file[0-9]+.txt\"",
+    "Block[0][0]: check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")",
 ]
   policies: [
     "allow if true",
 ]
 }
-validation for "file1": `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if resource(#ambient, $0), $0 matches \"file[0-9]+.txt\"" })])))`
+validation for "file1": `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")" })])))`
 verifier world:
 World {
   facts: [
@@ -624,7 +624,7 @@ World {
 ]
   rules: []
   checks: [
-    "Block[0][0]: check if resource(#ambient, $0), $0 matches \"file[0-9]+.txt\"",
+    "Block[0][0]: check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")",
 ]
   policies: [
     "allow if true",

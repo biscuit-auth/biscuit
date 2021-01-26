@@ -308,17 +308,16 @@ message OpBinary {
     LessOrEqual = 2;
     GreaterOrEqual = 3;
     Equal = 4;
-    In = 5;
-    NotIn = 6;
-    Prefix = 7;
-    Suffix = 8;
-    Regex = 9;
-    Add = 10;
-    Sub = 11;
-    Mul = 12;
-    Div = 13;
-    And = 14;
-    Or = 15;
+    Contains = 5;
+    Prefix = 6;
+    Suffix = 7;
+    Regex = 8;
+    Add = 9;
+    Sub = 10;
+    Mul = 11;
+    Div = 12;
+    And = 13;
+    Or = 14;
   }
 
   required Kind kind = 1;
