@@ -295,6 +295,7 @@ message Op {
 message OpUnary {
   enum Kind {
     Negate = 0;
+    Parens = 1;
   }
 
   required Kind kind = 1;
