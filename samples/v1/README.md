@@ -529,7 +529,7 @@ Biscuit {
             facts: []
             rules: [
                 valid_date("file1") <- time(#ambient, $0), resource(#ambient, "file1"), $0 <= 2030-12-31T12:59:59+00:00,
-                valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, !$1.contains(["\"file1\""])
+                valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, !["file1"].contains($1)
             ]
             checks: [
                 check if valid_date($0), resource(#ambient, $0)
@@ -549,7 +549,7 @@ World {
 ]
   rules: [
     "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
-    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, !$1.contains([\"\\\"file1\\\"\"])",
+    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, ![\"file1\"].contains($1)",
 ]
   checks: [
     "Block[1][0]: check if valid_date($0), resource(#ambient, $0)",
@@ -569,7 +569,7 @@ World {
 ]
   rules: [
     "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
-    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, !$1.contains([\"\\\"file1\\\"\"])",
+    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, ![\"file1\"].contains($1)",
 ]
   checks: [
     "Block[1][0]: check if valid_date($0), resource(#ambient, $0)",
