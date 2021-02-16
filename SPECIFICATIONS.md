@@ -10,11 +10,13 @@ HTTP cookies.
 
 ### Vocabulary
 
-- datalog: a declarative logic language that works on facts defining data relationship,
+- Datalog: a declarative logic language that works on facts defining data relationship,
 rules creating more facts if conditions are met, and queries to test such conditions
-- caveat: a restriction on the kind of operation that can be performed with
+- check: a restriction on the kind of operation that can be performed with
 the token that contains it, represented as a datalog query in biscuit. For the operation
-to be valid, all the caveats in the token must succeed
+to be valid, all of the checks defined in the token and the verifier must succeed
+- allow/deny policies: a list of datalog queries that are tested in a sequence
+until one of them matches. They can only be defined in the verifier
 - block: a list of datalog facts and rules. The first block is the authority
 block. The other blocks define caveats
 - authority: list of facts and rules defining the initial rights of the token
@@ -26,11 +28,11 @@ the current date, or revocation lists
 ### Overview
 
 A Biscuit token is defined as a serie of blocks. The first one, named "authority block",
-contains rights given to the token holder. The following blocks contain caveats that
+contains rights given to the token holder. The following blocks contain checks that
 reduce the token's scope, in the form of logic queries that must succeed.
-The holder of a biscuit token can at any time create a new
-token by adding a block with more caveats, but they cannot remove existing blocks
-without invalidating the signature.
+The holder of a biscuit token can at any time create a new token by adding a
+block with more checks, thus restricting the rights of the new token, but they
+cannot remove existing blocks without invalidating the signature.
 
 The token is protected by public key cryptography operations: the initial creator
 of a token holds a secret key, and any verifier for the token needs only know
@@ -41,37 +43,45 @@ destroyed as soon as they are used.
 There is also a sealed version of that token that uses symmetric cryptography
 to generate a token that cannot be further attenuated, but is faster to verify.
 
-The logic language used to design rights, caveats and operation data is a
-variant of datalog that accepts constraints on some data types.
+The logic language used to design rights, checks and operation data is a
+variant of Datalog that accepts expressions over some data types.
 
 
 ## Semantics
 
-A biscuit is structured as an append-only list of blocks, containing *caveats*,
+A biscuit is structured as an append-only list of blocks, containing *checks*,
 and describing authorization properties.  As with Macaroons[MACAROONS],
-an operation must comply with all caveats in order to be allowed by the biscuit.
+an operation must comply with all checks in order to be allowed by the biscuit.
 
-Caveats are written as queries defined in a flavor of Datalog that supports
-constraints on some data types[DATALOG], without support for negation. This
-simplifies its implementation and makes the caveat more precise.
+Checks are written as queries defined in a flavor of Datalog that supports
+expressions on some data types[DATALOG], without support for negation. This
+simplifies its implementation and makes the check more precise.
 
 ### Logic language
 
 #### Terminology
 
 A Biscuit Datalog program contains *facts* and *rules*, which are made of
-*predicates* over the following types: *symbol*, *variable*, *integer*,
-*string*, *byte array* and *date*. While Biscuit does not use a textual
-representation for storage, we will use one for this specification and
-for pretty printing of caveats.
+*predicates* over the following types:
+- *symbol*
+- *variable*
+- *integer*
+- *string*
+- *byte array*
+- *date*
+- *boolean*
+- *set* a deduplicated list of values of any type, except *vaiable* or *set*
+
+While a Biscuit token does not use a textual representation for storage, we
+use one for parsing and pretty printing of Datalog elements.
 A *predicate* has the form `Predicate(v0, v1, ..., vn)`.
 A *fact* is a *predicate* that does not contain any *variable*.
 A *rule* has the form:
-`Pr(r0, r1, ..., rk) <- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0, ..., vi), ..., Cx(vx, ..., vy)`.
+`Pr(r0, r1, ..., rk) <- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), E0(v0, ..., vi), ..., Ex(vx, ..., vy)`.
 The part of the left of the arrow is called the *head* and on the right, the
 *body*. In a *rule*, each of the `ri` or `ti_j` terms can be of any type. A
 *rule* is safe if all of the variables in the head appear somewhere in the body.
-We also define an *expression* `Cx` over the variables `v0` to `vi`. *Expressions*
+We also define an *expression* `Ex` over the variables `v0` to `vi`. *Expressions*
 define a test of variable values when applying the *rule*. If the *expression*
 returns `false`, the *rule* application fails.
 A *query* is a type of *rule* that has no head. It has the following form:
@@ -79,6 +89,13 @@ A *query* is a type of *rule* that has no head. It has the following form:
 When applying a *rule*, if there is a combination of *facts* that matches the
 body's predicates, we generate a new *fact* corresponding to the head (with the
 variables bound to the corresponding values).
+A *check* is a *query* for which the token validation will fail if it cannot
+produce any fact. If any of the cheks fails, the entire verification fails.
+An *allow policy* or *deny policy* is a *query*. If the query produces something,
+the policy matches, and we stop there, otherwise we test the next one. If an
+*allow policy* succeeds, the token verification succeeds, while if a *deny policy*
+succeeds, the token verification fails. Those policies are tested after all of
+the *checks* have passed.
 We will represent the various types as follows:
 - symbol: `#a`
 - variable: `$variable` (the variable name is converted to an integer id through the symbol table)
@@ -86,6 +103,8 @@ We will represent the various types as follows:
 - string: `"hello"`
 - byte array: `hex:01A2`
 - date in RFC 3339 format: `1985-04-12T23:20:50.52Z`
+- boolean: `true` or `false`
+- set: `[ #a, #b, #c]`
 
 As an example, assuming we have the following facts: `parent(#a, #b)`,
 `parent(#b, #c)`, `#parent(#c, #d)`. If we apply the rule
@@ -141,14 +160,22 @@ to the operation the token is authorizing.
 Facts can also be created in blocks other than the authority block, but they cannot
 be authority or ambient facts.
 
-### Caveats
+### Checks
 
-Caveats are logic queries evaluating conditions on authority and ambient facts.
-To validate an operation, all of a token's caveats must succeed.
+Checks are logic queries evaluating conditions on authority and ambient facts.
+To validate an operation, all of a token's checks must succeed.
 
-One block can contain one or more caveats.
+One block can contain one or more checks.
 
-Here are some examples of writing caveats:
+Their text representation is `check if` followed by the body of the query.
+There can be multiple queries inside of a check, it will succeed if any of them
+succeeds
+
+Their text representation is `check if` followed by the body of the query.
+There can be multiple queries inside of a check, it will succeed if any of them
+succeeds. They are separated by a `or` token.
+
+Here are some examples of writing checks:
 
 #### Basic token
 
@@ -159,13 +186,20 @@ the `read` right over the resource.
 The second caveat checks that the resource is `file1`.
 
 ```
-authority = [right(#authority, "file1", #read), right(#authority, "file2", #read),
-  right(#authority, "file1", #write)]
+authority:
+  right(#authority, "file1", #read);
+  right(#authority, "file2", #read);
+  right(#authority, "file1", #write);
 ----------
-caveats = [caveat() <- resource(#ambient, $0), operation(#ambient, #read),
-  right(#authority, $0, #read)]  // restrict to read operations
+Block 1:
+check if
+  resource(#ambient, $0),
+  operation(#ambient, #read),
+  right(#authority, $0, #read)  // restrict to read operations
 ----------
-caveats = [caveat() <- resource(#ambient, "file1")]  // restrict to file1 resource
+Block 2:
+check if
+  resource(#ambient, "file1")  // restrict to file1 resource
 ```
 
 The facts with the `authority` tag can only be defined in the `authority` part of
@@ -174,13 +208,13 @@ The verifier side provides the `resource` and `operation` facts with the `ambien
 fact, with information from the request.
 
 If the verifier provided the facts `resource(#ambient, "file2")` and
-`operation(#ambient, #read)`, the rule application of `caveat1` would see
+`operation(#ambient, #read)`, the rule application of the first check would see
 `resource(#ambient, "file2"), operation(#ambient, #read), right(#authority, "file2", #read)`
-with `X = "file2"`, so it would succeed, but `caveat2` would fail
+with `X = "file2"`, so it would succeed, but the second check would fail
 because it expects `resource(#ambient, "file1")`.
 
 If the verifier provided the facts `resource(#ambient, "file1")` and
-`operation(#ambient, #read)`, both caveats would succeed.
+`operation(#ambient, #read)`, both checks would succeed.
 
 #### Broad authority rules
 
@@ -189,51 +223,135 @@ before giving to a user. The authority block can define rules that will generate
 facts depending on ambient data. This helps reduce the size of the token.
 
 ```
-authority_rules = [
-  // if there is an ambient resource and we own it, we can read it
-  right(#authority, $0, #read) <- resource(#ambient, $0), owner(#ambient, $1, $0),
-  // if there is an ambient resource and we own it, we can write to it
-  right(#authority, $0, #write) <- resource(#ambient, $0), owner(#ambient, $1, $0)
-]
+authority:
+
+// if there is an ambient resource and we own it, we can read it
+right(#authority, $0, #read) <- resource(#ambient, $0), owner(#ambient, $1, $0);
+// if there is an ambient resource and we own it, we can write to it
+right(#authority, $0, #write) <- resource(#ambient, $0), owner(#ambient, $1, $0);
 ----------
-caveats = [caveat() <- right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)]
+Block 1:
+
+check if
+  right(#authority, $0, $1),
+  resource(#ambient, $0),
+  operation(#ambient, $1)
 ----------
-caveats = [caveat() <- resource(#ambient, $0), owner(#alice, $0)] // defines a token only usable by alice
+Block 2:
+
+check if
+  resource(#ambient, $0),
+  owner(#alice, $0) // defines a token only usable by alice
 ```
 
 These rules will define authority facts depending on ambient data.
 If we had the ambient facts `resource(#ambient, "file1")` and
 `owner(#ambient, #alice, "file1")`, the authority rules will define
 `right(#authority, "file1", #read)` and `right(#authority, "file1", #write)`,
-which will allow caveat 1 and caveat 2 to succeed.
+which will allow check 1 and check 2 to succeed.
 
-If the owner ambient fact does not match the restriction in `caveat2`, the token
-check will fail.
+If the owner ambient fact does not match the restriction in the second check, the
+token verification will fail.
 
-#### Expressions
+### Allow/deny policies
+
+Allow and deny policies are queries that are tested one by one, after all of the
+checks have succeeded. If one of them succeeds, we stop there, otherwise we test
+the next one. If an allow policy succeeds, token verification succeeds, while if
+a deny policy succeeds, the token verification fails. If none of these policies
+are present, the verification will fail.
+
+They are written as `allow if` or `deny if` followed by the body of the query.
+
+### Expressions
 
 We can define queries or rules with expressions on some predicate values, and
 restrict usage based on ambient values:
 
 ```
-authority=[right(#authority, "/folder/file1", #read),
-  right(#authority, "/folder/file2", #read), right(#authority, "/folder2/file3", #read)]
+authority:
+
+right(#authority, "/folder/file1", #read);
+right(#authority, "/folder/file2", #read);
+right(#authority, "/folder2/file3", #read);
 ----------
-caveats = [caveat() <- resource(#ambient, $0), right(#authority, $0, $1)]
+check if resource(#ambient, $0), right(#authority, $0, $1)
 ----------
-caveats = [caveat() <- time(#ambient, $0), $0 < 2019-02-05T23:00:00Z] // expiration date
+check if time(#ambient, $0), $0 < 2019-02-05T23:00:00Z // expiration date
 ----------
-caveats = [caveat() <- source_IP(#ambient, $0), $0 in ["1.2.3.4", "5.6.7.8"]] // set membership
+check if source_IP(#ambient, $0), ["1.2.3.4", "5.6.7.8"].contains($0) // set membership
 ----------
-caveats = [caveat() <- resource(#ambient, $0), prefix($0, "/folder/")] // prefix operation on strings
+check if resource(#ambient, $0), $0.starts_with("/folder/") // prefix operation on strings
 ```
+
+Executing an expression must always return a boolean, and all variables
+appearing in an expression must also appear in other predicates of the
+rule.
+
+#### Execution
+
+Expressions are internally represented as a serie of opcodes for a stack based
+virtual machine. There are three kinds of opcodes:
+- *value*: a raw value of any type. If it is a variable, the variable must also
+appear in a predicate, so the variable gets a real value for execution. When
+encountering a *value* opcode, we push it onto the stack
+- *unary operation*: an operation that applies on one argument. When executed,
+it pops a value from the stack, applies the operation, then pushes the result
+- *binary operation*: an operation that applies on two arguments. When executed,
+it pops two values from the stack, applies the operation, then pushes the result
+
+After executing, the stack must contain only one value, of the boolean type.
+
+Here are the currently defined unary operations:
+- *negate*: boolean negation
+- *parens*: returns its argument without modification (this is used when printing
+the expression, to avoid precedence errors)
+
+Here are the currently defined binary operations:
+- *less than*, defined on integers, returns a boolean
+- *greater than*, defined on integers, returns a boolean
+- *less or equal*, defined on integers and dates, returns a boolean
+- *greater or equal*, defined on integers and dates, returns a boolean
+- *equal*, defined on integers, strings, byte arrays, returns a boolean
+- *contains* takes a set and another value as argument, returns a boolean
+- *prefix*, defined on strings, returns a boolean
+- *suffix*, defined on strings, returns a boolean
+- *regex*, defined on strings, returns a boolean
+- *add*, defined on integers, returns an integer
+- *sub*, defined on integers, returns an integer
+- *mul*, defined on integers, returns an integer
+- *div*, defined on integers, returns an integer
+- *and*, defined on booleans, returns a boolean
+- *or*, defined on booleans, returns a boolean
+
+Integer operations must have overflow checks. If it overflows, the expression
+fails.
+
+#### Example
+
+The expression `1 + 2 < 4` will translate to the following opcodes: 1, 2, +, 4, <
+
+Here is how it would be executed:
+
+```
+Op | stack
+   | [ ]
+1  | [ 1 ]
+2  | [ 2, 1 ]
++  | [ 3 ]
+4  | [ 4, 3 ]
+<  | [ true ]
+```
+
+The stack contains only one value, and it is `true`: the expression succeeds.
 
 ### Verifier
 
 The verifier provides information on the operation, such as the type of access
 ("read", "write", etc), the resource accessed, and more ambient data like the
 current time, source IP address, revocation lists.
-The verifier can also provide its own caveats.
+The verifier can also provide its own checks. It provides allow and deny policies
+for the final decision on request validation.
 
 #### Deserializing the token
 
@@ -242,9 +360,9 @@ of either a `Biscuit` or `SealedBiscuit`.
 The cryptographic signature must be checked immediately after deserializing. For the
 `Biscuit` with a public key signature, the verifier must check that the public key of the
 authority block is the root public key it is expecting.
-TODO: describe `Biscuit` crypto deserialize process
 
-The blocks can then be deserialized from the `authority` and `blocks` fields.
+A `Biscuit` or `SealedBiscuit` contains in its`authority` and `blocks` fields
+some byte arrays that must be deserialized as a `Block`.
 
 #### Verification process
 
@@ -268,14 +386,19 @@ on its format.
 The verifier then adds facts and rules obtained from looking up the context, and provides
 facts and rules with the `ambient` tag to describe the request.
 
-To check caveats, the verifier will:
-- run the Datalog engine ont he facts and rules that were loaded
+To perform the verification, the verifier will:
+- run the Datalog engine on the facts and rules that were loaded
 - create an error list
-- for each verifier caveat (caveat provided on the verifier side), check the caveat. If it fails,
+- for each verifier check (check provided on the verifier side), validate it. If it fails,
 add an error to the error list
 - for each block:
-  - for each caveat, check the caveat. If it fails, add an error to the error list
-- if the error list is empty, verification succeeded, if it is not, return the error list
+  - for each check, validate it. If it fails, add an error to the error list
+- if the error list is not empty, return the error list
+- for each allow/deny policy:
+  - run the query. If it succeeds:
+    - if it is an allow policy, the verification succeeds, stop here
+    - if it is a deny policy, the verification fails, stop here
+- if no policy matched, the verification fails
 
 #### Queries
 
@@ -287,6 +410,7 @@ TODO: describe error codes
 ### Appending
 
 #### deserializing
+
 TODO: same as the verifier, but we do not need to know the root key
 
 ## Format
@@ -310,6 +434,17 @@ message Signature {
 }
 ```
 
+The `keys` and `parameters` arrays contain Ristretto points in their
+canonical representation, serialized to a 32 bytes array[CompressedRistretto].
+Thee `z` field is a 32 bytes array containing the canonical representation
+of an element of Ristretto's scalar field[Scalar].
+
+The `keys` field contains the public keys used to sign each block. It contains
+as many elements as the `blocks` field plus one. The first element is the root key.
+
+The `parameters` field must have as many elements as the `keys` field. All of
+their elements must be distinct.
+
 or the "sealed" Biscuit wrapper (a token that cannot be attenuated offline):
 
 ```proto
@@ -330,12 +465,19 @@ in Protobuf format as well:
 message Block {
   required uint32 index = 1;
   repeated string symbols = 2;
-  repeated Fact   facts = 3;
-  repeated Rule   rules = 4;
-  repeated Rule   caveats = 5;
+  repeated FactV0 facts_v0 = 3;
+  repeated RuleV0 rules_v0 = 4;
+  repeated CaveatV0 caveats_v0 = 5;
   optional string context = 6;
+  optional uint32 version = 7;
+  repeated FactV1 facts_v1 = 8;
+  repeated RuleV1 rules_v1 = 9;
+  repeated CheckV1 checks_v1 = 10;
 }
 ```
+
+TODO: describe deserialization of facts, rules, checks and expressions
+TODO: describe versioning
 
 ### Text format
 
@@ -354,7 +496,8 @@ Biscuit to make a new token with a valid signature from an existing one,
 by signing the new data and adding the new signature to the old one.
 
 Every public key operation in Biscuit is defined over the Ristretto prime
-order group, that is designed to prevent some implementation mistakes.
+order group[Ristretto], that is designed to prevent some implementation
+mistakes.
 
 Definitions:
 - `R`: Ristretto group
@@ -382,7 +525,8 @@ With secret key `x`, public key `X`, message `message`:
 * `e = H2(X, message)`
 * `z = rd - ex mod l`
 
-The signature is `([A], z)`
+The signature is `([A], z)`. The `[A]` array corresponds to the `parameters`
+field in the protobuf schema.
 
 #### Signature (appending)
 With `([A0, ..., An], s)` the current signature:
@@ -503,4 +647,5 @@ Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdata
 MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
 Aggregated Gamma Signatures: "Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao" https://eprint.iacr.org/2018/414.pdf
 Ristretto: "Ristretto: prime order elliptic curve groups with non-malleable encodings" https://ristretto.group
-
+Scalar: https://doc.dalek.rs/curve25519_dalek/scalar/struct.Scalar.html
+CompressedRistretto: https://doc.dalek.rs/curve25519_dalek/ristretto/struct.CompressedRistretto.html
