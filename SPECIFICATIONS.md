@@ -476,8 +476,33 @@ message Block {
 }
 ```
 
-TODO: describe deserialization of facts, rules, checks and expressions
-TODO: describe versioning
+Each block contains a `version` field, indicating at which format version it
+was generated. Since a Biscuit implementation at version N can receive a valid
+token generated at version N-1, new implemetations must be able to recognize
+older formats. Moreover, when appending a new block, they cannot convert the
+old blocks to the new format (since that would invalidate the signature). So
+each block must carry its own version.
+An implementation must refuse token with a newer format than the one they know.
+An implementation must always generate tokens at the highest version it can do.
+
+### Version 0
+
+This version corresponds to the initial development of Biscuit, kept for
+compatibility with current deployments, and to test version updates.
+
+It corresponds to the block fields with the `v0` suffix.
+The `caveats_v0` field must be converted to version 1 checks.
+Constraints are converted to expressions with binary operations.
+
+As an example, a integer constraint with id `15`, of kind "lower", with `10` in
+its `lower` field, will be converted to the serie of opcodes `$var, 10, <` with
+`var` corresponding to `15` in the symbol table.
+
+# Version 1
+
+This is the format for the 1.0 version of Biscuit.
+
+It transport expressions as an array of opcodes.
 
 ### Text format
 
