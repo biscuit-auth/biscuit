@@ -263,7 +263,7 @@ The verifier then adds facts and rules obtained from looking up the context, and
 facts and rules with the `ambient` tag to describe the request.
 
 To check caveats, the verifier will:
-- run the Datalog engine ont he facts and rules that were loaded
+- run the Datalog engine on the facts and rules that were loaded
 - create an error list
 - for each verifier caveat (caveat provided on the verifier side), check the caveat. If it fails,
 add an error to the error list
@@ -491,10 +491,10 @@ We provide sample tokens and the expected result of their verification at
 
 ## References
 
-ProtoBuf: https://developers.google.com/protocol-buffers/
-DATALOG: "Datalog with Constraints: A Foundation for
-Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf
-MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
-Aggregated Gamma Signatures: "Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao" https://eprint.iacr.org/2018/414.pdf
-Ristretto: "Ristretto: prime order elliptic curve groups with non-malleable encodings" https://ristretto.group
+ - ProtoBuf: https://developers.google.com/protocol-buffers/
+ - DATALOG: "Datalog with Constraints: A Foundation for
+ - Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf
+ - MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
+ - Aggregated Gamma Signatures: "Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao" https://eprint.iacr.org/2018/414.pdf
+ - Ristretto: "Ristretto: prime order elliptic curve groups with non-malleable encodings" https://ristretto.group
 
