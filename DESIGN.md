@@ -1,3 +1,9 @@
+**note: this is the initial design document of Biscuit, explaining the project's
+intentions and the solutions that were evaluated. It is not up to date with the
+current format of the token.
+For a complete description of the current format, see SPECIFICATIONS.md. For a
+usage explanation, see SUMMARY.md**
+
 # Biscuit Authentication
 
 ## Introduction
