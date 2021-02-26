@@ -9,16 +9,17 @@
 Biscuit is an authentication and authorization token for microservices
 architectures with the following properties:
 
-- distributed authentication: any node could validate the token only with public
+- **distributed authentication**: any node could validate the token only with public
   information;
-- offline delegation: a new, valid token can be created from another one by
+- **offline delegation**: a new, valid token can be created from another one by
   attenuating its rights, by its holder, without communicating with anyone;
-- capabilities based: authorization in microservices should be tied to rights
+- **capabilities based**: authorization in microservices should be tied to rights
   related to the request, instead of relying to an identity that might not make
   sense to the verifier;
-- flexible rights managements: the token uses a logic language to specify attenuation
-  and add bounds on ambient data;
-- small enough to fit anywhere (cookies, etc).
+- **flexible rights managements**: the token uses a logic language to specify attenuation
+  and add bounds on ambient data, it can model from small rules like expiration dates,
+  to more flexible architectures like hierarchical roles and user delegation;
+- **small** enough to fit anywhere (cookies, etc).
 
 ## Non goals
 - This is not a new authentication protocol. Biscuit tokens can be used as
@@ -46,9 +47,9 @@ Current status:
 ## Project organisation
 
 - `SUMMARY.md`: introduction to Biscuit from a user's perspective
-- `DESIGN.md` holds the current ideas about what Biscuit should be
 - `SPECIFICATIONS.md` is the description of Biscuit, its format and behaviour
-- `experimentations/` holds code examples for the crypographic schemes and caveat language. `code/biscuit-poc/` contains an experimental version of Biscuit, built to explore API issues
+- `DESIGN.md` holds the initial ideas about what Biscuit should be
+- `experimentations/` holds initial code examples for the crypographic schemes and caveat language. `code/biscuit-poc/` contains an experimental version of Biscuit, built to explore API issues
 
 ## License
 
