@@ -226,6 +226,12 @@ To check revocation status, we can either:
 - query the list of revocation tokens: `revocation($index, $id) <- revocation_id($index, $id)` then verify their presence in a revocation list
 - load a policy with the list of revoked tokens: `deny if revocation_id($index, $id), [ hex:1234..., hex:4567...].contains($id)`
 
+The hashes are generated from the serialized blocks and the corresponding keys,
+so if you generate multiple tokens with the same root key and same authority
+block, they will have the same revocation identifier. To avoid that, you can
+add unique data to the block, like a random value, a UUID identifying that
+token chain, a date, etc.
+
 # Example tokens
 
 Let's make an example, from an S3-like application, on which we can store and
