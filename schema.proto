@@ -296,6 +296,7 @@ message OpUnary {
   enum Kind {
     Negate = 0;
     Parens = 1;
+    Length = 2;
   }
 
   required Kind kind = 1;
@@ -318,6 +319,8 @@ message OpBinary {
     Div = 12;
     And = 13;
     Or = 14;
+    Intersection = 15;
+    Union = 16;
   }
 
   required Kind kind = 1;
