@@ -730,3 +730,95 @@ World {
 ]
 }
 validation: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if resource(#ambient, #hello)" })])))`
+
+------------------------------
+
+## test expression syntax and all available operations: test17_expressions.bc
+biscuit: Biscuit {
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "query", "abc", "hello", "world"]
+    authority: Block[0] {
+            symbols: ["query", "abc", "hello", "world"]
+            version: 1
+            context: ""
+            facts: []
+            rules: []
+            checks: [
+                check if true,
+                check if !false,
+                check if !false,
+                check if false or true,
+                check if 1 < 2,
+                check if 2 > 1,
+                check if 1 <= 2,
+                check if 1 <= 1,
+                check if 2 >= 1,
+                check if 2 >= 2,
+                check if 3 == 3,
+                check if 1 + 2 * 3 - 4 / 2 == 5,
+                check if "hello world".starts_with("hello") && "hello world".ends_with("world"),
+                check if "aaabde".matches("a*c?.e"),
+                check if "abcD12" == "abcD12",
+                check if 2019-12-04T09:46:41+00:00 < 2020-12-04T09:46:41+00:00,
+                check if 2020-12-04T09:46:41+00:00 > 2019-12-04T09:46:41+00:00,
+                check if 2019-12-04T09:46:41+00:00 <= 2020-12-04T09:46:41+00:00,
+                check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00,
+                check if 2020-12-04T09:46:41+00:00 >= 2019-12-04T09:46:41+00:00,
+                check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00,
+                check if 2020-12-04T09:46:41+00:00 == 2020-12-04T09:46:41+00:00,
+                check if #abc == #abc,
+                check if hex:12ab == hex:12ab,
+                check if [1, 2].contains(2),
+                check if [2019-12-04T09:46:41+00:00, 2020-12-04T09:46:41+00:00].contains(2020-12-04T09:46:41+00:00),
+                check if [false, true].contains(true),
+                check if ["abc", "def"].contains("abc"),
+                check if [hex:12ab, hex:34de].contains(hex:34de),
+                check if [#hello, #world].contains(#hello)
+            ]
+        }
+    blocks: [
+        
+    ]
+}
+verifier world:
+World {
+  facts: [
+    "revocation_id(0, hex:d3258e24583d1482da74b2a4864074428659ebd7f5c35d42d97ce33b3f32f59d)",
+]
+  rules: []
+  checks: [
+    "Block[0][0]: check if true",
+    "Block[0][1]: check if !false",
+    "Block[0][2]: check if !false",
+    "Block[0][3]: check if false or true",
+    "Block[0][4]: check if 1 < 2",
+    "Block[0][5]: check if 2 > 1",
+    "Block[0][6]: check if 1 <= 2",
+    "Block[0][7]: check if 1 <= 1",
+    "Block[0][8]: check if 2 >= 1",
+    "Block[0][9]: check if 2 >= 2",
+    "Block[0][10]: check if 3 == 3",
+    "Block[0][11]: check if 1 + 2 * 3 - 4 / 2 == 5",
+    "Block[0][12]: check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\")",
+    "Block[0][13]: check if \"aaabde\".matches(\"a*c?.e\")",
+    "Block[0][14]: check if \"abcD12\" == \"abcD12\"",
+    "Block[0][15]: check if 2019-12-04T09:46:41+00:00 < 2020-12-04T09:46:41+00:00",
+    "Block[0][16]: check if 2020-12-04T09:46:41+00:00 > 2019-12-04T09:46:41+00:00",
+    "Block[0][17]: check if 2019-12-04T09:46:41+00:00 <= 2020-12-04T09:46:41+00:00",
+    "Block[0][18]: check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00",
+    "Block[0][19]: check if 2020-12-04T09:46:41+00:00 >= 2019-12-04T09:46:41+00:00",
+    "Block[0][20]: check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00",
+    "Block[0][21]: check if 2020-12-04T09:46:41+00:00 == 2020-12-04T09:46:41+00:00",
+    "Block[0][22]: check if #abc == #abc",
+    "Block[0][23]: check if hex:12ab == hex:12ab",
+    "Block[0][24]: check if [1, 2].contains(2)",
+    "Block[0][25]: check if [2019-12-04T09:46:41+00:00, 2020-12-04T09:46:41+00:00].contains(2020-12-04T09:46:41+00:00)",
+    "Block[0][26]: check if [false, true].contains(true)",
+    "Block[0][27]: check if [\"abc\", \"def\"].contains(\"abc\")",
+    "Block[0][28]: check if [hex:12ab, hex:34de].contains(hex:34de)",
+    "Block[0][29]: check if [#hello, #world].contains(#hello)",
+]
+  policies: [
+    "allow if true",
+]
+}
+validation: `Ok(())`

@@ -306,14 +306,15 @@ Here are the currently defined unary operations:
 - *negate*: boolean negation
 - *parens*: returns its argument without modification (this is used when printing
 the expression, to avoid precedence errors)
+- *length*: defined on strings, byte arrays and sets
 
 Here are the currently defined binary operations:
-- *less than*, defined on integers, returns a boolean
-- *greater than*, defined on integers, returns a boolean
+- *less than*, defined on integers and dates, returns a boolean
+- *greater than*, defined on integers and dates, returns a boolean
 - *less or equal*, defined on integers and dates, returns a boolean
 - *greater or equal*, defined on integers and dates, returns a boolean
-- *equal*, defined on integers, strings, byte arrays, returns a boolean
-- *contains* takes a set and another value as argument, returns a boolean
+- *equal*, defined on integers, strings, byte arrays, dates, symbols, set, returns a boolean
+- *contains* takes a set and another value as argument, returns a boolean. Between two sets, indicates if the first set is a superset of the second one
 - *prefix*, defined on strings, returns a boolean
 - *suffix*, defined on strings, returns a boolean
 - *regex*, defined on strings, returns a boolean
@@ -323,6 +324,8 @@ Here are the currently defined binary operations:
 - *div*, defined on integers, returns an integer
 - *and*, defined on booleans, returns a boolean
 - *or*, defined on booleans, returns a boolean
+- *intersection*, defined on sets, return a set that is the intersection of both arguments
+- *union*, defined on sets, return a set that is the union of both arguments
 
 Integer operations must have overflow checks. If it overflows, the expression
 fails.
