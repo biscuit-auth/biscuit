@@ -41,6 +41,8 @@ verifier world:
 World {
   facts: [
     "resource(#ambient, \"file1\")",
+    "revocation_id(0, hex:596a24631a8eeec5cbc0d84fc6c22fec1a524c7367bc8926827201ddd218f4bb)",
+    "revocation_id(1, hex:dec4e0a7f817fe6c5964a18e9f0eae5564c12531b05dc4525f553570519baa87)",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file1\", #write)",
     "right(#authority, \"file2\", #read)",
@@ -341,6 +343,8 @@ World {
   facts: [
     "operation(#ambient, #read)",
     "resource(#ambient, \"file1\")",
+    "revocation_id(0, hex:deaf1b539fda04436be70357d4dca8435581661e47d5a6b690054a9e7b63ed09)",
+    "revocation_id(1, hex:e1ad30e387ff5b866bf631ac3c572256730cba0612d88054a863aa8c0702dbd6)",
     "time(#ambient, 2020-12-21T09:23:12+00:00)",
 ]
   rules: []
@@ -394,6 +398,8 @@ World {
     "operation(#ambient, #read)",
     "owner(#ambient, #alice, \"file1\")",
     "resource(#ambient, \"file1\")",
+    "revocation_id(0, hex:20262f14cd4d28aa7e95ec93e94c28faf9aac1e7b720fb47f177aea577b18691)",
+    "revocation_id(1, hex:9065c0f8a4abad0c01877a2a9427e948688fbe296069eeef021179d5b936e260)",
 ]
   rules: [
     "right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
@@ -437,6 +443,7 @@ World {
   facts: [
     "operation(#ambient, #read)",
     "resource(#ambient, \"file2\")",
+    "revocation_id(0, hex:ea25b30574845105fb8def0856560d07182bf5ab14fd4d32040431a69d788534)",
     "right(#authority, \"file1\", #read)",
 ]
   rules: []
@@ -477,6 +484,7 @@ World {
   facts: [
     "operation(#ambient, #read)",
     "resource(#ambient, \"file1\")",
+    "revocation_id(0, hex:a5b6e79d15461ee3c304802c00dfa4237c3702f6dd8a1dd148a7b4dfba18ef40)",
 ]
   rules: []
   checks: [
@@ -492,6 +500,7 @@ World {
   facts: [
     "operation(#ambient, #read)",
     "resource(#ambient, \"file2\")",
+    "revocation_id(0, hex:a5b6e79d15461ee3c304802c00dfa4237c3702f6dd8a1dd148a7b4dfba18ef40)",
 ]
   rules: []
   checks: [
@@ -543,6 +552,8 @@ verifier world:
 World {
   facts: [
     "resource(#ambient, \"file1\")",
+    "revocation_id(0, hex:d6c50661f8f35fbfdc3daa70f6ca41608d628b245c91ba6d6281805aa9f47774)",
+    "revocation_id(1, hex:c17a3b24a64978db6039d093f1109c63417b2dffc63b972abc69eb61ee28885e)",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file2\", #read)",
     "time(#ambient, 2020-12-21T09:23:12+00:00)",
@@ -563,6 +574,8 @@ verifier world:
 World {
   facts: [
     "resource(#ambient, \"file2\")",
+    "revocation_id(0, hex:d6c50661f8f35fbfdc3daa70f6ca41608d628b245c91ba6d6281805aa9f47774)",
+    "revocation_id(1, hex:c17a3b24a64978db6039d093f1109c63417b2dffc63b972abc69eb61ee28885e)",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file2\", #read)",
     "time(#ambient, 2020-12-21T09:23:12+00:00)",
@@ -607,6 +620,7 @@ verifier world:
 World {
   facts: [
     "resource(#ambient, \"file1\")",
+    "revocation_id(0, hex:a3a87a95f62fe215a0a83d462b8bb0e8b030d7d4d933706d19c3461a85bd3e83)",
 ]
   rules: []
   checks: [
@@ -621,6 +635,7 @@ verifier world:
 World {
   facts: [
     "resource(#ambient, \"file123.txt\")",
+    "revocation_id(0, hex:a3a87a95f62fe215a0a83d462b8bb0e8b030d7d4d933706d19c3461a85bd3e83)",
 ]
   rules: []
   checks: [
@@ -659,6 +674,7 @@ verifier world:
 World {
   facts: [
     "must_be_present(#authority, \"hello\")",
+    "revocation_id(0, hex:1ded979c6661e34b09cedf85c778ab0f0304e7c0ca44382348e76147cb1fa3f3)",
 ]
   rules: []
   checks: [
@@ -702,6 +718,8 @@ verifier world:
 World {
   facts: [
     "check1(#test)",
+    "revocation_id(0, hex:8f03890eeaa997cd03da71115168e41425b2be82731026225b0c5b87163e4d8e)",
+    "revocation_id(1, hex:94fff36a9fa4d4149ab1488bf4aa84ed0bab0075cc7d051270367fb9c9688795)",
 ]
   rules: []
   checks: [

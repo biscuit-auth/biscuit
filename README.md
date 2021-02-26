@@ -23,8 +23,10 @@ architectures with the following properties:
 ## Non goals
 - This is not a new authentication protocol. Biscuit tokens can be used as
   opaque tokens delivered by other systems such as OAuth.
-- Revocation: while tokens come with expiration dates and revocation ids,
-  revocation still requires external state management that we will not specify.
+- Revocation: Biscuit generates unique revocation identifiers for each token,
+and can provide expiration dates as well, but revocation requires external
+state management (revocation lists, databases, etc) that is outside of this
+specification.
 
 ## Roadmap
 

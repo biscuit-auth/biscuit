@@ -379,6 +379,18 @@ The verifier will create a Datalog "world", and add to this world:
   - add the rules from the block.  If it finds a rule generating `authority` or `ambient` facts, it
   stops there and returns an error checking that those facts are not `authority` or `ambient` facts
 
+##### Revocation identifiers
+
+The verifier will generate a list of facts indicating revocation identifiers for
+the token. They are calculated as follows:
+- perform a SHA256 hash of the authority block and the root key
+- generate the hash value, store it as `revocation_id(0, <byte array of the hash)`
+- for each following block:
+  - continue from the previous hash, update with the current block and its public key
+  - generate the hash value, store it as `revocation_id(<block index>, <byte array of the hash)`
+
+##### Verifying
+
 From there, the verifier can start loading ambient data. First, each block contains a `context`
 field that can give some information on the verifier to know which data to load (to avoid
 loading all of the users, groups, resources, etc). This field is a text field with no restriction

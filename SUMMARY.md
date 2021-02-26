@@ -215,6 +215,17 @@ allow if is_admin(#authority)
 deny if true
 ```
 
+##### Revocation identifiers
+
+The verifier will generate a list of facts indicating revocation identifiers for
+the token. They uniquely identify the token and each of its parent tokens through
+a serie of SHA256 hashes. That way, if a token is revoked, we will be able to
+refuse all the tokens derived from it.
+
+To check revocation status, we can either:
+- query the list of revocation tokens: `revocation($index, $id) <- revocation_id($index, $id)` then verify their presence in a revocation list
+- load a policy with the list of revoked tokens: `deny if revocation_id($index, $id), [ hex:1234..., hex:4567...].contains($id)`
+
 # Example tokens
 
 Let's make an example, from an S3-like application, on which we can store and
