@@ -325,3 +325,22 @@ message OpBinary {
 
   required Kind kind = 1;
 }
+
+message Policy {
+  enum Kind {
+    Allow = 0;
+    Deny = 1;
+  }
+
+  repeated RuleV1 queries = 1;
+  required Kind kind = 2;
+}
+
+message VerifierPolicies {
+  repeated string symbols = 1;
+  optional uint32 version = 2;
+  repeated FactV1 facts = 3;
+  repeated RuleV1 rules = 4;
+  repeated CheckV1 checks = 5;
+  repeated Policy policies = 6;
+}
