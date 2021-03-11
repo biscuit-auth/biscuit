@@ -25,7 +25,7 @@ the current date, or revocation lists
 
 ### Overview
 
-A Biscuit token is defined as a serie of blocks. The first one, named "authority block",
+A Biscuit token is defined as a series of blocks. The first one, named "authority block",
 contains rights given to the token holder. The following blocks contain caveats that
 reduce the token's scope, in the form of logic queries that must succeed.
 The holder of a biscuit token can at any time create a new
@@ -41,7 +41,7 @@ destroyed as soon as they are used.
 There is also a sealed version of that token that uses symmetric cryptography
 to generate a token that cannot be further attenuated, but is faster to verify.
 
-The logic language used to design rights, caveats and operation data is a
+The logic language used to design rights, caveats, and operation data is a
 variant of datalog that accepts constraints on some data types.
 
 
@@ -274,7 +274,7 @@ add an error to the error list
 #### Queries
 
 The verifier can also run queries over the loaded data. A query is a datalog rule,
-and the query's result are the produced facts.
+and the query's result is the produced facts.
 
 TODO: describe error codes
 
@@ -451,7 +451,7 @@ the `#authority` symbol.
 
 ### Symbol table
 
-To reduce token size and improve performance, Biscuit uses a symbol table,
+To reduce the token size and improve performance, Biscuit uses a symbol table,
 a list of strings that any fact or token can refer to by index. While
 running the logic engine does not need to know the content of that list,
 pretty printing facts, rules and results will use it.
