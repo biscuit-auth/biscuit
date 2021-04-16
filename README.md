@@ -42,7 +42,7 @@ Current status:
 ## How to help us?
 
 - provide use cases that we can test the token on (some specific kind of caveats, auth delegation, etc)
-- cryptographic design audit: we need to decide on a cryptographic scheme that will be strong enough
+- cryptographic design audit: we need reviews of algorithms, their usage and implementation in various languages
 
 ## Project organisation
 
