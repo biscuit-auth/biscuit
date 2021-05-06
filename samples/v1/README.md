@@ -400,6 +400,8 @@ World {
     "resource(#ambient, \"file1\")",
     "revocation_id(0, hex:20262f14cd4d28aa7e95ec93e94c28faf9aac1e7b720fb47f177aea577b18691)",
     "revocation_id(1, hex:9065c0f8a4abad0c01877a2a9427e948688fbe296069eeef021179d5b936e260)",
+    "right(#authority, \"file1\", #read)",
+    "right(#authority, \"file1\", #write)",
 ]
   rules: [
     "right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
@@ -557,6 +559,7 @@ World {
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file2\", #read)",
     "time(#ambient, 2020-12-21T09:23:12+00:00)",
+    "valid_date(\"file1\")",
 ]
   rules: [
     "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
