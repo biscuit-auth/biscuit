@@ -47,6 +47,7 @@ World {
     "right(#authority, \"file1\", #write)",
     "right(#authority, \"file2\", #read)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Block[1][0]: check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)",
@@ -347,6 +348,7 @@ World {
     "revocation_id(1, hex:e1ad30e387ff5b866bf631ac3c572256730cba0612d88054a863aa8c0702dbd6)",
     "time(#ambient, 2020-12-21T09:23:12+00:00)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Block[1][0]: check if resource(#ambient, \"file1\")",
@@ -403,10 +405,11 @@ World {
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file1\", #write)",
 ]
-  rules: [
+  privileged rules: [
     "right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
     "right(#authority, $1, #write) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
 ]
+  rules: []
   checks: [
     "Block[1][0]: check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)",
     "Block[1][1]: check if resource(#ambient, $0), owner(#ambient, #alice, $0)",
@@ -448,6 +451,7 @@ World {
     "revocation_id(0, hex:ea25b30574845105fb8def0856560d07182bf5ab14fd4d32040431a69d788534)",
     "right(#authority, \"file1\", #read)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Verifier[0]: check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)",
@@ -488,6 +492,7 @@ World {
     "resource(#ambient, \"file1\")",
     "revocation_id(0, hex:a5b6e79d15461ee3c304802c00dfa4237c3702f6dd8a1dd148a7b4dfba18ef40)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Block[0][0]: check if resource(#ambient, \"file1\")",
@@ -504,6 +509,7 @@ World {
     "resource(#ambient, \"file2\")",
     "revocation_id(0, hex:a5b6e79d15461ee3c304802c00dfa4237c3702f6dd8a1dd148a7b4dfba18ef40)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Block[0][0]: check if resource(#ambient, \"file1\")",
@@ -561,6 +567,7 @@ World {
     "time(#ambient, 2020-12-21T09:23:12+00:00)",
     "valid_date(\"file1\")",
 ]
+  privileged rules: []
   rules: [
     "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
     "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, ![\"file1\"].contains($1)",
@@ -583,6 +590,7 @@ World {
     "right(#authority, \"file2\", #read)",
     "time(#ambient, 2020-12-21T09:23:12+00:00)",
 ]
+  privileged rules: []
   rules: [
     "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
     "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, ![\"file1\"].contains($1)",
@@ -625,6 +633,7 @@ World {
     "resource(#ambient, \"file1\")",
     "revocation_id(0, hex:a3a87a95f62fe215a0a83d462b8bb0e8b030d7d4d933706d19c3461a85bd3e83)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Block[0][0]: check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")",
@@ -640,6 +649,7 @@ World {
     "resource(#ambient, \"file123.txt\")",
     "revocation_id(0, hex:a3a87a95f62fe215a0a83d462b8bb0e8b030d7d4d933706d19c3461a85bd3e83)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Block[0][0]: check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")",
@@ -679,6 +689,7 @@ World {
     "must_be_present(#authority, \"hello\")",
     "revocation_id(0, hex:1ded979c6661e34b09cedf85c778ab0f0304e7c0ca44382348e76147cb1fa3f3)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Verifier[0]: check if must_be_present(#authority, $0) or must_be_present($0)",
@@ -724,6 +735,7 @@ World {
     "revocation_id(0, hex:8f03890eeaa997cd03da71115168e41425b2be82731026225b0c5b87163e4d8e)",
     "revocation_id(1, hex:94fff36a9fa4d4149ab1488bf4aa84ed0bab0075cc7d051270367fb9c9688795)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Block[0][0]: check if resource(#ambient, #hello)",
@@ -786,6 +798,7 @@ World {
   facts: [
     "revocation_id(0, hex:28f62066e45ad00c448433083a283d48a14b05cc07adf533d90b216998ae2648)",
 ]
+  privileged rules: []
   rules: []
   checks: [
     "Block[0][0]: check if true",
@@ -823,3 +836,90 @@ World {
 ]
 }
 validation: `Ok(())`
+
+------------------------------
+
+## invalid block rule with unbound_variables: test18_unbound_variables_in_rule.bc
+biscuit2 (1 check):
+```
+Biscuit {
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "check1", "test", "read", "unbound", "any1", "any2"]
+    authority: Block[0] {
+            symbols: ["check1", "test", "read"]
+            version: 1
+            context: ""
+            facts: []
+            rules: []
+            checks: [
+                check if operation(#ambient, #read)
+            ]
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["unbound", "any1", "any2"]
+            version: 1
+            context: ""
+            facts: []
+            rules: [
+                operation($unbound, #read) <- operation($any1, $any2)
+            ]
+            checks: []
+        }
+    ]
+}
+```
+
+validation: `Err(FailedLogic(InvalidBlockRule(0, "operation($unbound, #read) <- operation($any1, $any2)")))`
+
+------------------------------
+
+## invalid block rule generating an #authority or #ambient symbol with a variable: test19_generating_ambient_from_variables.bc
+biscuit2 (1 check):
+```
+Biscuit {
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "check1", "test", "read", "any"]
+    authority: Block[0] {
+            symbols: ["check1", "test", "read"]
+            version: 1
+            context: ""
+            facts: []
+            rules: []
+            checks: [
+                check if operation(#ambient, #read)
+            ]
+        }
+    blocks: [
+        Block[1] {
+            symbols: ["any"]
+            version: 1
+            context: ""
+            facts: []
+            rules: [
+                operation($ambient, #read) <- operation($ambient, $any)
+            ]
+            checks: []
+        }
+    ]
+}
+```
+
+this rule should not generate a fact with restricted symbols
+verifier world:
+World {
+  facts: [
+    "operation(#ambient, #write)",
+    "revocation_id(0, hex:4bfc06061aaef82c0ae7b04c9e0842235815eb1247e3601f6e762fbfbf5b8227)",
+    "revocation_id(1, hex:b8b5c6fe921a9ea1bbfd6563cc8ca659cbdd5d40f27a193858ccab4bea942b50)",
+]
+  privileged rules: []
+  rules: [
+    "operation($ambient, #read) <- operation($ambient, $any)",
+]
+  checks: [
+    "Block[0][0]: check if operation(#ambient, #read)",
+]
+  policies: [
+    "allow if true",
+]
+}
+validation: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if operation(#ambient, #read)" })])))`
