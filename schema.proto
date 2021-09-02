@@ -3,21 +3,23 @@ syntax = "proto2";
 package biscuit.format.schema;
 
 message Biscuit {
-  required bytes authority = 1;
-  repeated bytes blocks = 2;
-  repeated bytes keys = 3;
-  required Signature signature = 4;
+  optional uint32 rootKeyId = 1;
+  required SignedBlock authority = 2;
+  repeated SignedBlock blocks = 3;
+  required Proof proof = 4;
 }
 
-message SealedBiscuit {
-  required bytes authority = 1;
-  repeated bytes blocks = 2;
+message SignedBlock {
+  required bytes block = 1;
+  required bytes nextKey = 2;
   required bytes signature = 3;
 }
 
-message Signature {
-  repeated bytes parameters = 1;
-  required bytes z = 2;
+message Proof {
+  oneof Content {
+    bytes nextSecret = 1;
+    bytes finalSignature = 2;
+  }
 }
 
 message Block {

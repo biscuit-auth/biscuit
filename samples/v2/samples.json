@@ -1,0 +1,611 @@
+{
+  "root_private_key": "12aca40167fbdd1a11037e9fd440e3d510d9d9dea70a6646aa4aaf84d718d75a",
+  "root_public_key": "acdd6d5b53bfee478bf689f8e012fe7988bf755e3d7c5152947abc149bc20189",
+  "testcases": [
+    {
+      "title": "basic token",
+      "filename": "test1_basic.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"write\", \"check1\", \"0\"]\n    authority: Block[0] {\n            symbols: [\"read\", \"write\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read),\n                right(#authority, \"file2\", #read),\n                right(#authority, \"file1\", #write)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"check1\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          {
+            "facts": [
+              "resource(#ambient, \"file1\")",
+              "revocation_id(0, hex:415b9d4bcfbcc052eb30b66bed5151a7291bd3ededa8679140753f97d9a0b3e6)",
+              "revocation_id(1, hex:057ef57833aac9fb405ba1abadca1b088f2557700ea2004c79004ea688abeb47)",
+              "right(#authority, \"file1\", #read)",
+              "right(#authority, \"file1\", #write)",
+              "right(#authority, \"file2\", #read)",
+              "unique_revocation_id(0, hex:415b9d4bcfbcc052eb30b66bed5151a7291bd3ededa8679140753f97d9a0b3e6)",
+              "unique_revocation_id(1, hex:057ef57833aac9fb405ba1abadca1b088f2557700ea2004c79004ea688abeb47)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Err": [
+              "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)\" })"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "different root key",
+      "filename": "test2_different_root_key.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"check1\", \"0\"]\n    authority: Block[0] {\n            symbols: [\"read\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"check1\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          null,
+          {
+            "Err": [
+              "Format(Signature(InvalidSignature(\"signature error\")))"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "invalid signature format",
+      "filename": "test3_invalid_signature_format.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"write\", \"check1\", \"0\"]\n    authority: Block[0] {\n            symbols: [\"read\", \"write\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read),\n                right(#authority, \"file2\", #read),\n                right(#authority, \"file1\", #write)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"check1\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          null,
+          {
+            "Err": [
+              "Format(InvalidSignatureSize(16))"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "random block",
+      "filename": "test4_random_block.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"write\", \"check1\", \"0\"]\n    authority: Block[0] {\n            symbols: [\"read\", \"write\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read),\n                right(#authority, \"file2\", #read),\n                right(#authority, \"file1\", #write)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"check1\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          null,
+          {
+            "Err": [
+              "Format(Signature(InvalidSignature(\"signature error\")))"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "invalid signature",
+      "filename": "test5_invalid_signature.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"write\", \"check1\", \"0\"]\n    authority: Block[0] {\n            symbols: [\"read\", \"write\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read),\n                right(#authority, \"file2\", #read),\n                right(#authority, \"file1\", #write)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"check1\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          null,
+          {
+            "Err": [
+              "Format(Signature(InvalidSignature(\"signature error\")))"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "reordered blocks",
+      "filename": "test6_reordered_blocks.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"write\", \"check1\", \"0\"]\n    authority: Block[0] {\n            symbols: [\"read\", \"write\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read),\n                right(#authority, \"file2\", #read),\n                right(#authority, \"file1\", #write)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"check1\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)\n            ]\n        }\n    ]\n}",
+        "biscuit3 (2 checks)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"write\", \"check1\", \"0\", \"check2\"]\n    authority: Block[0] {\n            symbols: [\"read\", \"write\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read),\n                right(#authority, \"file2\", #read),\n                right(#authority, \"file1\", #write)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"check1\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)\n            ]\n        },\n\tBlock[2] {\n            symbols: [\"check2\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, \"file1\")\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          null,
+          {
+            "Err": [
+              "Format(Signature(InvalidSignature(\"signature error\")))"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "invalid block fact with authority tag",
+      "filename": "test7_invalid_block_fact_authority.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"write\", \"check1\", \"0\"]\n    authority: Block[0] {\n            symbols: [\"read\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"write\", \"check1\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #write)\n            ]\n            rules: []\n            checks: [\n                check if operation(#ambient, #read)\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          null,
+          {
+            "Err": [
+              "FailedLogic(InvalidBlockFact(0, \"right(#authority, \\\"file1\\\", #write)\"))"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "invalid block fact with ambient tag",
+      "filename": "test8_invalid_block_fact_ambient.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"write\", \"check1\", \"0\"]\n    authority: Block[0] {\n            symbols: [\"read\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"write\", \"check1\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#ambient, \"file1\", #write)\n            ]\n            rules: []\n            checks: [\n                check if operation(#ambient, #read)\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          null,
+          {
+            "Err": [
+              "FailedLogic(InvalidBlockFact(0, \"right(#ambient, \\\"file1\\\", #write)\"))"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "expired token",
+      "filename": "test9_expired_token.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"check1\", \"expiration\", \"date\", \"time\"]\n    authority: Block[0] {\n            symbols: []\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"check1\", \"expiration\", \"date\", \"time\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, \"file1\"),\n                check if time(#ambient, $date), $date <= 2018-12-20T00:00:00+00:00\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          {
+            "facts": [
+              "operation(#ambient, #read)",
+              "resource(#ambient, \"file1\")",
+              "revocation_id(0, hex:96123a8ee182336c4c63ad29f2b23549020da2a90841ac63ccec4c20413753b0)",
+              "revocation_id(1, hex:60e6f54cb7a20ee0859495abe176da0306dfe91b4ee270244dfecf954da340bb)",
+              "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+              "unique_revocation_id(0, hex:96123a8ee182336c4c63ad29f2b23549020da2a90841ac63ccec4c20413753b0)",
+              "unique_revocation_id(1, hex:60e6f54cb7a20ee0859495abe176da0306dfe91b4ee270244dfecf954da340bb)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if resource(#ambient, \"file1\")",
+              "check if time(#ambient, $date), $date <= 2018-12-20T00:00:00+00:00"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Err": [
+              "Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: \"check if time(#ambient, $date), $date <= 2018-12-20T00:00:00+00:00\" })"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "authority rules",
+      "filename": "test10_authority_rules.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"1\", \"read\", \"owner\", \"0\", \"write\", \"check1\", \"check2\", \"alice\"]\n    authority: Block[0] {\n            symbols: [\"1\", \"read\", \"owner\", \"0\", \"write\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: [\n                right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1),\n                right(#authority, $1, #write) <- resource(#ambient, $1), owner(#ambient, $0, $1)\n            ]\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"check1\", \"check2\", \"alice\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1),\n                check if resource(#ambient, $0), owner(#ambient, #alice, $0)\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          {
+            "facts": [
+              "operation(#ambient, #read)",
+              "owner(#ambient, #alice, \"file1\")",
+              "resource(#ambient, \"file1\")",
+              "revocation_id(0, hex:7b1c49cfd08df0bca951d50aa6f5062db8e4decce6713974186abd050382ab67)",
+              "revocation_id(1, hex:c5fdfd4294c92dca9f14fa659c45c811828853bf913e71a5d18ef9eecd7a6cab)",
+              "right(#authority, \"file1\", #read)",
+              "right(#authority, \"file1\", #write)",
+              "unique_revocation_id(0, hex:7b1c49cfd08df0bca951d50aa6f5062db8e4decce6713974186abd050382ab67)",
+              "unique_revocation_id(1, hex:c5fdfd4294c92dca9f14fa659c45c811828853bf913e71a5d18ef9eecd7a6cab)"
+            ],
+            "rules": [],
+            "privileged_rules": [
+              "right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
+              "right(#authority, $1, #write) <- resource(#ambient, $1), owner(#ambient, $0, $1)"
+            ],
+            "checks": [
+              "check if resource(#ambient, $0), owner(#ambient, #alice, $0)",
+              "check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Ok": 0
+          }
+        ]
+      }
+    },
+    {
+      "title": "verifier authority checks",
+      "filename": "test11_verifier_authority_caveats.bc",
+      "print_token": {
+        "biscuit": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\"]\n    authority: Block[0] {\n            symbols: [\"read\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        \n    ]\n}"
+      },
+      "validations": {
+        "": [
+          {
+            "facts": [
+              "operation(#ambient, #read)",
+              "resource(#ambient, \"file2\")",
+              "revocation_id(0, hex:f3db615323f48dc225b793ec494c30c1d4a800ec8299aa7558fe769803f1446b)",
+              "right(#authority, \"file1\", #read)",
+              "unique_revocation_id(0, hex:f3db615323f48dc225b793ec494c30c1d4a800ec8299aa7558fe769803f1446b)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Err": [
+              "Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)\" })"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "authority checks",
+      "filename": "test12_authority_caveats.bc",
+      "print_token": {
+        "biscuit": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"check1\"]\n    authority: Block[0] {\n            symbols: [\"check1\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, \"file1\")\n            ]\n        }\n    blocks: [\n        \n    ]\n}"
+      },
+      "validations": {
+        "file1": [
+          {
+            "facts": [
+              "operation(#ambient, #read)",
+              "resource(#ambient, \"file1\")",
+              "revocation_id(0, hex:a6d33a7c61185cc962a4100d17176b72a60e95490af7c3cccbd244f3cce02b85)",
+              "unique_revocation_id(0, hex:a6d33a7c61185cc962a4100d17176b72a60e95490af7c3cccbd244f3cce02b85)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if resource(#ambient, \"file1\")"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Ok": 0
+          }
+        ],
+        "file2": [
+          {
+            "facts": [
+              "operation(#ambient, #read)",
+              "resource(#ambient, \"file2\")",
+              "revocation_id(0, hex:a6d33a7c61185cc962a4100d17176b72a60e95490af7c3cccbd244f3cce02b85)",
+              "unique_revocation_id(0, hex:a6d33a7c61185cc962a4100d17176b72a60e95490af7c3cccbd244f3cce02b85)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if resource(#ambient, \"file1\")"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Err": [
+              "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(#ambient, \\\"file1\\\")\" })"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "block rules",
+      "filename": "test13_block_rules.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"read\", \"valid_date\", \"time\", \"0\", \"1\", \"check1\"]\n    authority: Block[0] {\n            symbols: [\"read\"]\n            version: 1\n            context: \"\"\n            facts: [\n                right(#authority, \"file1\", #read),\n                right(#authority, \"file2\", #read)\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"valid_date\", \"time\", \"0\", \"1\", \"check1\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: [\n                valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00,\n                valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, ![\"file1\"].contains($1)\n            ]\n            checks: [\n                check if valid_date($0), resource(#ambient, $0)\n            ]\n        }\n    ]\n}"
+      },
+      "validations": {
+        "file1": [
+          {
+            "facts": [
+              "resource(#ambient, \"file1\")",
+              "revocation_id(0, hex:d0e882a6d2405213cc7a8f2ac3f0041fecbf535177b6a6b4a581b48783a9d19b)",
+              "revocation_id(1, hex:cab9e5395e49e41c53c3418796f73379a167d9c2d1504c99dac5e9bb06ec02cc)",
+              "right(#authority, \"file1\", #read)",
+              "right(#authority, \"file2\", #read)",
+              "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+              "unique_revocation_id(0, hex:d0e882a6d2405213cc7a8f2ac3f0041fecbf535177b6a6b4a581b48783a9d19b)",
+              "unique_revocation_id(1, hex:cab9e5395e49e41c53c3418796f73379a167d9c2d1504c99dac5e9bb06ec02cc)",
+              "valid_date(\"file1\")"
+            ],
+            "rules": [
+              "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
+              "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, ![\"file1\"].contains($1)"
+            ],
+            "privileged_rules": [],
+            "checks": [
+              "check if valid_date($0), resource(#ambient, $0)"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Ok": 0
+          }
+        ],
+        "file2": [
+          {
+            "facts": [
+              "resource(#ambient, \"file2\")",
+              "revocation_id(0, hex:d0e882a6d2405213cc7a8f2ac3f0041fecbf535177b6a6b4a581b48783a9d19b)",
+              "revocation_id(1, hex:cab9e5395e49e41c53c3418796f73379a167d9c2d1504c99dac5e9bb06ec02cc)",
+              "right(#authority, \"file1\", #read)",
+              "right(#authority, \"file2\", #read)",
+              "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+              "unique_revocation_id(0, hex:d0e882a6d2405213cc7a8f2ac3f0041fecbf535177b6a6b4a581b48783a9d19b)",
+              "unique_revocation_id(1, hex:cab9e5395e49e41c53c3418796f73379a167d9c2d1504c99dac5e9bb06ec02cc)"
+            ],
+            "rules": [
+              "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
+              "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, ![\"file1\"].contains($1)"
+            ],
+            "privileged_rules": [],
+            "checks": [
+              "check if valid_date($0), resource(#ambient, $0)"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Err": [
+              "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if valid_date($0), resource(#ambient, $0)\" })"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "regex_constraint",
+      "filename": "test14_regex_constraint.bc",
+      "print_token": {
+        "biscuit": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"resource_match\", \"0\"]\n    authority: Block[0] {\n            symbols: [\"resource_match\", \"0\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")\n            ]\n        }\n    blocks: [\n        \n    ]\n}"
+      },
+      "validations": {
+        "file1": [
+          {
+            "facts": [
+              "resource(#ambient, \"file1\")",
+              "revocation_id(0, hex:1da4cd4d7c60491948662acc237bb10599c6046e1ef09a867267b5e039a4d1b6)",
+              "unique_revocation_id(0, hex:1da4cd4d7c60491948662acc237bb10599c6046e1ef09a867267b5e039a4d1b6)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Err": [
+              "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(#ambient, $0), $0.matches(\\\"file[0-9]+.txt\\\")\" })"
+            ]
+          }
+        ],
+        "file123": [
+          {
+            "facts": [
+              "resource(#ambient, \"file123.txt\")",
+              "revocation_id(0, hex:1da4cd4d7c60491948662acc237bb10599c6046e1ef09a867267b5e039a4d1b6)",
+              "unique_revocation_id(0, hex:1da4cd4d7c60491948662acc237bb10599c6046e1ef09a867267b5e039a4d1b6)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Ok": 0
+          }
+        ]
+      }
+    },
+    {
+      "title": "multi queries checks",
+      "filename": "test15_multi_queries_caveats.bc",
+      "print_token": {
+        "biscuit": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"must_be_present\"]\n    authority: Block[0] {\n            symbols: [\"must_be_present\"]\n            version: 1\n            context: \"\"\n            facts: [\n                must_be_present(#authority, \"hello\")\n            ]\n            rules: []\n            checks: []\n        }\n    blocks: [\n        \n    ]\n}"
+      },
+      "validations": {
+        "": [
+          {
+            "facts": [
+              "must_be_present(#authority, \"hello\")",
+              "revocation_id(0, hex:128099942c46fc6a4f9a8f8f0cc5d8b70c4d55d834255ef6065b62c967eef50c)",
+              "unique_revocation_id(0, hex:128099942c46fc6a4f9a8f8f0cc5d8b70c4d55d834255ef6065b62c967eef50c)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if must_be_present(#authority, $0) or must_be_present($0)"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Ok": 0
+          }
+        ]
+      }
+    },
+    {
+      "title": "check head name should be independent from fact names",
+      "filename": "test16_caveat_head_name.bc",
+      "print_token": {
+        "biscuit": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"check1\", \"test\", \"hello\"]\n    authority: Block[0] {\n            symbols: [\"check1\", \"test\", \"hello\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if resource(#ambient, #hello)\n            ]\n        }\n    blocks: [\n        Block[1] {\n            symbols: []\n            version: 1\n            context: \"\"\n            facts: [\n                check1(#test)\n            ]\n            rules: []\n            checks: []\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          {
+            "facts": [
+              "check1(#test)",
+              "revocation_id(0, hex:08321b952cecd6cc7ca5d3493ae391e44fcf3d3d55e63aa7e8b098217b7736c3)",
+              "revocation_id(1, hex:e166c05f9ec0632fe286df76048a527a621d7ca08e2cd9f3995b4ee33b1e001c)",
+              "unique_revocation_id(0, hex:08321b952cecd6cc7ca5d3493ae391e44fcf3d3d55e63aa7e8b098217b7736c3)",
+              "unique_revocation_id(1, hex:e166c05f9ec0632fe286df76048a527a621d7ca08e2cd9f3995b4ee33b1e001c)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if resource(#ambient, #hello)"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Err": [
+              "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(#ambient, #hello)\" })"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "test expression syntax and all available operations",
+      "filename": "test17_expressions.bc",
+      "print_token": {
+        "biscuit": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"query\", \"abc\", \"hello\", \"world\"]\n    authority: Block[0] {\n            symbols: [\"query\", \"abc\", \"hello\", \"world\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if true,\n                check if !false,\n                check if false or true,\n                check if 1 < 2,\n                check if 2 > 1,\n                check if 1 <= 2,\n                check if 1 <= 1,\n                check if 2 >= 1,\n                check if 2 >= 2,\n                check if 3 == 3,\n                check if 1 + 2 * 3 - 4 / 2 == 5,\n                check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\"),\n                check if \"aaabde\".matches(\"a*c?.e\"),\n                check if \"abcD12\" == \"abcD12\",\n                check if 2019-12-04T09:46:41+00:00 < 2020-12-04T09:46:41+00:00,\n                check if 2020-12-04T09:46:41+00:00 > 2019-12-04T09:46:41+00:00,\n                check if 2019-12-04T09:46:41+00:00 <= 2020-12-04T09:46:41+00:00,\n                check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00,\n                check if 2020-12-04T09:46:41+00:00 >= 2019-12-04T09:46:41+00:00,\n                check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00,\n                check if 2020-12-04T09:46:41+00:00 == 2020-12-04T09:46:41+00:00,\n                check if #abc == #abc,\n                check if hex:12ab == hex:12ab,\n                check if [1, 2].contains(2),\n                check if [2019-12-04T09:46:41+00:00, 2020-12-04T09:46:41+00:00].contains(2020-12-04T09:46:41+00:00),\n                check if [false, true].contains(true),\n                check if [\"abc\", \"def\"].contains(\"abc\"),\n                check if [hex:12ab, hex:34de].contains(hex:34de),\n                check if [#hello, #world].contains(#hello)\n            ]\n        }\n    blocks: [\n        \n    ]\n}"
+      },
+      "validations": {
+        "": [
+          {
+            "facts": [
+              "revocation_id(0, hex:09b4fab17d84885149e416bf10990d19b918a02854acd9ad96494994735cd25d)",
+              "unique_revocation_id(0, hex:09b4fab17d84885149e416bf10990d19b918a02854acd9ad96494994735cd25d)"
+            ],
+            "rules": [],
+            "privileged_rules": [],
+            "checks": [
+              "check if !false",
+              "check if \"aaabde\".matches(\"a*c?.e\")",
+              "check if \"abcD12\" == \"abcD12\"",
+              "check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\")",
+              "check if #abc == #abc",
+              "check if 1 + 2 * 3 - 4 / 2 == 5",
+              "check if 1 < 2",
+              "check if 1 <= 1",
+              "check if 1 <= 2",
+              "check if 2 > 1",
+              "check if 2 >= 1",
+              "check if 2 >= 2",
+              "check if 2019-12-04T09:46:41+00:00 < 2020-12-04T09:46:41+00:00",
+              "check if 2019-12-04T09:46:41+00:00 <= 2020-12-04T09:46:41+00:00",
+              "check if 2020-12-04T09:46:41+00:00 == 2020-12-04T09:46:41+00:00",
+              "check if 2020-12-04T09:46:41+00:00 > 2019-12-04T09:46:41+00:00",
+              "check if 2020-12-04T09:46:41+00:00 >= 2019-12-04T09:46:41+00:00",
+              "check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00",
+              "check if 3 == 3",
+              "check if [\"abc\", \"def\"].contains(\"abc\")",
+              "check if [#hello, #world].contains(#hello)",
+              "check if [1, 2].contains(2)",
+              "check if [2019-12-04T09:46:41+00:00, 2020-12-04T09:46:41+00:00].contains(2020-12-04T09:46:41+00:00)",
+              "check if [false, true].contains(true)",
+              "check if [hex:12ab, hex:34de].contains(hex:34de)",
+              "check if false or true",
+              "check if hex:12ab == hex:12ab",
+              "check if true"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Ok": 0
+          }
+        ]
+      }
+    },
+    {
+      "title": "invalid block rule with unbound_variables",
+      "filename": "test18_unbound_variables_in_rule.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"check1\", \"test\", \"read\", \"unbound\", \"any1\", \"any2\"]\n    authority: Block[0] {\n            symbols: [\"check1\", \"test\", \"read\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if operation(#ambient, #read)\n            ]\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"unbound\", \"any1\", \"any2\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: [\n                operation($unbound, #read) <- operation($any1, $any2)\n            ]\n            checks: []\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          null,
+          {
+            "Err": [
+              "FailedLogic(InvalidBlockRule(0, \"operation($unbound, #read) <- operation($any1, $any2)\"))"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "invalid block rule generating an #authority or #ambient symbol with a variable",
+      "filename": "test19_generating_ambient_from_variables.bc",
+      "print_token": {
+        "biscuit2 (1 check)": "Biscuit {\n    symbols: [\"authority\", \"ambient\", \"resource\", \"operation\", \"right\", \"current_time\", \"revocation_id\", \"check1\", \"test\", \"read\", \"any\"]\n    authority: Block[0] {\n            symbols: [\"check1\", \"test\", \"read\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: []\n            checks: [\n                check if operation(#ambient, #read)\n            ]\n        }\n    blocks: [\n        Block[1] {\n            symbols: [\"any\"]\n            version: 1\n            context: \"\"\n            facts: []\n            rules: [\n                operation($ambient, #read) <- operation($ambient, $any)\n            ]\n            checks: []\n        }\n    ]\n}"
+      },
+      "validations": {
+        "": [
+          {
+            "facts": [
+              "operation(#ambient, #write)",
+              "revocation_id(0, hex:cfbc25eee0ffc9bca3930e88469c45b8aa43e856464fc401db213c3d9587783a)",
+              "revocation_id(1, hex:0e180a4400430a812b58751a3d3877af6ac2fe87559a32656c9ae78a4e973781)",
+              "unique_revocation_id(0, hex:cfbc25eee0ffc9bca3930e88469c45b8aa43e856464fc401db213c3d9587783a)",
+              "unique_revocation_id(1, hex:0e180a4400430a812b58751a3d3877af6ac2fe87559a32656c9ae78a4e973781)"
+            ],
+            "rules": [
+              "operation($ambient, #read) <- operation($ambient, $any)"
+            ],
+            "privileged_rules": [],
+            "checks": [
+              "check if operation(#ambient, #read)"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          {
+            "Err": [
+              "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if operation(#ambient, #read)\" })"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -437,43 +437,37 @@ transmitted over the wire is either the normal Biscuit wrapper:
 
 ```proto
 message Biscuit {
-  required bytes authority = 1;
-  repeated bytes blocks = 2;
-  repeated bytes keys = 3;
-  required Signature signature = 4;
+  optional uint32 rootKeyId = 1;
+  required SignedBlock authority = 2;
+  repeated SignedBlock blocks = 3;
+  required Proof proof = 4;
 }
 
-message Signature {
-  repeated bytes parameters = 1;
-  required bytes z = 2;
-}
-```
-
-The `keys` and `parameters` arrays contain Ristretto points in their
-canonical representation, serialized to a 32 bytes array[CompressedRistretto].
-Thee `z` field is a 32 bytes array containing the canonical representation
-of an element of Ristretto's scalar field[Scalar].
-
-The `keys` field contains the public keys used to sign each block. It contains
-as many elements as the `blocks` field plus one. The first element is the root key.
-
-The `parameters` field must have as many elements as the `keys` field. All of
-their elements must be distinct.
-
-or the "sealed" Biscuit wrapper (a token that cannot be attenuated offline):
-
-```proto
-message SealedBiscuit {
-  required bytes authority = 1;
-  repeated bytes blocks = 2;
+message SignedBlock {
+  required bytes block = 1;
+  required bytes nextKey = 2;
   required bytes signature = 3;
 }
+
+message Proof {
+  oneof Content {
+    bytes nextSecret = 1;
+    bytes finalSignature = 2;
+  }
+}
 ```
 
-The signature part of those tokens covers the content of authority and
-blocks members.
+The `rootKeyId` is a hint to decide which root public key should be used
+for signature verification.
+Each block contains a serialized byte array of the Datalog data (`block`),
+the next public key (`nextKey`) and the signature of that block and key
+by the previous key.
 
-Those members are byte arrays, containing `Block` structures serialized
+The `proof` field contains either the private key corresponding to the
+public key in the last block (attenuable tokens) or a signature of the last
+block by the private key (sealed tokens).
+
+The `block` field is a byte array, containing a `Block` structure serialized
 in Protobuf format as well:
 
 ```proto
@@ -528,92 +522,111 @@ or `sealed-biscuit:` accordingly.
 
 ### Cryptography
 
-#### Attenuable tokens
+Biscuit tokens are based on public key cryptography, with a chain of Ed25519
+signatures. Each block contains the serialized Datalog, the next public key,
+and the signature by the previous key. The token also contains the private key
+corresponding to the last public key, to sign a new block and attenuate the
+token, or a signature of the last block by the last private key, to seal the
+token.
 
-Those tokens are based on public key cryptography, specifically aggregated
-gamma signatures[Aggregated Gamma Signatures]. Signature aggregation allows
-Biscuit to make a new token with a valid signature from an existing one,
-by signing the new data and adding the new signature to the old one.
+#### Signature (one block)
 
-Every public key operation in Biscuit is defined over the Ristretto prime
-order group[Ristretto], that is designed to prevent some implementation
-mistakes.
+* `(pk_0, sk_0)` the root public and private Ed25519 keys
+* `data_0` the serialized Datalog
+* `(pk_1, sk_1)` the next key pair, generated at random
+* `sig_0 = sign(sk_0, data_0 + pk_1)`
 
-Definitions:
-- `R`: Ristretto group
-- `l`: order of the Ristretto group
-- `Z/l`: scalar of order `l` associated to the Ristretto group
-- `P`: Ristretto base point
-- `H1`: point hashing function
-- `H2`: message hashing function
+The token will contain:
 
-##### Key generation
-
-Private key:
-`x <- Z/l*` chosen at random
-
-Public key:
-`X = sk * P`
-
-##### Signature (one block)
-
-With secret key `x`, public key `X`, message `message`:
-
-* `r <- Z/l*` chosen at random
-* `A = r * P`
-* `d = H1(A)`
-* `e = H2(X, message)`
-* `z = rd - ex mod l`
-
-The signature is `([A], z)`. The `[A]` array corresponds to the `parameters`
-field in the protobuf schema.
+```
+Token {
+  root_key_id: <optional number indicating the root key to use for verification>
+  authority: Block {
+    data_0,
+    pk_1,
+    sig_0,
+  }
+  blocks: [],
+  proof: Proof {
+    nextSecret: sk_1,
+  },
+}```
 
 #### Signature (appending)
-With `([A0, ..., An], s)` the current signature:
 
-Same process as the signature for a single block,
-with secret key `x`, public key `X`, message `message`:
+With a token containing blocks 0 to n:
 
-* `r <- Z/l*` chosen at random
-* `A = r * P`
-* `d = H1(A)`
-* `e = H2(X, message)`
-* `z = rd - ex mod l`
+Block n contains:
+- `data_n`
+- `pk_n+1`
+- `sig_n`
 
-The new signature is `([A0, ..., An, A], s + z)`
+The token also contains `sk_n+1`
+
+We generate at random `(pk_n+2, sk_n+2)` and the signature `sig_n+1 = sign(sk_n+1, data_n+1 + pk_n+2)`
+
+The token will contain:
+
+```
+Token {
+  root_key_id: <optional number indicating the root key to use for verification>
+  authority: Block_0,
+  blocks: [Block_1, .., Block_n,
+      Block_n+1 {
+      data_n+1,
+      pk_n+2,
+      sig_n+1,
+    }]
+  proof: Proof {
+    nextSecret: sk_n+2,
+  },
+}```
 
 #### Verifying
 
-With:
+For each block i from 0 to n:
 
-* `([A0, ..., An], s)` the current signature
-* `[P0, ..., Pn]` the list of public keys
-* `[m0, ..., mn]` the list of messages
+- verify(pk_i, sig_i, data_i+pk_i+1)
 
-We verify as follows:
-* check that `|[A0, ..., An]| == |[P0, ..., Pn]| == |[m0, ..., mn]|`
-* check that `P0` is the root public key we are expecting
-* check that `[A0, ..., An]` are distinct
-* check that `[(P0, m0), ..., (Pn, mn)]` are distinct
-* `X = H2(P0, m0) * P0 + ... + H2(Pn, mn) * Pn - ( H1(A0) * A0 + ... + H1(An) * An )`
-* if `s * P + X` is the point at infinite, the signature is verified
+If all signatures are verified, extract pk_n+1 from the last block and
+sk_n+1 from the proof field, and check that they are from the same
+key pair.
 
-##### Point hashing
+#### Signature (appending)
 
-`H1(X) = Scalar::from_hash(sha512(X.compress().to_bytes()))`
+With a token containing blocks 0 to n:
 
-##### Message hashing
+Block n contains:
+- `data_n`
+- `pk_n+1`
+- `sig_n`
 
-`H2(X, message) = Scalar::from_hash(sha512(X.compress().to_bytes()|message))` (with `|` the concatenation operator)
+The token also contains `sk_n+1`
 
-#### Sealed tokens
+We generate the signature `sig_n+1 = sign(sk_n+1, data_n + pk_n+1 + sig_n)` (we sign
+the last block with the last private key).
 
-A sealed token contains the same kind of block as regular tokens,
-but it cannot be attenuated offline, and can only be verified by
-knowing the secret used to create it.
+The token will contain:
 
-The signature is the HMAC-SHA256 hash of the secret key and the
-concatenation of all the blocks.
+```
+Token {
+  root_key_id: <optional number indicating the root key to use for verification>
+  authority: Block_0,
+  blocks: [Block_1, .., Block_n]
+  proof: Proof {
+    finalSignature: sig_n+1
+  },
+}
+```
+
+#### Verifying (sealed)
+
+For each block i from 0 to n:
+
+- verify(pk_i, sig_i, data_i+pk_i+1)
+
+If all signatures are verified, extract pk_n+1 from the last block and
+sig from the proof field, and check `verify(pk_n+1, sig_n+1, data_n+pk_n+1+sig_n)`
 
 ### Blocks
 
@@ -685,8 +698,4 @@ We provide sample tokens and the expected result of their verification at
  - DATALOG: "Datalog with Constraints: A Foundation for Trust Management Languages" http://crypto.stanford.edu/~ninghui/papers/cdatalog_padl03.pdf
  - Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf
  - MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
- - Aggregated Gamma Signatures: "Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao" https://eprint.iacr.org/2018/414.pdf
- - Ristretto: "Ristretto: prime order elliptic curve groups with non-malleable encodings" https://ristretto.group
- - Scalar: https://doc.dalek.rs/curve25519_dalek/scalar/struct.Scalar.html
- - CompressedRistretto: https://doc.dalek.rs/curve25519_dalek/ristretto/struct.CompressedRistretto.html
 
