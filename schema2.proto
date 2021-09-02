@@ -1,0 +1,218 @@
+syntax = "proto2";
+
+package biscuit.format.schema;
+
+message Biscuit {
+  optional uint32 rootKeyId = 1;
+  required SignedBlock authority = 2;
+  repeated SignedBlock blocks = 3;
+  required Proof proof = 4;
+}
+
+message SignedBlock {
+  required bytes block = 1;
+  required bytes nextKey = 2;
+  required bytes signature = 3;
+}
+
+message Proof {
+  oneof Content {
+    bytes nextSecret = 1;
+    bytes finalSignature = 2;
+  }
+}
+
+message Block {
+  required uint32 index = 1;
+  // ^ is this still useful?
+  repeated string symbols = 2;
+  optional string context = 3;
+  optional uint32 version = 4;
+  repeated FactV2 facts_v2 = 5;
+  repeated RuleV2 rules_v2 = 6;
+  repeated CheckV2 checks_v2 = 7;
+}
+
+message FactV2 {
+  required PredicateV2 predicate = 1;
+}
+
+message RuleV2 {
+  required PredicateV2 head = 1;
+  repeated PredicateV2 body = 2;
+  repeated ExpressionV2 expressions = 3;
+}
+
+message CheckV2 {
+  repeated RuleV2 queries = 1;
+}
+
+message PredicateV2 {
+  required uint64 name = 1;
+  repeated IDV2 ids = 2;
+}
+
+message IDV2 {
+  oneof Content {
+    uint64 symbol = 1;
+    uint32 variable = 2;
+    int64 integer = 3;
+    string string = 4;
+    uint64 date = 5;
+    bytes bytes = 6;
+    bool bool = 7;
+    IDSet set = 8;
+  }
+}
+
+message IDSet {
+  repeated IDV2 set = 1;
+}
+
+message ConstraintV2 {
+  required uint32 id = 1;
+
+  oneof Constraint {
+    IntConstraintV2 int = 2;
+    StringConstraintV2 string = 3;
+    DateConstraintV2 date = 4;
+    SymbolConstraintV2 symbol = 5;
+    BytesConstraintV2 bytes = 6;
+  }
+}
+
+message IntConstraintV2 {
+  oneof Constraint {
+    int64 less_than = 1;
+    int64 greater_than = 2;
+    int64 less_or_equal = 3;
+    int64 greater_or_equal = 4;
+    int64 equal = 5;
+    IntSet in_set = 6;
+    IntSet not_in_set = 7;
+  }
+}
+
+message IntSet {
+  repeated int64 set = 7 [packed=true];
+}
+
+message StringConstraintV2 {
+  oneof Constraint {
+    string prefix = 1;
+    string suffix = 2;
+    string equal = 3;
+    StringSet in_set = 4;
+    StringSet not_in_set = 5;
+    string regex = 6;
+  }
+}
+
+message StringSet {
+  repeated string set = 1;
+}
+
+message DateConstraintV2 {
+  oneof Constraint {
+    uint64 before = 1;
+    uint64 after = 2;
+  }
+}
+
+message SymbolConstraintV2 {
+  oneof Constraint {
+    SymbolSet in_set = 1;
+    SymbolSet not_in_set = 2;
+  }
+}
+
+message SymbolSet {
+  repeated uint64 set = 1 [packed=true];
+}
+
+message BytesConstraintV2 {
+  oneof Constraint {
+    bytes equal = 1;
+    BytesSet in_set = 2;
+    BytesSet not_in_set = 3;
+  }
+}
+
+message BytesSet {
+  repeated bytes set = 1;
+}
+
+message ExpressionV2 {
+  repeated Op ops = 1;
+}
+
+message Op {
+  oneof Content {
+    IDV2 value = 1;
+    OpUnary unary = 2;
+    OpBinary Binary = 3;
+    OpTernary Ternary = 4;
+  }
+}
+
+message OpUnary {
+  enum Kind {
+    Negate = 0;
+    Parens = 1;
+    Length = 2;
+  }
+
+  required Kind kind = 1;
+}
+
+message OpBinary {
+  enum Kind {
+    LessThan = 0;
+    GreaterThan = 1;
+    LessOrEqual = 2;
+    GreaterOrEqual = 3;
+    Equal = 4;
+    Contains = 5;
+    Prefix = 6;
+    Suffix = 7;
+    Regex = 8;
+    Add = 9;
+    Sub = 10;
+    Mul = 11;
+    Div = 12;
+    And = 13;
+    Or = 14;
+    Intersection = 15;
+    Union = 16;
+    SignEd25519 = 17;
+  }
+
+  required Kind kind = 1;
+}
+
+message OpTernary {
+  enum Kind {
+    VerifyEd25519Signature = 0;
+  }
+
+  required Kind kind = 1;
+}
+
+message Policy {
+  enum Kind {
+    Allow = 0;
+    Deny = 1;
+  }
+
+  repeated RuleV2 queries = 1;
+  required Kind kind = 2;
+}
+
+message VerifierPolicies {
+  repeated string symbols = 1;
+  optional uint32 version = 2;
+  repeated FactV2 facts = 3;
+  repeated RuleV2 rules = 4;
+  repeated CheckV2 checks = 5;
+  repeated Policy policies = 6;
+}
