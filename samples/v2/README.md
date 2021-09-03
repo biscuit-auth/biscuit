@@ -10,9 +10,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read", "write"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -23,9 +23,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["check1", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -42,13 +42,13 @@ verifier world:
 World {
   facts: {
     "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:415b9d4bcfbcc052eb30b66bed5151a7291bd3ededa8679140753f97d9a0b3e6)",
-    "revocation_id(1, hex:057ef57833aac9fb405ba1abadca1b088f2557700ea2004c79004ea688abeb47)",
+    "revocation_id(0, hex:2d41aa8d0131f0a9f171ae849f99f78461157101001752852e1731281ad460b3)",
+    "revocation_id(1, hex:601083ff09e19882d762976dbb9bc98851439052e8c1bf3da1f32718a5a57eed)",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file1\", #write)",
     "right(#authority, \"file2\", #read)",
-    "unique_revocation_id(0, hex:415b9d4bcfbcc052eb30b66bed5151a7291bd3ededa8679140753f97d9a0b3e6)",
-    "unique_revocation_id(1, hex:057ef57833aac9fb405ba1abadca1b088f2557700ea2004c79004ea688abeb47)",
+    "unique_revocation_id(0, hex:2d41aa8d0131f0a9f171ae849f99f78461157101001752852e1731281ad460b3)",
+    "unique_revocation_id(1, hex:601083ff09e19882d762976dbb9bc98851439052e8c1bf3da1f32718a5a57eed)",
 }
   privileged rules: {}
   rules: {}
@@ -70,9 +70,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "check1", "0"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read)
@@ -81,9 +81,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["check1", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -106,9 +106,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read", "write"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -119,9 +119,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["check1", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -144,9 +144,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read", "write"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -157,9 +157,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["check1", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -182,9 +182,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read", "write"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -195,9 +195,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["check1", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -220,9 +220,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read", "write"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -233,9 +233,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["check1", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -251,9 +251,9 @@ biscuit3 (2 checks):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0", "check2"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read", "write"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -264,9 +264,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["check1", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -274,9 +274,9 @@ Biscuit {
                 check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)
             ]
         },
-	Block[2] {
+	Block {
             symbols: ["check2"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -299,9 +299,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read)
@@ -310,9 +310,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["write", "check1", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #write)
@@ -337,9 +337,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read)
@@ -348,9 +348,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["write", "check1", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#ambient, "file1", #write)
@@ -375,18 +375,18 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "check1", "expiration", "date", "time"]
-    authority: Block[0] {
+    authority: Block {
             symbols: []
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["check1", "expiration", "date", "time"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -405,11 +405,11 @@ World {
   facts: {
     "operation(#ambient, #read)",
     "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:96123a8ee182336c4c63ad29f2b23549020da2a90841ac63ccec4c20413753b0)",
-    "revocation_id(1, hex:60e6f54cb7a20ee0859495abe176da0306dfe91b4ee270244dfecf954da340bb)",
+    "revocation_id(0, hex:97d9502fe0963f757c0f7e20e7d3a07b13f762c206c77506f4bd60af68565ce1)",
+    "revocation_id(1, hex:5ccf80411f761b01c08783efede6b86898b920107507bd500c3854c8fe451f35)",
     "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
-    "unique_revocation_id(0, hex:96123a8ee182336c4c63ad29f2b23549020da2a90841ac63ccec4c20413753b0)",
-    "unique_revocation_id(1, hex:60e6f54cb7a20ee0859495abe176da0306dfe91b4ee270244dfecf954da340bb)",
+    "unique_revocation_id(0, hex:97d9502fe0963f757c0f7e20e7d3a07b13f762c206c77506f4bd60af68565ce1)",
+    "unique_revocation_id(1, hex:5ccf80411f761b01c08783efede6b86898b920107507bd500c3854c8fe451f35)",
 }
   privileged rules: {}
   rules: {}
@@ -432,9 +432,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "1", "read", "owner", "0", "write", "check1", "check2", "alice"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["1", "read", "owner", "0", "write"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: [
@@ -444,9 +444,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["check1", "check2", "alice"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -466,12 +466,12 @@ World {
     "operation(#ambient, #read)",
     "owner(#ambient, #alice, \"file1\")",
     "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:7b1c49cfd08df0bca951d50aa6f5062db8e4decce6713974186abd050382ab67)",
-    "revocation_id(1, hex:c5fdfd4294c92dca9f14fa659c45c811828853bf913e71a5d18ef9eecd7a6cab)",
+    "revocation_id(0, hex:615c86ed96ffb3e756cee9a922facef14e7ceedd7833a22474ffa69986a02aab)",
+    "revocation_id(1, hex:f5948d6b975b1f2e2571557588435445eeb088f6634c54247f0bc267bd11bc2a)",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file1\", #write)",
-    "unique_revocation_id(0, hex:7b1c49cfd08df0bca951d50aa6f5062db8e4decce6713974186abd050382ab67)",
-    "unique_revocation_id(1, hex:c5fdfd4294c92dca9f14fa659c45c811828853bf913e71a5d18ef9eecd7a6cab)",
+    "unique_revocation_id(0, hex:615c86ed96ffb3e756cee9a922facef14e7ceedd7833a22474ffa69986a02aab)",
+    "unique_revocation_id(1, hex:f5948d6b975b1f2e2571557588435445eeb088f6634c54247f0bc267bd11bc2a)",
 }
   privileged rules: {
     "right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
@@ -497,9 +497,9 @@ biscuit:
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read)
@@ -519,9 +519,9 @@ World {
   facts: {
     "operation(#ambient, #read)",
     "resource(#ambient, \"file2\")",
-    "revocation_id(0, hex:f3db615323f48dc225b793ec494c30c1d4a800ec8299aa7558fe769803f1446b)",
+    "revocation_id(0, hex:74d206f233bdcadbb6a8bdca0303b0520d75f94944f0dfc1d3b8edb0b3200b53)",
     "right(#authority, \"file1\", #read)",
-    "unique_revocation_id(0, hex:f3db615323f48dc225b793ec494c30c1d4a800ec8299aa7558fe769803f1446b)",
+    "unique_revocation_id(0, hex:74d206f233bdcadbb6a8bdca0303b0520d75f94944f0dfc1d3b8edb0b3200b53)",
 }
   privileged rules: {}
   rules: {}
@@ -543,9 +543,9 @@ biscuit:
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "check1"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["check1"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -565,8 +565,8 @@ World {
   facts: {
     "operation(#ambient, #read)",
     "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:a6d33a7c61185cc962a4100d17176b72a60e95490af7c3cccbd244f3cce02b85)",
-    "unique_revocation_id(0, hex:a6d33a7c61185cc962a4100d17176b72a60e95490af7c3cccbd244f3cce02b85)",
+    "revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
+    "unique_revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
 }
   privileged rules: {}
   rules: {}
@@ -585,8 +585,8 @@ World {
   facts: {
     "operation(#ambient, #read)",
     "resource(#ambient, \"file2\")",
-    "revocation_id(0, hex:a6d33a7c61185cc962a4100d17176b72a60e95490af7c3cccbd244f3cce02b85)",
-    "unique_revocation_id(0, hex:a6d33a7c61185cc962a4100d17176b72a60e95490af7c3cccbd244f3cce02b85)",
+    "revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
+    "unique_revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
 }
   privileged rules: {}
   rules: {}
@@ -608,9 +608,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "valid_date", "time", "0", "1", "check1"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["read"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 right(#authority, "file1", #read),
@@ -620,9 +620,9 @@ Biscuit {
             checks: []
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["valid_date", "time", "0", "1", "check1"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: [
@@ -642,13 +642,13 @@ verifier world:
 World {
   facts: {
     "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:d0e882a6d2405213cc7a8f2ac3f0041fecbf535177b6a6b4a581b48783a9d19b)",
-    "revocation_id(1, hex:cab9e5395e49e41c53c3418796f73379a167d9c2d1504c99dac5e9bb06ec02cc)",
+    "revocation_id(0, hex:9a30e5b4f22cdffd389bd06c77c8ef1912604b4ebe3f0de7ceea9f4ddb571da5)",
+    "revocation_id(1, hex:35dc6e409f6582a669f0d41bf3cd9aa837a19764f0262e3dd8b6d2bdacee5b82)",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file2\", #read)",
     "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
-    "unique_revocation_id(0, hex:d0e882a6d2405213cc7a8f2ac3f0041fecbf535177b6a6b4a581b48783a9d19b)",
-    "unique_revocation_id(1, hex:cab9e5395e49e41c53c3418796f73379a167d9c2d1504c99dac5e9bb06ec02cc)",
+    "unique_revocation_id(0, hex:9a30e5b4f22cdffd389bd06c77c8ef1912604b4ebe3f0de7ceea9f4ddb571da5)",
+    "unique_revocation_id(1, hex:35dc6e409f6582a669f0d41bf3cd9aa837a19764f0262e3dd8b6d2bdacee5b82)",
     "valid_date(\"file1\")",
 }
   privileged rules: {}
@@ -670,13 +670,13 @@ verifier world:
 World {
   facts: {
     "resource(#ambient, \"file2\")",
-    "revocation_id(0, hex:d0e882a6d2405213cc7a8f2ac3f0041fecbf535177b6a6b4a581b48783a9d19b)",
-    "revocation_id(1, hex:cab9e5395e49e41c53c3418796f73379a167d9c2d1504c99dac5e9bb06ec02cc)",
+    "revocation_id(0, hex:9a30e5b4f22cdffd389bd06c77c8ef1912604b4ebe3f0de7ceea9f4ddb571da5)",
+    "revocation_id(1, hex:35dc6e409f6582a669f0d41bf3cd9aa837a19764f0262e3dd8b6d2bdacee5b82)",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file2\", #read)",
     "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
-    "unique_revocation_id(0, hex:d0e882a6d2405213cc7a8f2ac3f0041fecbf535177b6a6b4a581b48783a9d19b)",
-    "unique_revocation_id(1, hex:cab9e5395e49e41c53c3418796f73379a167d9c2d1504c99dac5e9bb06ec02cc)",
+    "unique_revocation_id(0, hex:9a30e5b4f22cdffd389bd06c77c8ef1912604b4ebe3f0de7ceea9f4ddb571da5)",
+    "unique_revocation_id(1, hex:35dc6e409f6582a669f0d41bf3cd9aa837a19764f0262e3dd8b6d2bdacee5b82)",
 }
   privileged rules: {}
   rules: {
@@ -701,9 +701,9 @@ biscuit:
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "resource_match", "0"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["resource_match", "0"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -722,8 +722,8 @@ verifier world:
 World {
   facts: {
     "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:1da4cd4d7c60491948662acc237bb10599c6046e1ef09a867267b5e039a4d1b6)",
-    "unique_revocation_id(0, hex:1da4cd4d7c60491948662acc237bb10599c6046e1ef09a867267b5e039a4d1b6)",
+    "revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
+    "unique_revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
 }
   privileged rules: {}
   rules: {}
@@ -741,8 +741,8 @@ verifier world:
 World {
   facts: {
     "resource(#ambient, \"file123.txt\")",
-    "revocation_id(0, hex:1da4cd4d7c60491948662acc237bb10599c6046e1ef09a867267b5e039a4d1b6)",
-    "unique_revocation_id(0, hex:1da4cd4d7c60491948662acc237bb10599c6046e1ef09a867267b5e039a4d1b6)",
+    "revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
+    "unique_revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
 }
   privileged rules: {}
   rules: {}
@@ -764,9 +764,9 @@ biscuit:
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "must_be_present"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["must_be_present"]
-            version: 1
+            version: 2
             context: ""
             facts: [
                 must_be_present(#authority, "hello")
@@ -785,8 +785,8 @@ verifier world:
 World {
   facts: {
     "must_be_present(#authority, \"hello\")",
-    "revocation_id(0, hex:128099942c46fc6a4f9a8f8f0cc5d8b70c4d55d834255ef6065b62c967eef50c)",
-    "unique_revocation_id(0, hex:128099942c46fc6a4f9a8f8f0cc5d8b70c4d55d834255ef6065b62c967eef50c)",
+    "revocation_id(0, hex:a869933238d941c3c6fd2a6949844a35727741e04865faf66ebdeb0e2cadab40)",
+    "unique_revocation_id(0, hex:a869933238d941c3c6fd2a6949844a35727741e04865faf66ebdeb0e2cadab40)",
 }
   privileged rules: {}
   rules: {}
@@ -808,9 +808,9 @@ biscuit:
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "check1", "test", "hello"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["check1", "test", "hello"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -819,9 +819,9 @@ Biscuit {
             ]
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: []
-            version: 1
+            version: 2
             context: ""
             facts: [
                 check1(#test)
@@ -838,10 +838,10 @@ verifier world:
 World {
   facts: {
     "check1(#test)",
-    "revocation_id(0, hex:08321b952cecd6cc7ca5d3493ae391e44fcf3d3d55e63aa7e8b098217b7736c3)",
-    "revocation_id(1, hex:e166c05f9ec0632fe286df76048a527a621d7ca08e2cd9f3995b4ee33b1e001c)",
-    "unique_revocation_id(0, hex:08321b952cecd6cc7ca5d3493ae391e44fcf3d3d55e63aa7e8b098217b7736c3)",
-    "unique_revocation_id(1, hex:e166c05f9ec0632fe286df76048a527a621d7ca08e2cd9f3995b4ee33b1e001c)",
+    "revocation_id(0, hex:4a366515e159a7577166d8158bdca3c0bb39cbabb4988824ad0c9aab5d3ea402)",
+    "revocation_id(1, hex:2e8c19fefac5e54b7a8e21bb40eaf8aac70909e48f22c388ebb8cc742065d1dc)",
+    "unique_revocation_id(0, hex:4a366515e159a7577166d8158bdca3c0bb39cbabb4988824ad0c9aab5d3ea402)",
+    "unique_revocation_id(1, hex:2e8c19fefac5e54b7a8e21bb40eaf8aac70909e48f22c388ebb8cc742065d1dc)",
 }
   privileged rules: {}
   rules: {}
@@ -863,9 +863,9 @@ biscuit:
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "query", "abc", "hello", "world"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["query", "abc", "hello", "world"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -911,8 +911,8 @@ validation:
 verifier world:
 World {
   facts: {
-    "revocation_id(0, hex:09b4fab17d84885149e416bf10990d19b918a02854acd9ad96494994735cd25d)",
-    "unique_revocation_id(0, hex:09b4fab17d84885149e416bf10990d19b918a02854acd9ad96494994735cd25d)",
+    "revocation_id(0, hex:fde35e855f6e4a1037e6698d3085bef54a71093dc06c2f2a2027e7c126a340d8)",
+    "unique_revocation_id(0, hex:fde35e855f6e4a1037e6698d3085bef54a71093dc06c2f2a2027e7c126a340d8)",
 }
   privileged rules: {}
   rules: {}
@@ -961,9 +961,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "check1", "test", "read", "unbound", "any1", "any2"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["check1", "test", "read"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -972,9 +972,9 @@ Biscuit {
             ]
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["unbound", "any1", "any2"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: [
@@ -997,9 +997,9 @@ biscuit2 (1 check):
 ```
 Biscuit {
     symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "check1", "test", "read", "any"]
-    authority: Block[0] {
+    authority: Block {
             symbols: ["check1", "test", "read"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: []
@@ -1008,9 +1008,9 @@ Biscuit {
             ]
         }
     blocks: [
-        Block[1] {
+        Block {
             symbols: ["any"]
-            version: 1
+            version: 2
             context: ""
             facts: []
             rules: [
@@ -1027,10 +1027,10 @@ verifier world:
 World {
   facts: {
     "operation(#ambient, #write)",
-    "revocation_id(0, hex:cfbc25eee0ffc9bca3930e88469c45b8aa43e856464fc401db213c3d9587783a)",
-    "revocation_id(1, hex:0e180a4400430a812b58751a3d3877af6ac2fe87559a32656c9ae78a4e973781)",
-    "unique_revocation_id(0, hex:cfbc25eee0ffc9bca3930e88469c45b8aa43e856464fc401db213c3d9587783a)",
-    "unique_revocation_id(1, hex:0e180a4400430a812b58751a3d3877af6ac2fe87559a32656c9ae78a4e973781)",
+    "revocation_id(0, hex:345b72b425b0e134ba294e1183e91af519a154fefc8f3a6b788da47668fa90c9)",
+    "revocation_id(1, hex:5262c65a6042072011eb868c9f47a279264324a2781d3dd38e72f3464dc93348)",
+    "unique_revocation_id(0, hex:345b72b425b0e134ba294e1183e91af519a154fefc8f3a6b788da47668fa90c9)",
+    "unique_revocation_id(1, hex:5262c65a6042072011eb868c9f47a279264324a2781d3dd38e72f3464dc93348)",
 }
   privileged rules: {}
   rules: {
