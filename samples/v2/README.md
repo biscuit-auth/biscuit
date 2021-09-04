@@ -47,8 +47,6 @@ World {
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file1\", #write)",
     "right(#authority, \"file2\", #read)",
-    "unique_revocation_id(0, hex:2d41aa8d0131f0a9f171ae849f99f78461157101001752852e1731281ad460b3)",
-    "unique_revocation_id(1, hex:601083ff09e19882d762976dbb9bc98851439052e8c1bf3da1f32718a5a57eed)",
 }
   privileged rules: {}
   rules: {}
@@ -408,8 +406,6 @@ World {
     "revocation_id(0, hex:97d9502fe0963f757c0f7e20e7d3a07b13f762c206c77506f4bd60af68565ce1)",
     "revocation_id(1, hex:5ccf80411f761b01c08783efede6b86898b920107507bd500c3854c8fe451f35)",
     "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
-    "unique_revocation_id(0, hex:97d9502fe0963f757c0f7e20e7d3a07b13f762c206c77506f4bd60af68565ce1)",
-    "unique_revocation_id(1, hex:5ccf80411f761b01c08783efede6b86898b920107507bd500c3854c8fe451f35)",
 }
   privileged rules: {}
   rules: {}
@@ -470,8 +466,6 @@ World {
     "revocation_id(1, hex:f5948d6b975b1f2e2571557588435445eeb088f6634c54247f0bc267bd11bc2a)",
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file1\", #write)",
-    "unique_revocation_id(0, hex:615c86ed96ffb3e756cee9a922facef14e7ceedd7833a22474ffa69986a02aab)",
-    "unique_revocation_id(1, hex:f5948d6b975b1f2e2571557588435445eeb088f6634c54247f0bc267bd11bc2a)",
 }
   privileged rules: {
     "right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
@@ -521,7 +515,6 @@ World {
     "resource(#ambient, \"file2\")",
     "revocation_id(0, hex:74d206f233bdcadbb6a8bdca0303b0520d75f94944f0dfc1d3b8edb0b3200b53)",
     "right(#authority, \"file1\", #read)",
-    "unique_revocation_id(0, hex:74d206f233bdcadbb6a8bdca0303b0520d75f94944f0dfc1d3b8edb0b3200b53)",
 }
   privileged rules: {}
   rules: {}
@@ -566,7 +559,6 @@ World {
     "operation(#ambient, #read)",
     "resource(#ambient, \"file1\")",
     "revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
-    "unique_revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
 }
   privileged rules: {}
   rules: {}
@@ -586,7 +578,6 @@ World {
     "operation(#ambient, #read)",
     "resource(#ambient, \"file2\")",
     "revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
-    "unique_revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
 }
   privileged rules: {}
   rules: {}
@@ -647,8 +638,6 @@ World {
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file2\", #read)",
     "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
-    "unique_revocation_id(0, hex:9a30e5b4f22cdffd389bd06c77c8ef1912604b4ebe3f0de7ceea9f4ddb571da5)",
-    "unique_revocation_id(1, hex:35dc6e409f6582a669f0d41bf3cd9aa837a19764f0262e3dd8b6d2bdacee5b82)",
     "valid_date(\"file1\")",
 }
   privileged rules: {}
@@ -675,8 +664,6 @@ World {
     "right(#authority, \"file1\", #read)",
     "right(#authority, \"file2\", #read)",
     "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
-    "unique_revocation_id(0, hex:9a30e5b4f22cdffd389bd06c77c8ef1912604b4ebe3f0de7ceea9f4ddb571da5)",
-    "unique_revocation_id(1, hex:35dc6e409f6582a669f0d41bf3cd9aa837a19764f0262e3dd8b6d2bdacee5b82)",
 }
   privileged rules: {}
   rules: {
@@ -723,7 +710,6 @@ World {
   facts: {
     "resource(#ambient, \"file1\")",
     "revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
-    "unique_revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
 }
   privileged rules: {}
   rules: {}
@@ -742,7 +728,6 @@ World {
   facts: {
     "resource(#ambient, \"file123.txt\")",
     "revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
-    "unique_revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
 }
   privileged rules: {}
   rules: {}
@@ -786,7 +771,6 @@ World {
   facts: {
     "must_be_present(#authority, \"hello\")",
     "revocation_id(0, hex:a869933238d941c3c6fd2a6949844a35727741e04865faf66ebdeb0e2cadab40)",
-    "unique_revocation_id(0, hex:a869933238d941c3c6fd2a6949844a35727741e04865faf66ebdeb0e2cadab40)",
 }
   privileged rules: {}
   rules: {}
@@ -840,8 +824,6 @@ World {
     "check1(#test)",
     "revocation_id(0, hex:4a366515e159a7577166d8158bdca3c0bb39cbabb4988824ad0c9aab5d3ea402)",
     "revocation_id(1, hex:2e8c19fefac5e54b7a8e21bb40eaf8aac70909e48f22c388ebb8cc742065d1dc)",
-    "unique_revocation_id(0, hex:4a366515e159a7577166d8158bdca3c0bb39cbabb4988824ad0c9aab5d3ea402)",
-    "unique_revocation_id(1, hex:2e8c19fefac5e54b7a8e21bb40eaf8aac70909e48f22c388ebb8cc742065d1dc)",
 }
   privileged rules: {}
   rules: {}
@@ -912,7 +894,6 @@ verifier world:
 World {
   facts: {
     "revocation_id(0, hex:fde35e855f6e4a1037e6698d3085bef54a71093dc06c2f2a2027e7c126a340d8)",
-    "unique_revocation_id(0, hex:fde35e855f6e4a1037e6698d3085bef54a71093dc06c2f2a2027e7c126a340d8)",
 }
   privileged rules: {}
   rules: {}
@@ -1029,8 +1010,6 @@ World {
     "operation(#ambient, #write)",
     "revocation_id(0, hex:345b72b425b0e134ba294e1183e91af519a154fefc8f3a6b788da47668fa90c9)",
     "revocation_id(1, hex:5262c65a6042072011eb868c9f47a279264324a2781d3dd38e72f3464dc93348)",
-    "unique_revocation_id(0, hex:345b72b425b0e134ba294e1183e91af519a154fefc8f3a6b788da47668fa90c9)",
-    "unique_revocation_id(1, hex:5262c65a6042072011eb868c9f47a279264324a2781d3dd38e72f3464dc93348)",
 }
   privileged rules: {}
   rules: {
