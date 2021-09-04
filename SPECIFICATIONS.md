@@ -17,11 +17,8 @@ the token that contains it, represented as a datalog query in biscuit. For the o
 to be valid, all of the checks defined in the token and the verifier must succeed
 - allow/deny policies: a list of datalog queries that are tested in a sequence
 until one of them matches. They can only be defined in the verifier
-- block: a list of datalog facts and rules. The first block is the authority
-block. The other blocks define caveats
-- authority: list of facts and rules defining the initial rights of the token
-- ambient: list of facts related to the operation, like which resource is accessed,
-the current date, or revocation lists
+- block: a list of datalog facts, rules and checks. The first block is the authority
+block, used to define the basic rights of a token
 - symbol: string that is stored in a table and referred to by its index to save space
 
 
@@ -145,24 +142,30 @@ A *boolean* is `true` or `false`.
 A *set* is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets.
 
-### Authority and ambient facts
+### Scopes
 
-Facts in Biscuit's language have some specific context.
+Since the first block defines the token's rights through facts and rules, and
+later blocks can define their own facts and rules, we must ensure the token
+cannot increase its rights with later blocks.
 
-Authority facts can only be created in the authority block, either directly
-or from rules, and are represented by the `#authority` symbol as the first
-element of a fact. They hold the initial rights for the token.
+This is done through execution scopes: a block's rules and checks can only
+apply on facts created in the current or previous blocks. Facts, rules, checks
+and policies of the verifier are executed in the context of the authority block.
 
-Ambient facts can only be provided by the verifier, and are represented by the
-`#ambient` symbol as the first element of a fact. They indicate data related
-to the operation the token is authorizing.
+Example:
+- the token contains `right("file1", #read)` in the first block
+- the token holder adds a block with the fact `right("file2", #read)`
+- the verifier adds:
+  - `resource("file2")`
+  - `operation(#read)`
+  - `check if resource($res), operation($op), right($res, $op)`
 
-Facts can also be created in blocks other than the authority block, but they cannot
-be authority or ambient facts.
+The verifier's check will fail because when it is evaluated, it only sees
+`right("file1", #read)` from the authority block.
 
 ### Checks
 
-Checks are logic queries evaluating conditions on authority and ambient facts.
+Checks are logic queries evaluating conditions on facts.
 To validate an operation, all of a token's checks must succeed.
 
 One block can contain one or more checks.
@@ -187,67 +190,66 @@ The second caveat checks that the resource is `file1`.
 
 ```
 authority:
-  right(#authority, "file1", #read);
-  right(#authority, "file2", #read);
-  right(#authority, "file1", #write);
+  right("file1", #read);
+  right("file2", #read);
+  right("file1", #write);
 ----------
 Block 1:
 check if
-  resource(#ambient, $0),
-  operation(#ambient, #read),
-  right(#authority, $0, #read)  // restrict to read operations
+  resource($0),
+  operation(#read),
+  right($0, #read)  // restrict to read operations
 ----------
 Block 2:
 check if
-  resource(#ambient, "file1")  // restrict to file1 resource
+  resource("file1")  // restrict to file1 resource
 ```
 
-The facts with the `authority` tag can only be defined in the `authority` part of
-the token.
-The verifier side provides the `resource` and `operation` facts with the `ambient`
-fact, with information from the request.
+The verifier side provides the `resource` and `operation` facts with information
+from the request.
 
-If the verifier provided the facts `resource(#ambient, "file2")` and
-`operation(#ambient, #read)`, the rule application of the first check would see
-`resource(#ambient, "file2"), operation(#ambient, #read), right(#authority, "file2", #read)`
+If the verifier provided the facts `resource("file2")` and
+`operation(#read)`, the rule application of the first check would see
+`resource("file2"), operation(#read), right("file2", #read)`
 with `X = "file2"`, so it would succeed, but the second check would fail
-because it expects `resource(#ambient, "file1")`.
+because it expects `resource("file1")`.
 
-If the verifier provided the facts `resource(#ambient, "file1")` and
-`operation(#ambient, #read)`, both checks would succeed.
+If the verifier provided the facts `resource("file1")` and
+`operation(#read)`, both checks would succeed.
 
 #### Broad authority rules
 
 In this example, we have a token with very large rights, that will be attenuated
 before giving to a user. The authority block can define rules that will generate
-facts depending on ambient data. This helps reduce the size of the token.
+facts depending on data provided by the verifier. This helps reduce the size of
+the token.
 
 ```
 authority:
 
 // if there is an ambient resource and we own it, we can read it
-right(#authority, $0, #read) <- resource(#ambient, $0), owner(#ambient, $1, $0);
+right($0, #read) <- resource($0), owner($1, $0);
 // if there is an ambient resource and we own it, we can write to it
-right(#authority, $0, #write) <- resource(#ambient, $0), owner(#ambient, $1, $0);
+right($0, #write) <- resource($0), owner($1, $0);
 ----------
 Block 1:
 
 check if
-  right(#authority, $0, $1),
-  resource(#ambient, $0),
-  operation(#ambient, $1)
+  right($0, $1),
+  resource($0),
+  operation($1)
 ----------
 Block 2:
 
 check if
-  resource(#ambient, $0),
+  resource($0),
   owner(#alice, $0) // defines a token only usable by alice
 ```
 
-These rules will define authority facts depending on ambient data.
-If we had the ambient facts `resource(#ambient, "file1")` and
-`owner(#ambient, #alice, "file1")`, the authority rules will define
-`right(#authority, "file1", #read)` and `right(#authority, "file1", #write)`,
+These rules will define authority facts depending on verifier data.
+If we had the facts `resource("file1")` and
+`owner(#alice, "file1")`, the authority rules will define
+`right"file1", #read)` and `right("file1", #write)`,
 which will allow check 1 and check 2 to succeed.
 
 If the owner ambient fact does not match the restriction in the second check, the
@@ -271,17 +273,17 @@ restrict usage based on ambient values:
 ```
 authority:
 
-right(#authority, "/folder/file1", #read);
-right(#authority, "/folder/file2", #read);
-right(#authority, "/folder2/file3", #read);
+right("/folder/file1", #read);
+right("/folder/file2", #read);
+right("/folder2/file3", #read);
 ----------
-check if resource(#ambient, $0), right(#authority, $0, $1)
+check if resource($0), right($0, $1)
 ----------
-check if time(#ambient, $0), $0 < 2019-02-05T23:00:00Z // expiration date
+check if time($0), $0 < 2019-02-05T23:00:00Z // expiration date
 ----------
-check if source_IP(#ambient, $0), ["1.2.3.4", "5.6.7.8"].contains($0) // set membership
+check if source_IP($0), ["1.2.3.4", "5.6.7.8"].contains($0) // set membership
 ----------
-check if resource(#ambient, $0), $0.starts_with("/folder/") // prefix operation on strings
+check if resource($0), $0.starts_with("/folder/") // prefix operation on strings
 ```
 
 Executing an expression must always return a boolean, and all variables
@@ -364,7 +366,7 @@ The cryptographic signature must be checked immediately after deserializing. For
 `Biscuit` with a public key signature, the verifier must check that the public key of the
 authority block is the root public key it is expecting.
 
-A `Biscuit` or `SealedBiscuit` contains in its`authority` and `blocks` fields
+A `Biscuit` or `SealedBiscuit` contains in its `authority` and `blocks` fields
 some byte arrays that must be deserialized as a `Block`.
 
 #### Verification process
@@ -373,14 +375,13 @@ The verifier will first create a default symbol table, and will append to that t
 from the `symbols` field of each block, starting from the `authority` block and all the
 following blocks, ordered by their index.
 
-The verifier will create a Datalog "world", and add to this world:
+The verifier will create a Datalog "world", and add to this world its own facts and rules:
+ambient data from the request, lists of users and roles, etc.
 - the facts from the authority block
 - the rules from the authority block
 - for each following block:
-  - add the facts from the block. If it finds an `authority` or `ambient` fact, it stops there and
-  returns an error
-  - add the rules from the block.  If it finds a rule generating `authority` or `ambient` facts, it
-  stops there and returns an error checking that those facts are not `authority` or `ambient` facts
+  - add the facts from the block.
+  - add the rules from the block.
 
 ##### Revocation identifiers
 
@@ -394,26 +395,27 @@ the token. They are calculated as follows:
 
 ##### Verifying
 
-From there, the verifier can start loading ambient data. First, each block contains a `context`
-field that can give some information on the verifier to know which data to load (to avoid
-loading all of the users, groups, resources, etc). This field is a text field with no restriction
-on its format.
-The verifier then adds facts and rules obtained from looking up the context, and provides
-facts and rules with the `ambient` tag to describe the request.
-
-To perform the verification, the verifier will:
+From there, the verifier can start loading data from each block. First, for the authority block:
+- load facts and rules from the block
 - run the Datalog engine on the facts and rules that were loaded
-- create an error list
-- for each verifier check (check provided on the verifier side), validate it. If it fails,
-add an error to the error list
-- for each block:
-  - for each check, validate it. If it fails, add an error to the error list
-- if the error list is not empty, return the error list
+- for each authority check or verifier check, validate it. If it fails, add an error to the error list
 - for each allow/deny policy:
   - run the query. If it succeeds:
-    - if it is an allow policy, the verification succeeds, stop here
-    - if it is a deny policy, the verification fails, stop here
-- if no policy matched, the verification fails
+    - if it is an allow policy, the verification succeeds, store the result and stop here
+    - if it is a deny policy, the verification fails, store the result and stop here
+
+Then, for each following block:
+- remove all the previous rules (so the previous rules do not apply to new facts)
+- load facts and rules from the block
+- run the Datalog engine on the facts and rules that were loaded
+- for each block check, validate it. If it fails, add an error to the error list
+
+Returning the result:
+- if the error list is not empty, return the error list
+- check policy result:
+  - if an allow policy matched, the verification succeeds
+  - if a deny policy matched, the verification fails
+  - if no policy matched, the verification fails
 
 #### Queries
 
@@ -648,9 +650,6 @@ is the authority block.
 
 Each block can provide facts either from its facts list, or generate
 them with its rules list.
-The authority block can contain facts marked with the `#authority`
-symbol as first id, and rules that generate facts marked with
-the `#authority` symbol.
 
 ### Symbol table
 

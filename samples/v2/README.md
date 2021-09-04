@@ -15,9 +15,9 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read),
-                right(#authority, "file2", #read),
-                right(#authority, "file1", #write)
+                right("file1", #read),
+                right("file2", #read),
+                right("file1", #write)
             ]
             rules: []
             checks: []
@@ -30,7 +30,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)
+                check if resource($0), operation(#read), right($0, #read)
             ]
         }
     ]
@@ -41,24 +41,21 @@ validation:
 verifier world:
 World {
   facts: {
-    "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:2d41aa8d0131f0a9f171ae849f99f78461157101001752852e1731281ad460b3)",
-    "revocation_id(1, hex:601083ff09e19882d762976dbb9bc98851439052e8c1bf3da1f32718a5a57eed)",
-    "right(#authority, \"file1\", #read)",
-    "right(#authority, \"file1\", #write)",
-    "right(#authority, \"file2\", #read)",
+    "resource(\"file1\")",
+    "revocation_id(0, hex:d0b78d6ca60f7ecd2b73162cba6442b80cb88ae8ee2faff80ef2ef4a397b3ab1)",
+    "revocation_id(1, hex:44245305d22048f923864a76f719a689a442f4ebc0e3f49922ecb77a1b181024)",
+    "right(\"file1\", #read)",
+    "right(\"file1\", #write)",
+    "right(\"file2\", #read)",
 }
-  privileged rules: {}
   rules: {}
-  checks: {
-    "check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)",
-}
+  checks: {}
   policies: {
     "allow if true",
 }
 }
 
-Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)\" })"])
+Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(#read), right($0, #read)\" })"])
 
 
 ------------------------------
@@ -73,7 +70,7 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read)
+                right("file1", #read)
             ]
             rules: []
             checks: []
@@ -86,7 +83,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)
+                check if resource($0), operation(#read), right($0, #read)
             ]
         }
     ]
@@ -109,9 +106,9 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read),
-                right(#authority, "file2", #read),
-                right(#authority, "file1", #write)
+                right("file1", #read),
+                right("file2", #read),
+                right("file1", #write)
             ]
             rules: []
             checks: []
@@ -124,7 +121,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)
+                check if resource($0), operation(#read), right($0, #read)
             ]
         }
     ]
@@ -147,9 +144,9 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read),
-                right(#authority, "file2", #read),
-                right(#authority, "file1", #write)
+                right("file1", #read),
+                right("file2", #read),
+                right("file1", #write)
             ]
             rules: []
             checks: []
@@ -162,7 +159,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)
+                check if resource($0), operation(#read), right($0, #read)
             ]
         }
     ]
@@ -185,9 +182,9 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read),
-                right(#authority, "file2", #read),
-                right(#authority, "file1", #write)
+                right("file1", #read),
+                right("file2", #read),
+                right("file1", #write)
             ]
             rules: []
             checks: []
@@ -200,7 +197,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)
+                check if resource($0), operation(#read), right($0, #read)
             ]
         }
     ]
@@ -223,9 +220,9 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read),
-                right(#authority, "file2", #read),
-                right(#authority, "file1", #write)
+                right("file1", #read),
+                right("file2", #read),
+                right("file1", #write)
             ]
             rules: []
             checks: []
@@ -238,7 +235,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)
+                check if resource($0), operation(#read), right($0, #read)
             ]
         }
     ]
@@ -254,9 +251,9 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read),
-                right(#authority, "file2", #read),
-                right(#authority, "file1", #write)
+                right("file1", #read),
+                right("file2", #read),
+                right("file1", #write)
             ]
             rules: []
             checks: []
@@ -269,7 +266,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, $0), operation(#ambient, #read), right(#authority, $0, #read)
+                check if resource($0), operation(#read), right($0, #read)
             ]
         },
 	Block {
@@ -279,7 +276,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, "file1")
+                check if resource("file1")
             ]
         }
     ]
@@ -292,78 +289,256 @@ Err(["Format(Signature(InvalidSignature(\"signature error\")))"])
 
 ------------------------------
 
-## invalid block fact with authority tag: test7_invalid_block_fact_authority.bc
+## scoped rules: test7_scoped_rules.bc
 biscuit2 (1 check):
 ```
 Biscuit {
-    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0"]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "user_id", "owner", "0", "read", "1", "check1"]
     authority: Block {
-            symbols: ["read"]
+            symbols: ["user_id", "owner"]
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read)
+                user_id("alice"),
+                owner("alice", "file1")
             ]
             rules: []
             checks: []
         }
     blocks: [
         Block {
-            symbols: ["write", "check1", "0"]
+            symbols: ["0", "read", "1", "check1"]
             version: 2
             context: ""
-            facts: [
-                right(#authority, "file1", #write)
+            facts: []
+            rules: [
+                right($0, #read) <- resource($0), user_id($1), owner($1, $0)
             ]
-            rules: []
             checks: [
-                check if operation(#ambient, #read)
+                check if resource($0), operation(#read), right($0, #read)
             ]
         }
     ]
 }
 ```
 
+biscuit3 (2 check):
+```
+Biscuit {
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "user_id", "owner", "0", "read", "1", "check1"]
+    authority: Block {
+            symbols: ["user_id", "owner"]
+            version: 2
+            context: ""
+            facts: [
+                user_id("alice"),
+                owner("alice", "file1")
+            ]
+            rules: []
+            checks: []
+        }
+    blocks: [
+        Block {
+            symbols: ["0", "read", "1", "check1"]
+            version: 2
+            context: ""
+            facts: []
+            rules: [
+                right($0, #read) <- resource($0), user_id($1), owner($1, $0)
+            ]
+            checks: [
+                check if resource($0), operation(#read), right($0, #read)
+            ]
+        }
+    ]
+}
+```
+
+biscuit3 (2 checks):
+```
+Biscuit {
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "user_id", "owner", "0", "read", "1", "check1"]
+    authority: Block {
+            symbols: ["user_id", "owner"]
+            version: 2
+            context: ""
+            facts: [
+                user_id("alice"),
+                owner("alice", "file1")
+            ]
+            rules: []
+            checks: []
+        }
+    blocks: [
+        Block {
+            symbols: ["0", "read", "1", "check1"]
+            version: 2
+            context: ""
+            facts: []
+            rules: [
+                right($0, #read) <- resource($0), user_id($1), owner($1, $0)
+            ]
+            checks: [
+                check if resource($0), operation(#read), right($0, #read)
+            ]
+        },
+	Block {
+            symbols: []
+            version: 2
+            context: ""
+            facts: [
+                owner("alice", "file2")
+            ]
+            rules: []
+            checks: []
+        }
+    ]
+}
+```
+
 validation:
-Err(["FailedLogic(InvalidBlockFact(0, \"right(#authority, \\\"file1\\\", #write)\"))"])
+verifier world:
+World {
+  facts: {
+    "operation(#read)",
+    "owner(\"alice\", \"file1\")",
+    "owner(\"alice\", \"file2\")",
+    "resource(\"file2\")",
+    "revocation_id(0, hex:85ac327fc6703282ec689d3d5cad2f62ba357bc5285012ee4210a6b8ac51dac6)",
+    "revocation_id(1, hex:fa9013d9973657cd5050185a91f243859d982b6bd79a1fbf0c680e18ac526464)",
+    "revocation_id(2, hex:d4c38cff9911dedd5ec9535ada28df22c25a7a6a2589ebb1bfc809a4e5dd2548)",
+    "user_id(\"alice\")",
+}
+  rules: {}
+  checks: {}
+  policies: {
+    "allow if true",
+}
+}
+
+Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(#read), right($0, #read)\" })"])
 
 
 ------------------------------
 
-## invalid block fact with ambient tag: test8_invalid_block_fact_ambient.bc
+## scoped checks: test8_scoped_checks.bc
 biscuit2 (1 check):
 ```
 Biscuit {
-    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "write", "check1", "0"]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "check1", "0"]
     authority: Block {
             symbols: ["read"]
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read)
+                right("file1", #read)
             ]
             rules: []
             checks: []
         }
     blocks: [
         Block {
-            symbols: ["write", "check1", "0"]
+            symbols: ["check1", "0"]
             version: 2
             context: ""
-            facts: [
-                right(#ambient, "file1", #write)
-            ]
+            facts: []
             rules: []
             checks: [
-                check if operation(#ambient, #read)
+                check if resource($0), operation(#read), right($0, #read)
             ]
         }
     ]
 }
 ```
 
+biscuit3 (2 check):
+```
+Biscuit {
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "check1", "0"]
+    authority: Block {
+            symbols: ["read"]
+            version: 2
+            context: ""
+            facts: [
+                right("file1", #read)
+            ]
+            rules: []
+            checks: []
+        }
+    blocks: [
+        Block {
+            symbols: ["check1", "0"]
+            version: 2
+            context: ""
+            facts: []
+            rules: []
+            checks: [
+                check if resource($0), operation(#read), right($0, #read)
+            ]
+        }
+    ]
+}
+```
+
+biscuit3 (2 checks):
+```
+Biscuit {
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read", "check1", "0"]
+    authority: Block {
+            symbols: ["read"]
+            version: 2
+            context: ""
+            facts: [
+                right("file1", #read)
+            ]
+            rules: []
+            checks: []
+        }
+    blocks: [
+        Block {
+            symbols: ["check1", "0"]
+            version: 2
+            context: ""
+            facts: []
+            rules: []
+            checks: [
+                check if resource($0), operation(#read), right($0, #read)
+            ]
+        },
+	Block {
+            symbols: []
+            version: 2
+            context: ""
+            facts: [
+                right("file2", #read)
+            ]
+            rules: []
+            checks: []
+        }
+    ]
+}
+```
+
 validation:
-Err(["FailedLogic(InvalidBlockFact(0, \"right(#ambient, \\\"file1\\\", #write)\"))"])
+verifier world:
+World {
+  facts: {
+    "operation(#read)",
+    "resource(\"file2\")",
+    "revocation_id(0, hex:d82a7c1a18cfa4314b375a87c0a56a3053da388ea98bff667ce4d5400b7aa981)",
+    "revocation_id(1, hex:80992689d9e68ef103a9d620a107dc38fc020dd7e11238781547d6b8dfd7ad72)",
+    "revocation_id(2, hex:f6624085e6ea881004795493f67e6335e109dd228a060d05083cc49c88233944)",
+    "right(\"file1\", #read)",
+    "right(\"file2\", #read)",
+}
+  rules: {}
+  checks: {}
+  policies: {
+    "allow if true",
+}
+}
+
+Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(#read), right($0, #read)\" })"])
 
 
 ------------------------------
@@ -389,8 +564,8 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, "file1"),
-                check if time(#ambient, $date), $date <= 2018-12-20T00:00:00+00:00
+                check if resource("file1"),
+                check if time($date), $date <= 2018-12-20T00:00:00+00:00
             ]
         }
     ]
@@ -401,55 +576,49 @@ validation:
 verifier world:
 World {
   facts: {
-    "operation(#ambient, #read)",
-    "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:97d9502fe0963f757c0f7e20e7d3a07b13f762c206c77506f4bd60af68565ce1)",
-    "revocation_id(1, hex:5ccf80411f761b01c08783efede6b86898b920107507bd500c3854c8fe451f35)",
-    "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+    "operation(#read)",
+    "resource(\"file1\")",
+    "revocation_id(0, hex:d30401ced69d2a2a3ce04bdee201316e7d256b2b44c25e2a2c3db54a226dfa0d)",
+    "revocation_id(1, hex:53792abfe5845c74575528cc99803c02ab7dedf809f5b9ec5859a2f812c4627d)",
+    "time(SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
 }
-  privileged rules: {}
   rules: {}
-  checks: {
-    "check if resource(#ambient, \"file1\")",
-    "check if time(#ambient, $date), $date <= 2018-12-20T00:00:00+00:00",
-}
+  checks: {}
   policies: {
     "allow if true",
 }
 }
 
-Err(["Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: \"check if time(#ambient, $date), $date <= 2018-12-20T00:00:00+00:00\" })"])
+Err(["Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: \"check if time($date), $date <= 2018-12-20T00:00:00+00:00\" })"])
 
 
 ------------------------------
 
-## authority rules: test10_authority_rules.bc
-biscuit2 (1 check):
+## verifier scope: test10_verifier_scope.bc
+biscuit3 (2 check):
 ```
 Biscuit {
-    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "1", "read", "owner", "0", "write", "check1", "check2", "alice"]
+    symbols: ["authority", "ambient", "resource", "operation", "right", "current_time", "revocation_id", "read"]
     authority: Block {
-            symbols: ["1", "read", "owner", "0", "write"]
+            symbols: ["read"]
             version: 2
             context: ""
-            facts: []
-            rules: [
-                right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1),
-                right(#authority, $1, #write) <- resource(#ambient, $1), owner(#ambient, $0, $1)
+            facts: [
+                right("file1", #read)
             ]
+            rules: []
             checks: []
         }
     blocks: [
         Block {
-            symbols: ["check1", "check2", "alice"]
+            symbols: []
             version: 2
             context: ""
-            facts: []
-            rules: []
-            checks: [
-                check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1),
-                check if resource(#ambient, $0), owner(#ambient, #alice, $0)
+            facts: [
+                right("file2", #read)
             ]
+            rules: []
+            checks: []
         }
     ]
 }
@@ -459,29 +628,23 @@ validation:
 verifier world:
 World {
   facts: {
-    "operation(#ambient, #read)",
-    "owner(#ambient, #alice, \"file1\")",
-    "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:615c86ed96ffb3e756cee9a922facef14e7ceedd7833a22474ffa69986a02aab)",
-    "revocation_id(1, hex:f5948d6b975b1f2e2571557588435445eeb088f6634c54247f0bc267bd11bc2a)",
-    "right(#authority, \"file1\", #read)",
-    "right(#authority, \"file1\", #write)",
-}
-  privileged rules: {
-    "right(#authority, $1, #read) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
-    "right(#authority, $1, #write) <- resource(#ambient, $1), owner(#ambient, $0, $1)",
+    "operation(#read)",
+    "resource(\"file2\")",
+    "revocation_id(0, hex:81cec0693dbe65a0e6a97bec0e046629b96ade022bcbf0eb85a4f32fe08af176)",
+    "revocation_id(1, hex:f478ed76b9c914b8626021362ea9a395fbd5ac5349ac11e200c76dec95271bce)",
+    "right(\"file1\", #read)",
+    "right(\"file2\", #read)",
 }
   rules: {}
   checks: {
-    "check if resource(#ambient, $0), owner(#ambient, #alice, $0)",
-    "check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)",
+    "check if right($0, $1), resource($0), operation($1)",
 }
   policies: {
     "allow if true",
 }
 }
 
-Ok(0)
+Err(["Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"])
 
 
 ------------------------------
@@ -496,7 +659,7 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read)
+                right("file1", #read)
             ]
             rules: []
             checks: []
@@ -511,22 +674,21 @@ validation:
 verifier world:
 World {
   facts: {
-    "operation(#ambient, #read)",
-    "resource(#ambient, \"file2\")",
-    "revocation_id(0, hex:74d206f233bdcadbb6a8bdca0303b0520d75f94944f0dfc1d3b8edb0b3200b53)",
-    "right(#authority, \"file1\", #read)",
+    "operation(#read)",
+    "resource(\"file2\")",
+    "revocation_id(0, hex:db94822670781ef0678edf5e9b11c5e75fcedb90c2243cd4993415a81b3abb23)",
+    "right(\"file1\", #read)",
 }
-  privileged rules: {}
   rules: {}
   checks: {
-    "check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)",
+    "check if right($0, $1), resource($0), operation($1)",
 }
   policies: {
     "allow if true",
 }
 }
 
-Err(["Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right(#authority, $0, $1), resource(#ambient, $0), operation(#ambient, $1)\" })"])
+Err(["Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"])
 
 
 ------------------------------
@@ -543,7 +705,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, "file1")
+                check if resource("file1")
             ]
         }
     blocks: [
@@ -556,15 +718,12 @@ validation for "file1":
 verifier world:
 World {
   facts: {
-    "operation(#ambient, #read)",
-    "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
+    "operation(#read)",
+    "resource(\"file1\")",
+    "revocation_id(0, hex:3527bbda37830c73381efdeb2c41eac3468240ddb263e7897266cc391c21f37f)",
 }
-  privileged rules: {}
   rules: {}
-  checks: {
-    "check if resource(#ambient, \"file1\")",
-}
+  checks: {}
   policies: {
     "allow if true",
 }
@@ -575,21 +734,18 @@ validation for "file2":
 verifier world:
 World {
   facts: {
-    "operation(#ambient, #read)",
-    "resource(#ambient, \"file2\")",
-    "revocation_id(0, hex:6da467f30421f10f2bdd7eacb3ed3ce0741757c1afa8da1775f376dba88a5683)",
+    "operation(#read)",
+    "resource(\"file2\")",
+    "revocation_id(0, hex:3527bbda37830c73381efdeb2c41eac3468240ddb263e7897266cc391c21f37f)",
 }
-  privileged rules: {}
   rules: {}
-  checks: {
-    "check if resource(#ambient, \"file1\")",
-}
+  checks: {}
   policies: {
     "allow if true",
 }
 }
 
-Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(#ambient, \\\"file1\\\")\" })"])
+Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(\\\"file1\\\")\" })"])
 
 
 ------------------------------
@@ -604,8 +760,8 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                right(#authority, "file1", #read),
-                right(#authority, "file2", #read)
+                right("file1", #read),
+                right("file2", #read)
             ]
             rules: []
             checks: []
@@ -617,11 +773,11 @@ Biscuit {
             context: ""
             facts: []
             rules: [
-                valid_date("file1") <- time(#ambient, $0), resource(#ambient, "file1"), $0 <= 2030-12-31T12:59:59+00:00,
-                valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, !["file1"].contains($1)
+                valid_date("file1") <- time($0), resource("file1"), $0 <= 2030-12-31T12:59:59+00:00,
+                valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59+00:00, !["file1"].contains($1)
             ]
             checks: [
-                check if valid_date($0), resource(#ambient, $0)
+                check if valid_date($0), resource($0)
             ]
         }
     ]
@@ -632,22 +788,16 @@ validation for "file1":
 verifier world:
 World {
   facts: {
-    "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:9a30e5b4f22cdffd389bd06c77c8ef1912604b4ebe3f0de7ceea9f4ddb571da5)",
-    "revocation_id(1, hex:35dc6e409f6582a669f0d41bf3cd9aa837a19764f0262e3dd8b6d2bdacee5b82)",
-    "right(#authority, \"file1\", #read)",
-    "right(#authority, \"file2\", #read)",
-    "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+    "resource(\"file1\")",
+    "revocation_id(0, hex:3d5459878dfb4e1dba4e1ff1c585b98435117dd8f27b4402e836405e2073d58d)",
+    "revocation_id(1, hex:6af4d647ce1df7e80c1cb4736087e21340fa3ed63b0d3f172d25e8e9964489c3)",
+    "right(\"file1\", #read)",
+    "right(\"file2\", #read)",
+    "time(SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
     "valid_date(\"file1\")",
 }
-  privileged rules: {}
-  rules: {
-    "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
-    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, ![\"file1\"].contains($1)",
-}
-  checks: {
-    "check if valid_date($0), resource(#ambient, $0)",
-}
+  rules: {}
+  checks: {}
   policies: {
     "allow if true",
 }
@@ -658,27 +808,21 @@ validation for "file2":
 verifier world:
 World {
   facts: {
-    "resource(#ambient, \"file2\")",
-    "revocation_id(0, hex:9a30e5b4f22cdffd389bd06c77c8ef1912604b4ebe3f0de7ceea9f4ddb571da5)",
-    "revocation_id(1, hex:35dc6e409f6582a669f0d41bf3cd9aa837a19764f0262e3dd8b6d2bdacee5b82)",
-    "right(#authority, \"file1\", #read)",
-    "right(#authority, \"file2\", #read)",
-    "time(#ambient, SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+    "resource(\"file2\")",
+    "revocation_id(0, hex:3d5459878dfb4e1dba4e1ff1c585b98435117dd8f27b4402e836405e2073d58d)",
+    "revocation_id(1, hex:6af4d647ce1df7e80c1cb4736087e21340fa3ed63b0d3f172d25e8e9964489c3)",
+    "right(\"file1\", #read)",
+    "right(\"file2\", #read)",
+    "time(SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
 }
-  privileged rules: {}
-  rules: {
-    "valid_date(\"file1\") <- time(#ambient, $0), resource(#ambient, \"file1\"), $0 <= 2030-12-31T12:59:59+00:00",
-    "valid_date($1) <- time(#ambient, $0), resource(#ambient, $1), $0 <= 1999-12-31T12:59:59+00:00, ![\"file1\"].contains($1)",
-}
-  checks: {
-    "check if valid_date($0), resource(#ambient, $0)",
-}
+  rules: {}
+  checks: {}
   policies: {
     "allow if true",
 }
 }
 
-Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if valid_date($0), resource(#ambient, $0)\" })"])
+Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if valid_date($0), resource($0)\" })"])
 
 
 ------------------------------
@@ -695,7 +839,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, $0), $0.matches("file[0-9]+.txt")
+                check if resource($0), $0.matches("file[0-9]+.txt")
             ]
         }
     blocks: [
@@ -708,32 +852,26 @@ validation for "file1":
 verifier world:
 World {
   facts: {
-    "resource(#ambient, \"file1\")",
-    "revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
+    "resource(\"file1\")",
+    "revocation_id(0, hex:c1e6da318f99f8ad00d1b6bbfcf56fbd7ffd2b499f5719e6a371ad82d1d94368)",
 }
-  privileged rules: {}
   rules: {}
-  checks: {
-    "check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")",
-}
+  checks: {}
   policies: {
     "allow if true",
 }
 }
 
-Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(#ambient, $0), $0.matches(\\\"file[0-9]+.txt\\\")\" })"])
+Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource($0), $0.matches(\\\"file[0-9]+.txt\\\")\" })"])
 validation for "file123":
 verifier world:
 World {
   facts: {
-    "resource(#ambient, \"file123.txt\")",
-    "revocation_id(0, hex:7d04d352cd30ad2875f003ff2ccc57dc7ec39763f3a823f87c9e26bf40b0310d)",
+    "resource(\"file123.txt\")",
+    "revocation_id(0, hex:c1e6da318f99f8ad00d1b6bbfcf56fbd7ffd2b499f5719e6a371ad82d1d94368)",
 }
-  privileged rules: {}
   rules: {}
-  checks: {
-    "check if resource(#ambient, $0), $0.matches(\"file[0-9]+.txt\")",
-}
+  checks: {}
   policies: {
     "allow if true",
 }
@@ -754,7 +892,7 @@ Biscuit {
             version: 2
             context: ""
             facts: [
-                must_be_present(#authority, "hello")
+                must_be_present("hello")
             ]
             rules: []
             checks: []
@@ -769,13 +907,12 @@ validation:
 verifier world:
 World {
   facts: {
-    "must_be_present(#authority, \"hello\")",
-    "revocation_id(0, hex:a869933238d941c3c6fd2a6949844a35727741e04865faf66ebdeb0e2cadab40)",
+    "must_be_present(\"hello\")",
+    "revocation_id(0, hex:f1aba7009cd19fbc5605ad5a318775bc8bb4c887cc3d00f405689420a8ccdc6a)",
 }
-  privileged rules: {}
   rules: {}
   checks: {
-    "check if must_be_present(#authority, $0) or must_be_present($0)",
+    "check if must_be_present($0) or must_be_present($0)",
 }
   policies: {
     "allow if true",
@@ -799,7 +936,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, #hello)
+                check if resource(#hello)
             ]
         }
     blocks: [
@@ -822,20 +959,17 @@ verifier world:
 World {
   facts: {
     "check1(#test)",
-    "revocation_id(0, hex:4a366515e159a7577166d8158bdca3c0bb39cbabb4988824ad0c9aab5d3ea402)",
-    "revocation_id(1, hex:2e8c19fefac5e54b7a8e21bb40eaf8aac70909e48f22c388ebb8cc742065d1dc)",
+    "revocation_id(0, hex:a4155e1642c441f169f8251cc3c1a1fa6b172543948c0a1a33d6409c28cae987)",
+    "revocation_id(1, hex:63f977e2f45b998a920fba2bb69af6c02e4f094294dc89bdbaabb88f8a582186)",
 }
-  privileged rules: {}
   rules: {}
-  checks: {
-    "check if resource(#ambient, #hello)",
-}
+  checks: {}
   policies: {
     "allow if true",
 }
 }
 
-Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(#ambient, #hello)\" })"])
+Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(#hello)\" })"])
 
 
 ------------------------------
@@ -893,40 +1027,10 @@ validation:
 verifier world:
 World {
   facts: {
-    "revocation_id(0, hex:fde35e855f6e4a1037e6698d3085bef54a71093dc06c2f2a2027e7c126a340d8)",
+    "revocation_id(0, hex:388e71fd289d831f617872e9c454eac446a88080f34bfbe4da50fbce7144bcda)",
 }
-  privileged rules: {}
   rules: {}
-  checks: {
-    "check if !false",
-    "check if \"aaabde\".matches(\"a*c?.e\")",
-    "check if \"abcD12\" == \"abcD12\"",
-    "check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\")",
-    "check if #abc == #abc",
-    "check if 1 + 2 * 3 - 4 / 2 == 5",
-    "check if 1 < 2",
-    "check if 1 <= 1",
-    "check if 1 <= 2",
-    "check if 2 > 1",
-    "check if 2 >= 1",
-    "check if 2 >= 2",
-    "check if 2019-12-04T09:46:41+00:00 < 2020-12-04T09:46:41+00:00",
-    "check if 2019-12-04T09:46:41+00:00 <= 2020-12-04T09:46:41+00:00",
-    "check if 2020-12-04T09:46:41+00:00 == 2020-12-04T09:46:41+00:00",
-    "check if 2020-12-04T09:46:41+00:00 > 2019-12-04T09:46:41+00:00",
-    "check if 2020-12-04T09:46:41+00:00 >= 2019-12-04T09:46:41+00:00",
-    "check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00",
-    "check if 3 == 3",
-    "check if [\"abc\", \"def\"].contains(\"abc\")",
-    "check if [#hello, #world].contains(#hello)",
-    "check if [1, 2].contains(2)",
-    "check if [2019-12-04T09:46:41+00:00, 2020-12-04T09:46:41+00:00].contains(2020-12-04T09:46:41+00:00)",
-    "check if [false, true].contains(true)",
-    "check if [hex:12ab, hex:34de].contains(hex:34de)",
-    "check if false or true",
-    "check if hex:12ab == hex:12ab",
-    "check if true",
-}
+  checks: {}
   policies: {
     "allow if true",
 }
@@ -949,7 +1053,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if operation(#ambient, #read)
+                check if operation(#read)
             ]
         }
     blocks: [
@@ -968,6 +1072,20 @@ Biscuit {
 ```
 
 validation:
+verifier world:
+World {
+  facts: {
+    "operation(#write)",
+    "revocation_id(0, hex:2e13a1deb4edc2c841324ab4120351aa8696d455750045511cb94ee243b9c35f)",
+    "revocation_id(1, hex:628bf94715ce5ca37fe9d49bacee6a13fb77d8fd481b09875757bd567c93f0ca)",
+}
+  rules: {}
+  checks: {}
+  policies: {
+    "allow if true",
+}
+}
+
 Err(["FailedLogic(InvalidBlockRule(0, \"operation($unbound, #read) <- operation($any1, $any2)\"))"])
 
 
@@ -985,7 +1103,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if operation(#ambient, #read)
+                check if operation(#read)
             ]
         }
     blocks: [
@@ -995,7 +1113,7 @@ Biscuit {
             context: ""
             facts: []
             rules: [
-                operation($ambient, #read) <- operation($ambient, $any)
+                operation(#read) <- operation($any)
             ]
             checks: []
         }
@@ -1007,21 +1125,17 @@ validation:
 verifier world:
 World {
   facts: {
-    "operation(#ambient, #write)",
-    "revocation_id(0, hex:345b72b425b0e134ba294e1183e91af519a154fefc8f3a6b788da47668fa90c9)",
-    "revocation_id(1, hex:5262c65a6042072011eb868c9f47a279264324a2781d3dd38e72f3464dc93348)",
+    "operation(#read)",
+    "operation(#write)",
+    "revocation_id(0, hex:e0728acdc6aac007be70c2795e681c911fbf1bb0d8063a04258813d3cc36ebd2)",
+    "revocation_id(1, hex:29226d29e16815d2adae6139b5761515f5fc219dcafbf1e113f03ab1b7134790)",
 }
-  privileged rules: {}
-  rules: {
-    "operation($ambient, #read) <- operation($ambient, $any)",
-}
-  checks: {
-    "check if operation(#ambient, #read)",
-}
+  rules: {}
+  checks: {}
   policies: {
     "allow if true",
 }
 }
 
-Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if operation(#ambient, #read)\" })"])
+Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if operation(#read)\" })"])
 
