@@ -22,8 +22,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "resource(\"file1\")",
               "revocation_id(0, hex:d0b78d6ca60f7ecd2b73162cba6442b80cb88ae8ee2faff80ef2ef4a397b3ab1)",
@@ -38,12 +38,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(#read), right($0, #read)\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": "resource(\"file1\");\n"
+        }
       }
     },
     {
@@ -65,14 +66,15 @@
         }
       ],
       "validations": {
-        "": [
-          null,
-          {
+        "": {
+          "world": null,
+          "result": {
             "Err": [
               "Format(Signature(InvalidSignature(\"signature error\")))"
             ]
-          }
-        ]
+          },
+          "verifier_code": ""
+        }
       }
     },
     {
@@ -95,14 +97,15 @@
         }
       ],
       "validations": {
-        "": [
-          null,
-          {
+        "": {
+          "world": null,
+          "result": {
             "Err": [
               "Format(InvalidSignatureSize(16))"
             ]
-          }
-        ]
+          },
+          "verifier_code": ""
+        }
       }
     },
     {
@@ -125,14 +128,15 @@
         }
       ],
       "validations": {
-        "": [
-          null,
-          {
+        "": {
+          "world": null,
+          "result": {
             "Err": [
               "Format(Signature(InvalidSignature(\"signature error\")))"
             ]
-          }
-        ]
+          },
+          "verifier_code": ""
+        }
       }
     },
     {
@@ -155,14 +159,15 @@
         }
       ],
       "validations": {
-        "": [
-          null,
-          {
+        "": {
+          "world": null,
+          "result": {
             "Err": [
               "Format(Signature(InvalidSignature(\"signature error\")))"
             ]
-          }
-        ]
+          },
+          "verifier_code": ""
+        }
       }
     },
     {
@@ -191,14 +196,15 @@
         }
       ],
       "validations": {
-        "": [
-          null,
-          {
+        "": {
+          "world": null,
+          "result": {
             "Err": [
               "Format(Signature(InvalidSignature(\"signature error\")))"
             ]
-          }
-        ]
+          },
+          "verifier_code": ""
+        }
       }
     },
     {
@@ -227,8 +233,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "operation(#read)",
               "owner(\"alice\", \"file1\")",
@@ -245,12 +251,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(#read), right($0, #read)\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": "resource(\"file2\");\noperation(#read);\n"
+        }
       }
     },
     {
@@ -276,8 +283,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "operation(#read)",
               "resource(\"file2\")",
@@ -293,12 +300,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(#read), right($0, #read)\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": "resource(\"file2\");\noperation(#read);\n"
+        }
       }
     },
     {
@@ -320,14 +328,14 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "operation(#read)",
               "resource(\"file1\")",
               "revocation_id(0, hex:d30401ced69d2a2a3ce04bdee201316e7d256b2b44c25e2a2c3db54a226dfa0d)",
               "revocation_id(1, hex:53792abfe5845c74575528cc99803c02ab7dedf809f5b9ec5859a2f812c4627d)",
-              "time(SystemTime { tv_sec: 1608542592, tv_nsec: 0 })"
+              "time(2020-12-21T09:23:12+00:00)"
             ],
             "rules": [],
             "checks": [],
@@ -335,12 +343,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: \"check if time($date), $date <= 2018-12-20T00:00:00+00:00\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": "resource(\"file1\");\noperation(#read);\ntime(2020-12-21T09:23:12+00:00);\n"
+        }
       }
     },
     {
@@ -359,8 +368,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "operation(#read)",
               "resource(\"file2\")",
@@ -377,12 +386,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": "resource(\"file2\");\noperation(#read);\n\ncheck if right($0, $1), resource($0), operation($1);\n"
+        }
       }
     },
     {
@@ -397,8 +407,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "operation(#read)",
               "resource(\"file2\")",
@@ -413,12 +423,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": "resource(\"file2\");\noperation(#read);\n\ncheck if right($0, $1), resource($0), operation($1);\n"
+        }
       }
     },
     {
@@ -433,8 +444,8 @@
         }
       ],
       "validations": {
-        "file1": [
-          {
+        "file1": {
+          "world": {
             "facts": [
               "operation(#read)",
               "resource(\"file1\")",
@@ -446,12 +457,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Ok": 0
-          }
-        ],
-        "file2": [
-          {
+          },
+          "verifier_code": "resource(\"file1\");\noperation(#read);\n"
+        },
+        "file2": {
+          "world": {
             "facts": [
               "operation(#read)",
               "resource(\"file2\")",
@@ -463,12 +475,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(\\\"file1\\\")\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": "resource(\"file2\");\noperation(#read);\n"
+        }
       }
     },
     {
@@ -493,15 +506,15 @@
         }
       ],
       "validations": {
-        "file1": [
-          {
+        "file1": {
+          "world": {
             "facts": [
               "resource(\"file1\")",
               "revocation_id(0, hex:3d5459878dfb4e1dba4e1ff1c585b98435117dd8f27b4402e836405e2073d58d)",
               "revocation_id(1, hex:6af4d647ce1df7e80c1cb4736087e21340fa3ed63b0d3f172d25e8e9964489c3)",
               "right(\"file1\", #read)",
               "right(\"file2\", #read)",
-              "time(SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+              "time(2020-12-21T09:23:12+00:00)",
               "valid_date(\"file1\")"
             ],
             "rules": [],
@@ -510,19 +523,20 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Ok": 0
-          }
-        ],
-        "file2": [
-          {
+          },
+          "verifier_code": "resource(\"file1\");\ntime(2020-12-21T09:23:12+00:00);\n"
+        },
+        "file2": {
+          "world": {
             "facts": [
               "resource(\"file2\")",
               "revocation_id(0, hex:3d5459878dfb4e1dba4e1ff1c585b98435117dd8f27b4402e836405e2073d58d)",
               "revocation_id(1, hex:6af4d647ce1df7e80c1cb4736087e21340fa3ed63b0d3f172d25e8e9964489c3)",
               "right(\"file1\", #read)",
               "right(\"file2\", #read)",
-              "time(SystemTime { tv_sec: 1608542592, tv_nsec: 0 })"
+              "time(2020-12-21T09:23:12+00:00)"
             ],
             "rules": [],
             "checks": [],
@@ -530,12 +544,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if valid_date($0), resource($0)\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": "resource(\"file2\");\ntime(2020-12-21T09:23:12+00:00);\n"
+        }
       }
     },
     {
@@ -551,8 +566,8 @@
         }
       ],
       "validations": {
-        "file1": [
-          {
+        "file1": {
+          "world": {
             "facts": [
               "resource(\"file1\")",
               "revocation_id(0, hex:c1e6da318f99f8ad00d1b6bbfcf56fbd7ffd2b499f5719e6a371ad82d1d94368)"
@@ -563,14 +578,15 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource($0), $0.matches(\\\"file[0-9]+.txt\\\")\" })"
             ]
-          }
-        ],
-        "file123": [
-          {
+          },
+          "verifier_code": "resource(\"file1\");\n"
+        },
+        "file123": {
+          "world": {
             "facts": [
               "resource(\"file123.txt\")",
               "revocation_id(0, hex:c1e6da318f99f8ad00d1b6bbfcf56fbd7ffd2b499f5719e6a371ad82d1d94368)"
@@ -581,10 +597,11 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Ok": 0
-          }
-        ]
+          },
+          "verifier_code": "resource(\"file123.txt\");\n"
+        }
       }
     },
     {
@@ -599,8 +616,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "must_be_present(\"hello\")",
               "revocation_id(0, hex:f1aba7009cd19fbc5605ad5a318775bc8bb4c887cc3d00f405689420a8ccdc6a)"
@@ -613,10 +630,11 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Ok": 0
-          }
-        ]
+          },
+          "verifier_code": "\ncheck if must_be_present($0) or must_be_present($0);\n"
+        }
       }
     },
     {
@@ -637,8 +655,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "check1(#test)",
               "revocation_id(0, hex:a4155e1642c441f169f8251cc3c1a1fa6b172543948c0a1a33d6409c28cae987)",
@@ -650,12 +668,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(#hello)\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": ""
+        }
       }
     },
     {
@@ -673,8 +692,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "revocation_id(0, hex:388e71fd289d831f617872e9c454eac446a88080f34bfbe4da50fbce7144bcda)"
             ],
@@ -684,10 +703,11 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Ok": 0
-          }
-        ]
+          },
+          "verifier_code": ""
+        }
       }
     },
     {
@@ -712,8 +732,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "operation(#write)",
               "revocation_id(0, hex:2e13a1deb4edc2c841324ab4120351aa8696d455750045511cb94ee243b9c35f)",
@@ -725,12 +745,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "FailedLogic(InvalidBlockRule(0, \"operation($unbound, #read) <- operation($any1, $any2)\"))"
             ]
-          }
-        ]
+          },
+          "verifier_code": "operation(#write);\n"
+        }
       }
     },
     {
@@ -753,8 +774,8 @@
         }
       ],
       "validations": {
-        "": [
-          {
+        "": {
+          "world": {
             "facts": [
               "operation(#read)",
               "operation(#write)",
@@ -767,12 +788,13 @@
               "allow if true"
             ]
           },
-          {
+          "result": {
             "Err": [
               "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if operation(#read)\" })"
             ]
-          }
-        ]
+          },
+          "verifier_code": "operation(#write);\n"
+        }
       }
     }
   ]

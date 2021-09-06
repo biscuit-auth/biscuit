@@ -28,6 +28,11 @@ check if resource($0), operation(#read), right($0, #read);
 
 ### validation
 
+verifier code:
+```
+resource("file1");
+```
+
 verifier world:
 ```
 World {
@@ -227,6 +232,12 @@ owner("alice", "file2");
 
 ### validation
 
+verifier code:
+```
+resource("file2");
+operation(#read);
+```
+
 verifier world:
 ```
 World {
@@ -281,6 +292,12 @@ right("file2", #read);
 
 ### validation
 
+verifier code:
+```
+resource("file2");
+operation(#read);
+```
+
 verifier world:
 ```
 World {
@@ -327,6 +344,13 @@ check if time($date), $date <= 2018-12-20T00:00:00+00:00;
 
 ### validation
 
+verifier code:
+```
+resource("file1");
+operation(#read);
+time(2020-12-21T09:23:12+00:00);
+```
+
 verifier world:
 ```
 World {
@@ -335,7 +359,7 @@ World {
     "resource(\"file1\")",
     "revocation_id(0, hex:d30401ced69d2a2a3ce04bdee201316e7d256b2b44c25e2a2c3db54a226dfa0d)",
     "revocation_id(1, hex:53792abfe5845c74575528cc99803c02ab7dedf809f5b9ec5859a2f812c4627d)",
-    "time(SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+    "time(2020-12-21T09:23:12+00:00)",
 }
   rules: {}
   checks: {}
@@ -370,6 +394,14 @@ right("file2", #read);
 ```
 
 ### validation
+
+verifier code:
+```
+resource("file2");
+operation(#read);
+
+check if right($0, $1), resource($0), operation($1);
+```
 
 verifier world:
 ```
@@ -411,6 +443,14 @@ right("file1", #read);
 
 ### validation
 
+verifier code:
+```
+resource("file2");
+operation(#read);
+
+check if right($0, $1), resource($0), operation($1);
+```
+
 verifier world:
 ```
 World {
@@ -449,6 +489,12 @@ check if resource("file1");
 
 ### validation for "file1"
 
+verifier code:
+```
+resource("file1");
+operation(#read);
+```
+
 verifier world:
 ```
 World {
@@ -467,6 +513,12 @@ World {
 
 result: `Ok(0)`
 ### validation for "file2"
+
+verifier code:
+```
+resource("file2");
+operation(#read);
+```
 
 verifier world:
 ```
@@ -513,6 +565,12 @@ check if valid_date($0), resource($0);
 
 ### validation for "file1"
 
+verifier code:
+```
+resource("file1");
+time(2020-12-21T09:23:12+00:00);
+```
+
 verifier world:
 ```
 World {
@@ -522,7 +580,7 @@ World {
     "revocation_id(1, hex:6af4d647ce1df7e80c1cb4736087e21340fa3ed63b0d3f172d25e8e9964489c3)",
     "right(\"file1\", #read)",
     "right(\"file2\", #read)",
-    "time(SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+    "time(2020-12-21T09:23:12+00:00)",
     "valid_date(\"file1\")",
 }
   rules: {}
@@ -536,6 +594,12 @@ World {
 result: `Ok(0)`
 ### validation for "file2"
 
+verifier code:
+```
+resource("file2");
+time(2020-12-21T09:23:12+00:00);
+```
+
 verifier world:
 ```
 World {
@@ -545,7 +609,7 @@ World {
     "revocation_id(1, hex:6af4d647ce1df7e80c1cb4736087e21340fa3ed63b0d3f172d25e8e9964489c3)",
     "right(\"file1\", #read)",
     "right(\"file2\", #read)",
-    "time(SystemTime { tv_sec: 1608542592, tv_nsec: 0 })",
+    "time(2020-12-21T09:23:12+00:00)",
 }
   rules: {}
   checks: {}
@@ -574,6 +638,11 @@ check if resource($0), $0.matches("file[0-9]+.txt");
 
 ### validation for "file1"
 
+verifier code:
+```
+resource("file1");
+```
+
 verifier world:
 ```
 World {
@@ -591,6 +660,11 @@ World {
 
 result: `Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource($0), $0.matches(\\\"file[0-9]+.txt\\\")\" })"])`
 ### validation for "file123"
+
+verifier code:
+```
+resource("file123.txt");
+```
 
 verifier world:
 ```
@@ -625,6 +699,12 @@ must_be_present("hello");
 ```
 
 ### validation
+
+verifier code:
+```
+
+check if must_be_present($0) or must_be_present($0);
+```
 
 verifier world:
 ```
@@ -668,6 +748,10 @@ check1(#test);
 ```
 
 ### validation
+
+verifier code:
+```
+```
 
 verifier world:
 ```
@@ -732,6 +816,10 @@ check if [#hello, #world].contains(#hello);
 
 ### validation
 
+verifier code:
+```
+```
+
 verifier world:
 ```
 World {
@@ -771,6 +859,11 @@ operation($unbound, #read) <- operation($any1, $any2);
 ```
 
 ### validation
+
+verifier code:
+```
+operation(#write);
+```
 
 verifier world:
 ```
@@ -813,6 +906,11 @@ operation(#read) <- operation($any);
 ```
 
 ### validation
+
+verifier code:
+```
+operation(#write);
+```
 
 verifier world:
 ```
