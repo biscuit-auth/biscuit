@@ -52,14 +52,13 @@ message PredicateV2 {
 
 message IDV2 {
   oneof Content {
-    uint64 symbol = 1;
-    uint32 variable = 2;
-    int64 integer = 3;
-    string string = 4;
-    uint64 date = 5;
-    bytes bytes = 6;
-    bool bool = 7;
-    IDSet set = 8;
+    uint32 variable = 1;
+    int64 integer = 2;
+    uint64 string = 3;
+    uint64 date = 4;
+    bytes bytes = 5;
+    bool bool = 6;
+    IDSet set = 7;
   }
 }
 
@@ -74,8 +73,7 @@ message ConstraintV2 {
     IntConstraintV2 int = 2;
     StringConstraintV2 string = 3;
     DateConstraintV2 date = 4;
-    SymbolConstraintV2 symbol = 5;
-    BytesConstraintV2 bytes = 6;
+    BytesConstraintV2 bytes = 5;
   }
 }
 
@@ -107,7 +105,7 @@ message StringConstraintV2 {
 }
 
 message StringSet {
-  repeated string set = 1;
+  repeated uint64 set = 1 [packed=true];
 }
 
 message DateConstraintV2 {
@@ -115,17 +113,6 @@ message DateConstraintV2 {
     uint64 before = 1;
     uint64 after = 2;
   }
-}
-
-message SymbolConstraintV2 {
-  oneof Constraint {
-    SymbolSet in_set = 1;
-    SymbolSet not_in_set = 2;
-  }
-}
-
-message SymbolSet {
-  repeated uint64 set = 1 [packed=true];
 }
 
 message BytesConstraintV2 {
@@ -203,5 +190,4 @@ message VerifierPolicies {
   repeated RuleV2 rules = 4;
   repeated CheckV2 checks = 5;
   repeated Policy policies = 6;
-  repeated RuleV2 privileged_rules = 7;
 }
