@@ -38,8 +38,8 @@ verifier world:
 World {
   facts: {
     "resource(\"file1\")",
-    "revocation_id(0, hex:0f96d9dfe80a884387e92c69eb7c0e8bccf3320117ebfe9841553885e19285f6)",
-    "revocation_id(1, hex:30bfe7d51efafa81e488744e3c2849b0ac46f229fba172093c5ff2b80eaa1044)",
+    "revocation_id(0, hex:bd6e89a2b700700cc68e644298685b1283deee82cc119417d03391a652cfa2bd55968f8e6039c48c39daa6a5efe984eb56733e9eb3289d9fb4c310b95c0a3701)",
+    "revocation_id(1, hex:588f783d07f5bc0f145c452776494dcbbfed460484e7c06bba82b0f4edfbe2ecac9e97efc420a4344361544a21c6fa1f95dd0aeb4b161c6fbd06b839ffedd80a)",
     "right(\"file1\", \"read\")",
     "right(\"file1\", \"write\")",
     "right(\"file2\", \"read\")",
@@ -246,9 +246,9 @@ World {
     "owner(\"alice\", \"file1\")",
     "owner(\"alice\", \"file2\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:e02f6b03e6c135aabf0dec9d6652d555bb077e644cca809e2e9a3078ab6ffe73)",
-    "revocation_id(1, hex:1e17451cbd10f072874cb2f71ec3e8070f05bf9547b32542a30a4f16f31aed45)",
-    "revocation_id(2, hex:32bcb814710b1f6083e9574e5a11e6fc65b9d92b032f4827f6e50c2d58d2a519)",
+    "revocation_id(0, hex:9373e9f4418a9ce4818e5031c7fbd6dadd840c4ea5d9dd8ee088fdbd9f8c9da3a6517ee7fb581ee2a75ac3fe9eb4cc10338e6b877849dc433c7a62d1cd5a9706)",
+    "revocation_id(1, hex:6dd0e774476520b616e8b68ee693791e2273d2349adbd1c58ebd987895c5286400b8af081f2cf5d1a565be2d96bb906990c3f4287dbae3dd1ab0fdd2dce31e0a)",
+    "revocation_id(2, hex:ce242e513db4cf2dcd8a5cc2cd37313caab903b8f0bd7bfb86c425a9a4af043492325d67ce97ff570667fa2325091caa025d5bb1f68b48fc11bc7b689e78e20e)",
     "user_id(\"alice\")",
 }
   rules: {}
@@ -304,9 +304,9 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:d11cee82bbf1491bcc7edab465258acc53c31d6575508335f67e8285e62d537c)",
-    "revocation_id(1, hex:b43a8c3b0334be31eb308a27332fd47669efe2f3e858cfc8c02f8f91019c41d6)",
-    "revocation_id(2, hex:86c20810f1439f9c6a616e426f903aecaa3dc0b009a9fd07b15feb0682ea8ba3)",
+    "revocation_id(0, hex:8e4fba9d79d7752b74808e9571804778d358f1be3dca8cde638e15683d14a0587e38f39d726a52c93b87c1c6a80e6cffed57761dcc0cd42e2d94819c661b1607)",
+    "revocation_id(1, hex:4222d817999f47d1b52dfb4e6457487b69153a8a8b87b9f42160b7210bcfe1d01e8ad752311751fcbf87e20a7a92e5e789b7d09b8539dec7603038f29d2a0a07)",
+    "revocation_id(2, hex:05f1a98da4caccc50bda218ead6d535e27cb7a07a1cc7d792ae3ce718a9b01b7066ec5a794ec8ac7a4d94573b0b66a6a1c1d69bb561e6980707c8beb2f94140f)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
 }
@@ -357,8 +357,8 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file1\")",
-    "revocation_id(0, hex:d30401ced69d2a2a3ce04bdee201316e7d256b2b44c25e2a2c3db54a226dfa0d)",
-    "revocation_id(1, hex:0f17932fdb2d90c01449b05b30ef11f79e133bbc5baf72b767ee6a53e2a9cba5)",
+    "revocation_id(0, hex:09fe2276d4a6f7a0cb53e4d5f804f96ecfb500d5e17004313fb3f2ce329250f2f6dca25a6af669775f8011fde7d6c00d7e6217faa5746417c328887e89837503)",
+    "revocation_id(1, hex:c3a558b2a401af6de4a39a60e427fdd6692320370a3ebf54c9aef67cd6b1cd5406d60b61ef297a2a73b9a07adf62f2e0c29a43c90a126eb157057361e781bd05)",
     "time(2020-12-21T09:23:12+00:00)",
 }
   rules: {}
@@ -409,8 +409,8 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:0a3610021893291c9cb313fe0dbf905fb69c8ea13b10baa417fca38bad1c2b36)",
-    "revocation_id(1, hex:08138b73dc1409e86a7f12934e4fda2fa143f5323cf63711ecb996a3fd322f63)",
+    "revocation_id(0, hex:7fa94693fffd5f804deac39567c7b79ba839d961368d668cc0ea7b84a895df64a0cb8f89774fdf356066980f202ba7fd9a645e6dbe0efc3e9fadfdad4ce99907)",
+    "revocation_id(1, hex:666823b6e4e465241cabca743f0d49e461bd6cb3ad04e4646f33ca187554a9fd8ad37998411abf9cfc7bf33f84cce7f34126d87c0638503520d353b7afb41505)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
 }
@@ -457,7 +457,7 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:52810f896ce039bbcb954c293f2359ed0d4eab36a8f2bd5e37f5cf7c43a4b9e4)",
+    "revocation_id(0, hex:87298abf1b281814c29c4a52cf3252eddd454703edae0e2599c560ebd471c5d95b0c73cb80ba767ad29cb3af89cdb86df0f5a22ed297b4b3374d9d270751100c)",
     "right(\"file1\", \"read\")",
 }
   rules: {}
@@ -501,7 +501,7 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file1\")",
-    "revocation_id(0, hex:72c2881a912c8e117605600c2d1dac170422e51a82af1c41d02e980bc8b27ca9)",
+    "revocation_id(0, hex:bb673d5a10e849db2903e9cd9ca6134bcff4720628ef97b613a20a310d1b0980208ab53eb584f2be049bf7381c3fcae45ec88e7cce06f0af10ebd1e86cd9b902)",
 }
   rules: {}
   checks: {}
@@ -526,7 +526,7 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:72c2881a912c8e117605600c2d1dac170422e51a82af1c41d02e980bc8b27ca9)",
+    "revocation_id(0, hex:bb673d5a10e849db2903e9cd9ca6134bcff4720628ef97b613a20a310d1b0980208ab53eb584f2be049bf7381c3fcae45ec88e7cce06f0af10ebd1e86cd9b902)",
 }
   rules: {}
   checks: {}
@@ -576,8 +576,8 @@ verifier world:
 World {
   facts: {
     "resource(\"file1\")",
-    "revocation_id(0, hex:2840e519de1696684a69e511a2a802e5e6eaff7a78d94e908e8c94609ab8783b)",
-    "revocation_id(1, hex:2b68ec0ff65537e6212d167d2ad7b0ee04cddd0ab6f9598ef3b0b080f9d271d0)",
+    "revocation_id(0, hex:5ba8b06cd4c4f7fe0993836ceee769ec915be987f643662ec7d8d4f244286cdf65a1adf6e5327688cb0d8a4f40ef368c11bf7c27d8507608920b0ccd2249ad0f)",
+    "revocation_id(1, hex:f1128098488f48f2185539a8f1b2493e3e66cd824b0226a5d9424eea685290938aafb2b18147e9f08d64e557f2bea5954d30bf66032bd0f12b2a9d6e310ba208)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
     "time(2020-12-21T09:23:12+00:00)",
@@ -605,8 +605,8 @@ verifier world:
 World {
   facts: {
     "resource(\"file2\")",
-    "revocation_id(0, hex:2840e519de1696684a69e511a2a802e5e6eaff7a78d94e908e8c94609ab8783b)",
-    "revocation_id(1, hex:2b68ec0ff65537e6212d167d2ad7b0ee04cddd0ab6f9598ef3b0b080f9d271d0)",
+    "revocation_id(0, hex:5ba8b06cd4c4f7fe0993836ceee769ec915be987f643662ec7d8d4f244286cdf65a1adf6e5327688cb0d8a4f40ef368c11bf7c27d8507608920b0ccd2249ad0f)",
+    "revocation_id(1, hex:f1128098488f48f2185539a8f1b2493e3e66cd824b0226a5d9424eea685290938aafb2b18147e9f08d64e557f2bea5954d30bf66032bd0f12b2a9d6e310ba208)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
     "time(2020-12-21T09:23:12+00:00)",
@@ -648,7 +648,7 @@ verifier world:
 World {
   facts: {
     "resource(\"file1\")",
-    "revocation_id(0, hex:80f05f2831e0fa1667ce5c5ff8753161e384ca3732d71d77eeb856b9953e5b59)",
+    "revocation_id(0, hex:7d7317a3d4c1705ef0f14daab4b0877dee913db0883b0efb1e8af4b3e0762262a51dc6e8f179af573723fd77c919cfccc02d376d8a80abd2a33716aa99558a05)",
 }
   rules: {}
   checks: {}
@@ -671,7 +671,7 @@ verifier world:
 World {
   facts: {
     "resource(\"file123.txt\")",
-    "revocation_id(0, hex:80f05f2831e0fa1667ce5c5ff8753161e384ca3732d71d77eeb856b9953e5b59)",
+    "revocation_id(0, hex:7d7317a3d4c1705ef0f14daab4b0877dee913db0883b0efb1e8af4b3e0762262a51dc6e8f179af573723fd77c919cfccc02d376d8a80abd2a33716aa99558a05)",
 }
   rules: {}
   checks: {}
@@ -711,7 +711,7 @@ verifier world:
 World {
   facts: {
     "must_be_present(\"hello\")",
-    "revocation_id(0, hex:dcc8b221fb90ab87828b8d27e62810bce9046486dda01c763786d179a2a13a5c)",
+    "revocation_id(0, hex:a83fd5ebefd85373c624bfa0847c2c13726b1120319b735781a34fd59a6f045dc906b1ba7006e9c26687c8d5e0ba23eebd68f4a868367ee7ceb1ea377cc67409)",
 }
   rules: {}
   checks: {
@@ -758,8 +758,8 @@ verifier world:
 World {
   facts: {
     "check1(\"test\")",
-    "revocation_id(0, hex:1ffe0f15ba4ee93fb4d35431e5d83a1856beae6ab2ed5d20cfb1a57abf43b513)",
-    "revocation_id(1, hex:0016c3ce871c58c03f952a108a8712daac2d98a7975cecb4adb148bb6a234f5f)",
+    "revocation_id(0, hex:75a758d48783b23b4337b71c3567fb1d5293d5538d74cf3a4f1bfe306a0f79f393f2e7e9bd48ca48ccb587deca870b71df82f7decf8ed663e801eb4ee7080804)",
+    "revocation_id(1, hex:177092ffbb60e4e44ea5c7d07415782c018a28a2765317ae3e14526ca8fbb0f55a60b264c60269ac277a48a868f27774d10cd46cbe77380dad9e73c82c49eb00)",
 }
   rules: {}
   checks: {}
@@ -822,7 +822,7 @@ verifier world:
 ```
 World {
   facts: {
-    "revocation_id(0, hex:ab737266e9316885ebc9c61df6e5b56e2691b366a0f2107e78bc2cc54683b22a)",
+    "revocation_id(0, hex:ed59c23946d8f86642de25d718ae29ad25d923bf303bf8bd1460eee140e28e12571eadf4bd03c952af43573b1dd32e764d70dc9f76f57920c42507612b348602)",
 }
   rules: {}
   checks: {}
@@ -868,8 +868,8 @@ verifier world:
 World {
   facts: {
     "operation(\"write\")",
-    "revocation_id(0, hex:9f766630542046f7e6b738a4ce5953f187b9ea891df45cd69656a74ba7501108)",
-    "revocation_id(1, hex:f6fa94603e423ed4b78a0a82c77a4a79191712c56fb4b89a11f0a47b52febff8)",
+    "revocation_id(0, hex:814d95cb15c293aaefe111506e40ee48a6630a4409e2032288865fb3322615e6c4d2f7b64762d5a755310936ebc9314927816b5640a9c9b7cc2374bdcf649b0a)",
+    "revocation_id(1, hex:08a93c775baef6d662229a7059faa307517589359d229fa90e1cc7a540361c607415257853d834fe7557d9c54005550627ee8c5d05ce031b923069f9bef71a0e)",
 }
   rules: {}
   checks: {}
@@ -916,8 +916,8 @@ World {
   facts: {
     "operation(\"read\")",
     "operation(\"write\")",
-    "revocation_id(0, hex:bc877aadd403a6c4f97525a3a4488a47122883edb9d2e4f0e8084be8b311b6f2)",
-    "revocation_id(1, hex:13f15a0a93e6584858722b2d5b7785030cf3a2a6805a4d5af31e813b976de2c3)",
+    "revocation_id(0, hex:9c3f40ab693f438286e61310572c6fe0fbf5bb289cad11e5fb6425c10fdd55922a3398c3fef64e7f8da2bb86e12f76b520d70497144a1a54dc6bb2037d774e09)",
+    "revocation_id(1, hex:c4956938e31a6e29f609e833884db72dc49636344f3a40c1b80a839ebdb08d2453a422d8d2a33b8950e1750607adede01c52415f85034b7b7df1886de9fc9502)",
 }
   rules: {}
   checks: {}
