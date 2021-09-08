@@ -184,7 +184,7 @@ This check uses a _symbol_ named `#ambient` (symbols start with a `#`).
 
 There are two special symbols that can appear in facts:
 
--`#ambient`: facts that are _provided by the verifier_, and that depend on the **request**, like which resource we want to access(file path, REST endpoint, etc), operation(read, write...), current date and time, source IP address, HTTP headers...
+- `#ambient`: facts that are _provided by the verifier_, and that depend on the **request**, like which resource we want to access(file path, REST endpoint, etc), operation(read, write...), current date and time, source IP address, HTTP headers...
 - `#authority`: facts _defined by the token's original creator_ or _the verifier_, that indicates the basic rights of the **token**. Every new attenation of the token will reduce those rights by adding checks
 
 `#ambient` and `#authority` tokens can only be provided by the token's origin
