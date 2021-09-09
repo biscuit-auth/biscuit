@@ -137,7 +137,6 @@ It has the following base types (for elements inside of a fact):
 - string
 - date (seconds from epoch, UTC)
 - byte array
-- symbol (interned strings that are stored in a dictionary to spare space)
 - boolean (true or false)
 - set: a deduplicated list of values, that can be of any type except variables or sets
 
@@ -171,24 +170,12 @@ using a string expression:
 
 ```
 check if
-  resource(#ambient, $path),
+  resource($path),
   $path.matches("file[0-9]+.txt")
 ```
 
-This check matches only if there exists a `resource(#ambient, $path)` fact for
+This check matches only if there exists a `resource($path)` fact for
 which `$path` matches a pattern.
-
-## `#ambient` and `#authority` symbols
-
-This check uses a _symbol_ named `#ambient` (symbols start with a `#`).
-
-There are two special symbols that can appear in facts:
-
--`#ambient`: facts that are _provided by the verifier_, and that depend on the **request**, like which resource we want to access(file path, REST endpoint, etc), operation(read, write...), current date and time, source IP address, HTTP headers...
-- `#authority`: facts _defined by the token's original creator_ or _the verifier_, that indicates the basic rights of the **token**. Every new attenation of the token will reduce those rights by adding checks
-
-`#ambient` and `#authority` tokens can only be provided by the token's origin
-or by the verifier, **they cannot be added by attenuating the token**.
 
 ## Allow and deny policies
 
@@ -204,12 +191,12 @@ Example policies:
 ```
 // verifies that we have rights for this request
 allow if
-  resource(#ambient, $res),
-  operation(#ambient, $op),
-  right(#authority, $res, $op)
+  resource($res),
+  operation($op),
+  right($res, $op)
 
 // otherwise, allow if we're admin
-allow if is_admin(#authority)
+allow if is_admin()
 
 // catch all if non of the policies matched
 deny if true
@@ -251,7 +238,7 @@ Biscuit {
             context: ""
             version: 1
             facts: [
-                user_id(#authority, "user_1234"),
+                user_id("user_1234"),
             ]
             rules: []
             checks: []
@@ -264,35 +251,34 @@ Biscuit {
 Let's unpack what's displayed here:
 
  - `symbols` carries a list of symbols used in the biscuit.
- - `authority` carries information provided by the token creator. It gives the initial scope of the bicuit.
+ - `authority` this block carries information provided by the token creator. It gives the initial scope of the biscuit.
  - `blocks` carries a list of blocks, which can refine the scope of the biscuit
 
 Here, `authority` provides the initial block, which can be refined in subsequent blocks.
 
-A block comes with new symbols it adds to the system (there's a default symbol
-table that already contains values like `#authority` or `#operation`). It can
+A block comes with new symbols it adds to the system. It can
 contain facts, rules and checks. A block contains:
 
  - `symbols`:  a block can introduce new symbols: these symbols are available in the current block, _and the following blocks_. **It is not possible to re-declare an existing symbol**.
  - `context`: free form text used either for documentation purpose, or to give a hind about which facts should be retrieved from DB
- - `facts`: each block can define new facts (but only `authority` can define facts mentioning `#authority`)
- - `rules` each block can define new rules (but only `authority` can define rules deriving facts mentioning `#authority`)
- - `checks` each block can define new checks (queries that need to match in order to make the biscuit valid)
+ - `facts`: each block can define new facts
+ - `rules` each block can define new rules but they only have access to facts from the current and previous blocks
+ - `checks` each block can define new checks (queries that need to match in order to make the biscuit valid) but they only have access to facts from the current and previous blocks
 
 Let's assume the user is sending this token with a `PUT /bucket_5678/folder1/hello.txt` HTTP
 request. The verifier would then load the token's facts and rules, along with
 facts from the request:
 
 ```
-user_id(#authority, "user_1234");
-operation(#ambient, #write);
-resource(#ambient, "bucket_5678", "/folder1/hello.txt");
-current_time(#ambient, 2020-11-17T12:00:00+00:00);
+user_id("user_1234");
+operation("write");
+resource("bucket_5678", "/folder1/hello.txt");
+current_time(2020-11-17T12:00:00+00:00);
 ```
 
 The verifier would also be able to load authorization data from its database,
-like ownership information: `owner(#authority, "user_1234", "bucket_1234")`,
-`owner(#authority, "user_1234", "bucket_5678")` `owner(#authority, "user_ABCD", "bucket_ABCD")`.
+like ownership information: `owner("user_1234", "bucket_1234")`,
+`owner("user_1234", "bucket_5678")` `owner("user_ABCD", "bucket_ABCD")`.
 In practice,this data could be filtered by limiting it to facts related to
 the current ressource, or extracting the user id from the token with a query.
 
@@ -301,11 +287,11 @@ if we own a specific folder:
 
 ```
 // the resource owner has all rights on the resource
-right(#authority, $bucket, $path, $operation) <-
-  resource(#ambient, $bucket, $path),
-  operation(#ambient, $operation),
-  user_id(#authority, $id),
-  owner(#authority, $id, $bucket)
+right($bucket, $path, $operation) <-
+  resource($bucket, $path),
+  operation($operation),
+  user_id($id),
+  owner($id, $bucket)
 ```
 
 This rule will generate a `right` fact if it finds data matching the variables.
@@ -313,14 +299,14 @@ This rule will generate a `right` fact if it finds data matching the variables.
 We end up with a system with the following facts:
 
 ```
-user_id(#authority, "user_1234");
-operation(#ambient, #write);
-resource(#ambient, "bucket_5678", "/folder1/hello.txt");
-current_time(#ambient, 2020-11-17T12:00:00+00:00);
-owner(#authority, "user_1234", "bucket_1234");
-owner(#authority, "user_1234", "bucket_5678");
-owner(#authority, "user_ABCD", "bucket_ABCD");
-right(#authority, "bucket_5678", "/folder1/hello.txt", #write);
+user_id("user_1234");
+operation("write");
+resource("bucket_5678", "/folder1/hello.txt");
+current_time(2020-11-17T12:00:00+00:00);
+owner("user_1234", "bucket_1234");
+owner("user_1234", "bucket_5678");
+owner("user_ABCD", "bucket_ABCD");
+right("bucket_5678", "/folder1/hello.txt", "write");
 ```
 
 At last, the verifier provides a policy to test that we have the rights for this
@@ -328,9 +314,9 @@ operation:
 
 ```
 allow if
-  right(#authority, $bucket, $path, $operation),
-  resource(#ambient, $bucket, $path),
-  operation(#ambient, $operation)
+  right($bucket, $path, $operation),
+  resource($bucket, $path),
+  operation($operation)
 ```
 
 Here we can find matching facts, so the request succeeds. If the request was
@@ -351,7 +337,7 @@ Biscuit {
             context: ""
             version: 1
             facts: [
-                right(#authority, "bucket_5678", "/folder1/hello.txt", #read)
+                right("bucket_5678", "/folder1/hello.txt", "read")
             ]
             rules: []
             checks: []
@@ -375,7 +361,7 @@ Biscuit {
             context: ""
             version: 1
             facts: [
-                user_id(#authority, "user_1234"),
+                user_id("user_1234"),
             ]
             rules: []
             checks: []
@@ -388,7 +374,7 @@ Biscuit {
             facts: []
             rules: []
             checks: [
-                check if resource(#ambient, "bucket_5678", "/folder1/hello.txt"), operation(#ambient, #read)
+                check if resource("bucket_5678", "/folder1/hello.txt"), operation("read")
             ]
         }
 
@@ -400,18 +386,18 @@ With that token, if the holder tried to do a `PUT /bucket_5678/folder1/hello.txt
 request, we would end up with the following facts:
 
 ```
-user_id(#authority, "user_1234");
-operation(#ambient, #write);
-resource(#ambient, "bucket_5678", "/folder1/hello.txt");
-current_time(#ambient, 2020-11-17T12:00:00+00:00);
-owner(#authority, "user_1234", "bucket_1234");
-owner(#authority, "user_1234", "bucket_5678");
-owner(#authority, "user_ABCD", "bucket_ABCD");
-right(#authority, "bucket_5678", "/folder1/hello.txt", #write);
+user_id("user_1234");
+operation("write");
+resource("bucket_5678", "/folder1/hello.txt");
+current_time(2020-11-17T12:00:00+00:00);
+owner("user_1234", "bucket_1234");
+owner("user_1234", "bucket_5678");
+owner("user_ABCD", "bucket_ABCD");
+right("bucket_5678", "/folder1/hello.txt", "write");
 ```
 
 The verifier's policy would still succeed, but the check from block 1 would
-fail because it cannot find `operation(#ambient, #read)`.
+fail because it cannot find `operation("read")`.
 
 By playing with the facts provided on the token and verifier sides, generating
 data through rules, and restricting access with a series of checks, it is

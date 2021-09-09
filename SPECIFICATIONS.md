@@ -19,7 +19,6 @@ to be valid, all of the checks defined in the token and the verifier must succee
 until one of them matches. They can only be defined in the verifier
 - block: a list of datalog facts, rules and checks. The first block is the authority
 block, used to define the basic rights of a token
-- symbol: string that is stored in a table and referred to by its index to save space
 
 
 ### Overview
@@ -60,7 +59,6 @@ simplifies its implementation and makes the check more precise.
 
 A Biscuit Datalog program contains *facts* and *rules*, which are made of
 *predicates* over the following types:
-- *symbol*
 - *variable*
 - *integer*
 - *string*
@@ -94,35 +92,28 @@ the policy matches, and we stop there, otherwise we test the next one. If an
 succeeds, the token verification fails. Those policies are tested after all of
 the *checks* have passed.
 We will represent the various types as follows:
-- symbol: `#a`
 - variable: `$variable` (the variable name is converted to an integer id through the symbol table)
 - integer: `12`
 - string: `"hello"`
 - byte array: `hex:01A2`
 - date in RFC 3339 format: `1985-04-12T23:20:50.52Z`
 - boolean: `true` or `false`
-- set: `[ #a, #b, #c]`
+- set: `[ "a", "b", "c"]`
 
-As an example, assuming we have the following facts: `parent(#a, #b)`,
-`parent(#b, #c)`, `#parent(#c, #d)`. If we apply the rule
+As an example, assuming we have the following facts: `parent("a", "b")`,
+`parent("b", "c")`, `parent("c", "d")`. If we apply the rule
 `grandparent($x, $z) <- parent($x, $y), parent($y, $z)`, we will try to replace
 the predicates in the body by matching facts. We will get the following
 combinations:
-- `grandparent(#a, #c) <- parent(#a, #b), parent(#b, #c)`
-- `grandparent(#b, #d) <- parent(#b, #c), parent(#c, #d)`
+- `grandparent("a", "c") <- parent("a", "b"), parent("b", "c")`
+- `grandparent("b", "d") <- parent("b", "c"), parent("c", "d")`
 
-The system will now contain the two new facts `grandparent(#a, #c)` and
-`grandparent(#b, #d)`. Whenever we generate new facts, we have to reapply all of
+The system will now contain the two new facts `grandparent("a", "c")` and
+`grandparent("b", "d")`. Whenever we generate new facts, we have to reapply all of
 the system's rules on the facts, because some rules might give a new result. Once
 rules application does not generate any new facts, we can stop.
 
 #### Data types
-
-A *symbol* indicates a value that supports equality, set inclusion and set
-exclusion checks. Its internal representation is an index into the token's
-symbol table, which is a list of strings. The symbol table reduces the size of
-tokens by storing common symbols in a predefined table, and writing new symbols
-only once per token.
 
 An *integer* is a signed 64 bits integer. It supports the following
 operatios: lower, larger, lower or equal, larger or equal, equal, set
@@ -153,15 +144,15 @@ apply on facts created in the current or previous blocks. Facts, rules, checks
 and policies of the verifier are executed in the context of the authority block.
 
 Example:
-- the token contains `right("file1", #read)` in the first block
-- the token holder adds a block with the fact `right("file2", #read)`
+- the token contains `right("file1", "read")` in the first block
+- the token holder adds a block with the fact `right("file2", "read")`
 - the verifier adds:
   - `resource("file2")`
-  - `operation(#read)`
+  - `operation("read")`
   - `check if resource($res), operation($op), right($res, $op)`
 
 The verifier's check will fail because when it is evaluated, it only sees
-`right("file1", #read)` from the authority block.
+`right("file1", "read")` from the authority block.
 
 ### Checks
 
@@ -190,15 +181,15 @@ The second caveat checks that the resource is `file1`.
 
 ```
 authority:
-  right("file1", #read);
-  right("file2", #read);
-  right("file1", #write);
+  right("file1", "read");
+  right("file2", "read");
+  right("file1", "write");
 ----------
 Block 1:
 check if
   resource($0),
-  operation(#read),
-  right($0, #read)  // restrict to read operations
+  operation("read"),
+  right($0, "read")  // restrict to read operations
 ----------
 Block 2:
 check if
@@ -209,13 +200,13 @@ The verifier side provides the `resource` and `operation` facts with information
 from the request.
 
 If the verifier provided the facts `resource("file2")` and
-`operation(#read)`, the rule application of the first check would see
-`resource("file2"), operation(#read), right("file2", #read)`
+`operation("read")`, the rule application of the first check would see
+`resource("file2"), operation("read"), right("file2", "read")`
 with `X = "file2"`, so it would succeed, but the second check would fail
 because it expects `resource("file1")`.
 
 If the verifier provided the facts `resource("file1")` and
-`operation(#read)`, both checks would succeed.
+`operation("read")`, both checks would succeed.
 
 #### Broad authority rules
 
@@ -228,9 +219,9 @@ the token.
 authority:
 
 // if there is an ambient resource and we own it, we can read it
-right($0, #read) <- resource($0), owner($1, $0);
+right($0, "read") <- resource($0), owner($1, $0);
 // if there is an ambient resource and we own it, we can write to it
-right($0, #write) <- resource($0), owner($1, $0);
+right($0, "write") <- resource($0), owner($1, $0);
 ----------
 Block 1:
 
@@ -243,13 +234,13 @@ Block 2:
 
 check if
   resource($0),
-  owner(#alice, $0) // defines a token only usable by alice
+  owner("alice", $0) // defines a token only usable by alice
 ```
 
 These rules will define authority facts depending on verifier data.
 If we had the facts `resource("file1")` and
-`owner(#alice, "file1")`, the authority rules will define
-`right"file1", #read)` and `right("file1", #write)`,
+`owner("alice", "file1")`, the authority rules will define
+`right"file1", "read")` and `right("file1", "write")`,
 which will allow check 1 and check 2 to succeed.
 
 If the owner ambient fact does not match the restriction in the second check, the
@@ -273,9 +264,9 @@ restrict usage based on ambient values:
 ```
 authority:
 
-right("/folder/file1", #read);
-right("/folder/file2", #read);
-right("/folder2/file3", #read);
+right("/folder/file1", "read");
+right("/folder/file2", "read");
+right("/folder2/file3", "read");
 ----------
 check if resource($0), right($0, $1)
 ----------
@@ -315,7 +306,7 @@ Here are the currently defined binary operations:
 - *greater than*, defined on integers and dates, returns a boolean
 - *less or equal*, defined on integers and dates, returns a boolean
 - *greater or equal*, defined on integers and dates, returns a boolean
-- *equal*, defined on integers, strings, byte arrays, dates, symbols, set, returns a boolean
+- *equal*, defined on integers, strings, byte arrays, dates, set, returns a boolean
 - *contains* takes a set and another value as argument, returns a boolean. Between two sets, indicates if the first set is a superset of the second one
 - *prefix*, defined on strings, returns a boolean
 - *suffix*, defined on strings, returns a boolean
