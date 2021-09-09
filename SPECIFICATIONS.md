@@ -377,12 +377,9 @@ ambient data from the request, lists of users and roles, etc.
 ##### Revocation identifiers
 
 The verifier will generate a list of facts indicating revocation identifiers for
-the token. They are calculated as follows:
-- perform a SHA256 hash of the authority block and the root key
-- generate the hash value, store it as `revocation_id(0, <byte array of the hash)`
-- for each following block:
-  - continue from the previous hash, update with the current block and its public key
-  - generate the hash value, store it as `revocation_id(<block index>, <byte array of the hash)`
+the token. The revocation identifier for a block is its signature (as it uniquely
+identifies the block) serialized to a byte array (as in the Protobuf schema).
+For each of these if, a fact `revocation_id(<index of the block>, <byte array>)` will be generated
 
 ##### Verifying
 
