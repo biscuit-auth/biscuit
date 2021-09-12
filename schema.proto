@@ -47,10 +47,10 @@ message CheckV2 {
 
 message PredicateV2 {
   required uint64 name = 1;
-  repeated IDV2 ids = 2;
+  repeated TermV2 terms = 2;
 }
 
-message IDV2 {
+message TermV2 {
   oneof Content {
     uint32 variable = 1;
     int64 integer = 2;
@@ -58,16 +58,16 @@ message IDV2 {
     uint64 date = 4;
     bytes bytes = 5;
     bool bool = 6;
-    IDSet set = 7;
+    TermSet set = 7;
   }
 }
 
-message IDSet {
-  repeated IDV2 set = 1;
+message TermSet {
+  repeated TermV2 set = 1;
 }
 
 message ConstraintV2 {
-  required uint32 id = 1;
+  required uint32 term = 1;
 
   oneof Constraint {
     IntConstraintV2 int = 2;
@@ -133,7 +133,7 @@ message ExpressionV2 {
 
 message Op {
   oneof Content {
-    IDV2 value = 1;
+    TermV2 value = 1;
     OpUnary unary = 2;
     OpBinary Binary = 3;
   }
