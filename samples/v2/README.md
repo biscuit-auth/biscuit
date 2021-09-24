@@ -929,3 +929,57 @@ World {
 
 result: `Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if operation(\\\"read\\\")\" })"])`
 
+
+------------------------------
+
+## sealed token: test20_sealed.bc
+### token
+
+authority:
+symbols: ["file1", "read", "file2", "write"]
+
+```
+right("file1", "read");
+right("file2", "read");
+right("file1", "write");
+```
+
+1:
+symbols: ["check1", "0"]
+
+```
+check if resource($0), operation("read"), right($0, "read");
+```
+
+```
+
+### validation
+
+verifier code:
+```
+resource("file1");
+operation("read");
+```
+
+verifier world:
+```
+World {
+  facts: {
+    "operation(\"read\")",
+    "resource(\"file1\")",
+    "revocation_id(0, hex:b0eb17f363e71adaac3a571d2b813321414dd9dc8714a767185a862575bd16a6b73b19655ffe1c6dcbb75c35715b3298ae29595287cbc8fafeb4d676292d3b02)",
+    "revocation_id(1, hex:7e57a5130b5ccf8383cb74e60ebb240ac5339433fd6cc4b904c7583bd522a404fd391fc09138b3a8fa73a58d4facd05577f4e72acb7ef36be7e0dc885272ad00)",
+    "right(\"file1\", \"read\")",
+    "right(\"file1\", \"write\")",
+    "right(\"file2\", \"read\")",
+}
+  rules: {}
+  checks: {}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Ok(0)`
+
