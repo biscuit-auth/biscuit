@@ -11,9 +11,20 @@ message Biscuit {
 
 message SignedBlock {
   required bytes block = 1;
-  required bytes nextKey = 2;
+  required PublicKey nextKey = 2;
   required bytes signature = 3;
 }
+
+message PublicKey {
+  required Algorithm algorithm = 1;
+
+  enum Algorithm {
+    Ed25519 = 0;
+  }
+
+  required bytes key = 2;
+}
+
 
 message Proof {
   oneof Content {

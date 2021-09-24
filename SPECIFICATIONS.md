@@ -524,7 +524,8 @@ token.
 * `(pk_0, sk_0)` the root public and private Ed25519 keys
 * `data_0` the serialized Datalog
 * `(pk_1, sk_1)` the next key pair, generated at random
-* `sig_0 = sign(sk_0, data_0 + pk_1)`
+* `alg_1` the little endian representation of the signature algorithm fr `pk1, sk1` (see protobuf schema)
+* `sig_0 = sign(sk_0, data_0 + alg_1 + pk_1)`
 
 The token will contain:
 
@@ -553,7 +554,7 @@ Block n contains:
 
 The token also contains `sk_n+1`
 
-We generate at random `(pk_n+2, sk_n+2)` and the signature `sig_n+1 = sign(sk_n+1, data_n+1 + pk_n+2)`
+We generate at random `(pk_n+2, sk_n+2)` and the signature `sig_n+1 = sign(sk_n+1, data_n+1 + alg_n+2 + pk_n+2)`
 
 The token will contain:
 
@@ -576,7 +577,7 @@ Token {
 
 For each block i from 0 to n:
 
-- verify(pk_i, sig_i, data_i+pk_i+1)
+- verify(pk_i, sig_i, data_i + alg_i + pk_i+1)
 
 If all signatures are verified, extract pk_n+1 from the last block and
 sk_n+1 from the proof field, and check that they are from the same

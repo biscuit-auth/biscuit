@@ -28,8 +28,8 @@
           "world": {
             "facts": [
               "resource(\"file1\")",
-              "revocation_id(0, hex:bd6e89a2b700700cc68e644298685b1283deee82cc119417d03391a652cfa2bd55968f8e6039c48c39daa6a5efe984eb56733e9eb3289d9fb4c310b95c0a3701)",
-              "revocation_id(1, hex:588f783d07f5bc0f145c452776494dcbbfed460484e7c06bba82b0f4edfbe2ecac9e97efc420a4344361544a21c6fa1f95dd0aeb4b161c6fbd06b839ffedd80a)",
+              "revocation_id(0, hex:9d3e984bd0447eea9f31a56df51ba606160c66102063dd29410a2c85601a2139ce0cd212daf755ed0b8fe1f0e9388a89074b009b7169499e51df83c308e8d20b)",
+              "revocation_id(1, hex:5cade9fd3690b72bf90c29c529cb5b1bb50832554ba525b15c5d3f7c994814af522c5a68d61a950bc5f98d9ff4e3e20ffecef65ddaa2858251768ec999ed8b06)",
               "right(\"file1\", \"read\")",
               "right(\"file1\", \"write\")",
               "right(\"file2\", \"read\")"
@@ -255,9 +255,9 @@
               "owner(\"alice\", \"file1\")",
               "owner(\"alice\", \"file2\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:9373e9f4418a9ce4818e5031c7fbd6dadd840c4ea5d9dd8ee088fdbd9f8c9da3a6517ee7fb581ee2a75ac3fe9eb4cc10338e6b877849dc433c7a62d1cd5a9706)",
-              "revocation_id(1, hex:6dd0e774476520b616e8b68ee693791e2273d2349adbd1c58ebd987895c5286400b8af081f2cf5d1a565be2d96bb906990c3f4287dbae3dd1ab0fdd2dce31e0a)",
-              "revocation_id(2, hex:ce242e513db4cf2dcd8a5cc2cd37313caab903b8f0bd7bfb86c425a9a4af043492325d67ce97ff570667fa2325091caa025d5bb1f68b48fc11bc7b689e78e20e)",
+              "revocation_id(0, hex:d2454c600567418982b2787c1fbc4e04d6f59f1576b6613d1cacd30440f673a0c44728457a39fb8085e4152a8195e0bdfbe3a5fdcfafd08b33ad53c3274c6d0c)",
+              "revocation_id(1, hex:aad436b9239c4df033f0ad88276981f7738033df4562c0e2ae3da1fa9629c050e00a44e5831520cdb4dba879cfb047cde523ef5fbffc19e5fcd5969177466400)",
+              "revocation_id(2, hex:ca46c3c9099242ea594642ea6fa75c47df463b2548f090e0800fc10375d2cd464571c54316cfbee863c01f49ccd72492483d95134090327ea92984202c07d004)",
               "user_id(\"alice\")"
             ],
             "rules": [],
@@ -306,9 +306,9 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:8e4fba9d79d7752b74808e9571804778d358f1be3dca8cde638e15683d14a0587e38f39d726a52c93b87c1c6a80e6cffed57761dcc0cd42e2d94819c661b1607)",
-              "revocation_id(1, hex:4222d817999f47d1b52dfb4e6457487b69153a8a8b87b9f42160b7210bcfe1d01e8ad752311751fcbf87e20a7a92e5e789b7d09b8539dec7603038f29d2a0a07)",
-              "revocation_id(2, hex:05f1a98da4caccc50bda218ead6d535e27cb7a07a1cc7d792ae3ce718a9b01b7066ec5a794ec8ac7a4d94573b0b66a6a1c1d69bb561e6980707c8beb2f94140f)",
+              "revocation_id(0, hex:593c16b2bb2a00c02a9be0504206a142c77917af234ea7b5109b1bad22459fc4e6680ff38c852ca75959f637ebb02479d60d63d47e1514636c34acf3b378c40e)",
+              "revocation_id(1, hex:8dddcbff3fd9dfd494b98a9c15225e1064e5c96eaf977e6a06e6581bdea2440c67ea7a88d7d51badf732217351ead40041beda6d4f892518e46b187207bc840c)",
+              "revocation_id(2, hex:587e3b1a03c3247db490c246adf0e02e00abda4b2cccb1dbf1adb5ccb5b978d9a9bbf8fcdcc81680e0f9d89e57cb1537a4e71a50e8b1542761b585d9a204f504)",
               "right(\"file1\", \"read\")",
               "right(\"file2\", \"read\")"
             ],
@@ -352,8 +352,8 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file1\")",
-              "revocation_id(0, hex:09fe2276d4a6f7a0cb53e4d5f804f96ecfb500d5e17004313fb3f2ce329250f2f6dca25a6af669775f8011fde7d6c00d7e6217faa5746417c328887e89837503)",
-              "revocation_id(1, hex:c3a558b2a401af6de4a39a60e427fdd6692320370a3ebf54c9aef67cd6b1cd5406d60b61ef297a2a73b9a07adf62f2e0c29a43c90a126eb157057361e781bd05)",
+              "revocation_id(0, hex:16d0a9d7f3d29ee2112d67451c8e4ff07bd5366a6cdb082cf4fcb66e6d15a57a22009ef1018fc4d0f9184edb0900df161807bc6f8287275f32eae6b5b1c57100)",
+              "revocation_id(1, hex:0670d948462e0cc248ce45b7ea04cbfb126a7559c8d60b533f7f0a92696900ee4e432780b526462b845d372c9b7b223c43efc22e0441b14b0bc4661e05ebfe03)",
               "time(2020-12-21T09:23:12+00:00)"
             ],
             "rules": [],
@@ -395,8 +395,8 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:7fa94693fffd5f804deac39567c7b79ba839d961368d668cc0ea7b84a895df64a0cb8f89774fdf356066980f202ba7fd9a645e6dbe0efc3e9fadfdad4ce99907)",
-              "revocation_id(1, hex:666823b6e4e465241cabca743f0d49e461bd6cb3ad04e4646f33ca187554a9fd8ad37998411abf9cfc7bf33f84cce7f34126d87c0638503520d353b7afb41505)",
+              "revocation_id(0, hex:5e626c4991877dd41d9e506d51a3888454cc764e11622945b24df99ca0bcc7f144d41aea0fb88778e67cf0f8609e47302d11007dc456bcdb98c14a25a6eecc05)",
+              "revocation_id(1, hex:1c5896cc25959f456db10fa142164f90e99791313d65025e2058e4f990314f12965a22ca394f448083c64fd29438ff9ad25634320f8907a0587153d905adc108)",
               "right(\"file1\", \"read\")",
               "right(\"file2\", \"read\")"
             ],
@@ -435,7 +435,7 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:87298abf1b281814c29c4a52cf3252eddd454703edae0e2599c560ebd471c5d95b0c73cb80ba767ad29cb3af89cdb86df0f5a22ed297b4b3374d9d270751100c)",
+              "revocation_id(0, hex:7c0601144e26538ed4870f844a970b2b8bdabab13dd676763956ae9a8e3ec830fbb8a031b92abd4eb66124d9f8d86576a5161cd1499f29539372676fdb740505)",
               "right(\"file1\", \"read\")"
             ],
             "rules": [],
@@ -473,7 +473,7 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file1\")",
-              "revocation_id(0, hex:bb673d5a10e849db2903e9cd9ca6134bcff4720628ef97b613a20a310d1b0980208ab53eb584f2be049bf7381c3fcae45ec88e7cce06f0af10ebd1e86cd9b902)"
+              "revocation_id(0, hex:0d313cc11a09af8844290865c919220aebfb260aa5a1f738c8a8f3df677902e5ea06f408fa316d527926a688764a2c5e06cdecf14bc1ace3e6128323dcb8c801)"
             ],
             "rules": [],
             "checks": [],
@@ -491,7 +491,7 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:bb673d5a10e849db2903e9cd9ca6134bcff4720628ef97b613a20a310d1b0980208ab53eb584f2be049bf7381c3fcae45ec88e7cce06f0af10ebd1e86cd9b902)"
+              "revocation_id(0, hex:0d313cc11a09af8844290865c919220aebfb260aa5a1f738c8a8f3df677902e5ea06f408fa316d527926a688764a2c5e06cdecf14bc1ace3e6128323dcb8c801)"
             ],
             "rules": [],
             "checks": [],
@@ -536,8 +536,8 @@
           "world": {
             "facts": [
               "resource(\"file1\")",
-              "revocation_id(0, hex:5ba8b06cd4c4f7fe0993836ceee769ec915be987f643662ec7d8d4f244286cdf65a1adf6e5327688cb0d8a4f40ef368c11bf7c27d8507608920b0ccd2249ad0f)",
-              "revocation_id(1, hex:f1128098488f48f2185539a8f1b2493e3e66cd824b0226a5d9424eea685290938aafb2b18147e9f08d64e557f2bea5954d30bf66032bd0f12b2a9d6e310ba208)",
+              "revocation_id(0, hex:893ff2daf44325f05849f581de561732094f14223d724202ce2f3d4058cead2ba238e4ef3a6b18f076f155e5e21ec30eded28f98d29979a39eb7f72da128a404)",
+              "revocation_id(1, hex:3189fe4ccec73777fcb0a63fb497c4391bc967c1cc02ec409ae19e7e30fd2bfeb2c309e67c615bcae986a0de15a1a21b5623ccdab5afe36c11c539ac7e475202)",
               "right(\"file1\", \"read\")",
               "right(\"file2\", \"read\")",
               "time(2020-12-21T09:23:12+00:00)",
@@ -558,8 +558,8 @@
           "world": {
             "facts": [
               "resource(\"file2\")",
-              "revocation_id(0, hex:5ba8b06cd4c4f7fe0993836ceee769ec915be987f643662ec7d8d4f244286cdf65a1adf6e5327688cb0d8a4f40ef368c11bf7c27d8507608920b0ccd2249ad0f)",
-              "revocation_id(1, hex:f1128098488f48f2185539a8f1b2493e3e66cd824b0226a5d9424eea685290938aafb2b18147e9f08d64e557f2bea5954d30bf66032bd0f12b2a9d6e310ba208)",
+              "revocation_id(0, hex:893ff2daf44325f05849f581de561732094f14223d724202ce2f3d4058cead2ba238e4ef3a6b18f076f155e5e21ec30eded28f98d29979a39eb7f72da128a404)",
+              "revocation_id(1, hex:3189fe4ccec73777fcb0a63fb497c4391bc967c1cc02ec409ae19e7e30fd2bfeb2c309e67c615bcae986a0de15a1a21b5623ccdab5afe36c11c539ac7e475202)",
               "right(\"file1\", \"read\")",
               "right(\"file2\", \"read\")",
               "time(2020-12-21T09:23:12+00:00)"
@@ -597,7 +597,7 @@
           "world": {
             "facts": [
               "resource(\"file1\")",
-              "revocation_id(0, hex:7d7317a3d4c1705ef0f14daab4b0877dee913db0883b0efb1e8af4b3e0762262a51dc6e8f179af573723fd77c919cfccc02d376d8a80abd2a33716aa99558a05)"
+              "revocation_id(0, hex:9752ecf19b270129471b459de5b8fbf6c04ad652d1ebd042f79efd8ceb6d14fd3a92ff5f2ada3996895bc4e9effe2b723b775d28ddcdc2365294a4420b67790f)"
             ],
             "rules": [],
             "checks": [],
@@ -616,7 +616,7 @@
           "world": {
             "facts": [
               "resource(\"file123.txt\")",
-              "revocation_id(0, hex:7d7317a3d4c1705ef0f14daab4b0877dee913db0883b0efb1e8af4b3e0762262a51dc6e8f179af573723fd77c919cfccc02d376d8a80abd2a33716aa99558a05)"
+              "revocation_id(0, hex:9752ecf19b270129471b459de5b8fbf6c04ad652d1ebd042f79efd8ceb6d14fd3a92ff5f2ada3996895bc4e9effe2b723b775d28ddcdc2365294a4420b67790f)"
             ],
             "rules": [],
             "checks": [],
@@ -648,7 +648,7 @@
           "world": {
             "facts": [
               "must_be_present(\"hello\")",
-              "revocation_id(0, hex:a83fd5ebefd85373c624bfa0847c2c13726b1120319b735781a34fd59a6f045dc906b1ba7006e9c26687c8d5e0ba23eebd68f4a868367ee7ceb1ea377cc67409)"
+              "revocation_id(0, hex:aa4293d9e62461c2871071a3c40c515427927fa47e7e123e857ba1f41275a87ca53db2183023d09a4ad09cf6c1e70c816a48ab0b532a49c3ebb903cfbc66cf01)"
             ],
             "rules": [],
             "checks": [
@@ -687,8 +687,8 @@
           "world": {
             "facts": [
               "check1(\"test\")",
-              "revocation_id(0, hex:75a758d48783b23b4337b71c3567fb1d5293d5538d74cf3a4f1bfe306a0f79f393f2e7e9bd48ca48ccb587deca870b71df82f7decf8ed663e801eb4ee7080804)",
-              "revocation_id(1, hex:177092ffbb60e4e44ea5c7d07415782c018a28a2765317ae3e14526ca8fbb0f55a60b264c60269ac277a48a868f27774d10cd46cbe77380dad9e73c82c49eb00)"
+              "revocation_id(0, hex:aa8f26e32b6a55fe99decfb0f2c229776cc30360e5b68a5b06e730f1e9a13697f87929592f37b7b58dd00dececd6fa40540a3879f74bd232505f1c419907000c)",
+              "revocation_id(1, hex:02766fa2dbb0bd5a2d4d3fc4e0dd9252ec4dc118fe5bc0eafb67fbce0ddf6a86f4db7ecc0b1da14c210b8dcae53fcfc44565edb32ba18bfc9ca9f97258c4db0d)"
             ],
             "rules": [],
             "checks": [],
@@ -728,7 +728,7 @@
         "": {
           "world": {
             "facts": [
-              "revocation_id(0, hex:ed59c23946d8f86642de25d718ae29ad25d923bf303bf8bd1460eee140e28e12571eadf4bd03c952af43573b1dd32e764d70dc9f76f57920c42507612b348602)"
+              "revocation_id(0, hex:39e2c7e2319cc614acf881d06bfd5e344a0e7ed2c4c15e0d068f66467276dead3db6d4aca2cf5b688fc84f13861c7c89c047adde161f962dee18099902da5608)"
             ],
             "rules": [],
             "checks": [],
@@ -769,8 +769,8 @@
           "world": {
             "facts": [
               "operation(\"write\")",
-              "revocation_id(0, hex:814d95cb15c293aaefe111506e40ee48a6630a4409e2032288865fb3322615e6c4d2f7b64762d5a755310936ebc9314927816b5640a9c9b7cc2374bdcf649b0a)",
-              "revocation_id(1, hex:08a93c775baef6d662229a7059faa307517589359d229fa90e1cc7a540361c607415257853d834fe7557d9c54005550627ee8c5d05ce031b923069f9bef71a0e)"
+              "revocation_id(0, hex:33756b656cbb74acea3613b37ba27be1c761ebeacfb5143bab0e284febb04f048eda846b1419558f38d08628b141cd1b38a261c6e865d1c8ed65722a839ec803)",
+              "revocation_id(1, hex:05b10a427cfb7e4712bf8b56edaba207200a53b68a4e8b79afe935b37791e7ac5bfb89ff6c6f20795a82a8b18d60194b92db55d0a82edd8ce3a744459fe3130b)"
             ],
             "rules": [],
             "checks": [],
@@ -812,8 +812,8 @@
             "facts": [
               "operation(\"read\")",
               "operation(\"write\")",
-              "revocation_id(0, hex:9c3f40ab693f438286e61310572c6fe0fbf5bb289cad11e5fb6425c10fdd55922a3398c3fef64e7f8da2bb86e12f76b520d70497144a1a54dc6bb2037d774e09)",
-              "revocation_id(1, hex:c4956938e31a6e29f609e833884db72dc49636344f3a40c1b80a839ebdb08d2453a422d8d2a33b8950e1750607adede01c52415f85034b7b7df1886de9fc9502)"
+              "revocation_id(0, hex:f2bb00974734d38dd729b0cf8e6625a63186cc03b43d48b662d7e9f5821f90881359802ebac1fdf3407f15a65c1584363f8ea03f50eb66105df55275415a910c)",
+              "revocation_id(1, hex:72f9a076f221f3458db15b373df023245bd0fc811ea28a9f99b79bd908224ea317986692c159a54f3aba1f15ba771c8e3ac6bc998a36e79a08aedbc25f1e200d)"
             ],
             "rules": [],
             "checks": [],
@@ -857,8 +857,8 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file1\")",
-              "revocation_id(0, hex:b0eb17f363e71adaac3a571d2b813321414dd9dc8714a767185a862575bd16a6b73b19655ffe1c6dcbb75c35715b3298ae29595287cbc8fafeb4d676292d3b02)",
-              "revocation_id(1, hex:7e57a5130b5ccf8383cb74e60ebb240ac5339433fd6cc4b904c7583bd522a404fd391fc09138b3a8fa73a58d4facd05577f4e72acb7ef36be7e0dc885272ad00)",
+              "revocation_id(0, hex:669be0e6d07eb7a34be1f48921976e70ff9491845f4c983c59bfd0aac449a76c239120f152e1ed10d1c86da73cf7ff6f3bdde0f42e242d0f911e0b938d516c04)",
+              "revocation_id(1, hex:05c5f63076fb7ad5d6eef8a486d8a460c8fa8d986e1d8f9a0b28997687b0541fccd42fb974c4ed3032a0f5553f7c8022c4ad734df87e589ca25efcab8552b009)",
               "right(\"file1\", \"read\")",
               "right(\"file1\", \"write\")",
               "right(\"file2\", \"read\")"
