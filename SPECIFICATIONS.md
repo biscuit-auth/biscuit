@@ -19,7 +19,18 @@ to be valid, all of the checks defined in the token and the verifier must succee
 until one of them matches. They can only be defined in the verifier
 - block: a list of datalog facts, rules and checks. The first block is the authority
 block, used to define the basic rights of a token
-
+- (Verified) Biscuit: a completely parsed biscuit, whose signatures and final proof
+  have been successfully verified
+- Unverified Biscuit: a completely parsed biscuit, whose signatures and final proof
+  have not been verified yet. Manipulating unchecked biscuits can be useful for generic
+  tooling (eg inspecting a biscuit without knowing its public key)
+- Authorized Biscuit: a completely parsed biscuit, whose signatures and final proof
+  have been successfully verified and that was authorized in a given context, by running
+  checks and policies.  
+  An authorized biscuit may carry informations about the successful authorization such as
+  the allow query that matched and the facts generated in the process
+- Authorizer: the context in which a biscuit is evaluated. An authorizer may carry facts,
+  rules, checks and policies.
 
 ### Overview
 
