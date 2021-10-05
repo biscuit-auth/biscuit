@@ -45,7 +45,7 @@
               "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(\\\"read\\\"), right($0, \\\"read\\\")\" })"
             ]
           },
-          "verifier_code": "resource(\"file1\");\n"
+          "authorizer_code": "resource(\"file1\");\n"
         }
       }
     },
@@ -76,7 +76,7 @@
               "Format(Signature(InvalidSignature(\"signature error\")))"
             ]
           },
-          "verifier_code": ""
+          "authorizer_code": ""
         }
       }
     },
@@ -109,7 +109,7 @@
               "Format(InvalidSignatureSize(16))"
             ]
           },
-          "verifier_code": ""
+          "authorizer_code": ""
         }
       }
     },
@@ -142,7 +142,7 @@
               "Format(Signature(InvalidSignature(\"signature error\")))"
             ]
           },
-          "verifier_code": ""
+          "authorizer_code": ""
         }
       }
     },
@@ -175,7 +175,7 @@
               "Format(Signature(InvalidSignature(\"signature error\")))"
             ]
           },
-          "verifier_code": ""
+          "authorizer_code": ""
         }
       }
     },
@@ -214,7 +214,7 @@
               "Format(Signature(InvalidSignature(\"signature error\")))"
             ]
           },
-          "verifier_code": ""
+          "authorizer_code": ""
         }
       }
     },
@@ -271,7 +271,7 @@
               "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(\\\"read\\\"), right($0, \\\"read\\\")\" })"
             ]
           },
-          "verifier_code": "resource(\"file2\");\noperation(\"read\");\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n"
         }
       }
     },
@@ -323,7 +323,7 @@
               "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(\\\"read\\\"), right($0, \\\"read\\\")\" })"
             ]
           },
-          "verifier_code": "resource(\"file2\");\noperation(\"read\");\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n"
         }
       }
     },
@@ -367,13 +367,13 @@
               "Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: \"check if time($date), $date <= 2018-12-20T00:00:00+00:00\" })"
             ]
           },
-          "verifier_code": "resource(\"file1\");\noperation(\"read\");\ntime(2020-12-21T09:23:12+00:00);\n"
+          "authorizer_code": "resource(\"file1\");\noperation(\"read\");\ntime(2020-12-21T09:23:12+00:00);\n"
         }
       }
     },
     {
-      "title": "verifier scope",
-      "filename": "test10_verifier_scope.bc",
+      "title": "authorizer scope",
+      "filename": "test10_authorizer_scope.bc",
       "token": [
         {
           "symbols": [
@@ -410,16 +410,16 @@
           },
           "result": {
             "Err": [
-              "Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"
+              "Authorizer(FailedAuthorizerCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"
             ]
           },
-          "verifier_code": "resource(\"file2\");\noperation(\"read\");\n\ncheck if right($0, $1), resource($0), operation($1);\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n\ncheck if right($0, $1), resource($0), operation($1);\n"
         }
       }
     },
     {
-      "title": "verifier authority checks",
-      "filename": "test11_verifier_authority_caveats.bc",
+      "title": "authorizer authority checks",
+      "filename": "test11_authorizer_authority_caveats.bc",
       "token": [
         {
           "symbols": [
@@ -448,10 +448,10 @@
           },
           "result": {
             "Err": [
-              "Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"
+              "Authorizer(FailedAuthorizerCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"
             ]
           },
-          "verifier_code": "resource(\"file2\");\noperation(\"read\");\n\ncheck if right($0, $1), resource($0), operation($1);\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n\ncheck if right($0, $1), resource($0), operation($1);\n"
         }
       }
     },
@@ -484,7 +484,7 @@
           "result": {
             "Ok": 0
           },
-          "verifier_code": "resource(\"file1\");\noperation(\"read\");\n"
+          "authorizer_code": "resource(\"file1\");\noperation(\"read\");\n"
         },
         "file2": {
           "world": {
@@ -504,7 +504,7 @@
               "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(\\\"file1\\\")\" })"
             ]
           },
-          "verifier_code": "resource(\"file2\");\noperation(\"read\");\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n"
         }
       }
     },
@@ -552,7 +552,7 @@
           "result": {
             "Ok": 0
           },
-          "verifier_code": "resource(\"file1\");\ntime(2020-12-21T09:23:12+00:00);\n"
+          "authorizer_code": "resource(\"file1\");\ntime(2020-12-21T09:23:12+00:00);\n"
         },
         "file2": {
           "world": {
@@ -575,7 +575,7 @@
               "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if valid_date($0), resource($0)\" })"
             ]
           },
-          "verifier_code": "resource(\"file2\");\ntime(2020-12-21T09:23:12+00:00);\n"
+          "authorizer_code": "resource(\"file2\");\ntime(2020-12-21T09:23:12+00:00);\n"
         }
       }
     },
@@ -610,7 +610,7 @@
               "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource($0), $0.matches(\\\"file[0-9]+.txt\\\")\" })"
             ]
           },
-          "verifier_code": "resource(\"file1\");\n"
+          "authorizer_code": "resource(\"file1\");\n"
         },
         "file123": {
           "world": {
@@ -627,7 +627,7 @@
           "result": {
             "Ok": 0
           },
-          "verifier_code": "resource(\"file123.txt\");\n"
+          "authorizer_code": "resource(\"file123.txt\");\n"
         }
       }
     },
@@ -661,7 +661,7 @@
           "result": {
             "Ok": 0
           },
-          "verifier_code": "\ncheck if must_be_present($0) or must_be_present($0);\n"
+          "authorizer_code": "\ncheck if must_be_present($0) or must_be_present($0);\n"
         }
       }
     },
@@ -701,7 +701,7 @@
               "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(\\\"hello\\\")\" })"
             ]
           },
-          "verifier_code": ""
+          "authorizer_code": ""
         }
       }
     },
@@ -739,7 +739,7 @@
           "result": {
             "Ok": 0
           },
-          "verifier_code": ""
+          "authorizer_code": ""
         }
       }
     },
@@ -783,7 +783,7 @@
               "FailedLogic(InvalidBlockRule(0, \"operation($unbound, \\\"read\\\") <- operation($any1, $any2)\"))"
             ]
           },
-          "verifier_code": "operation(\"write\");\n"
+          "authorizer_code": "operation(\"write\");\n"
         }
       }
     },
@@ -826,7 +826,7 @@
               "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if operation(\\\"read\\\")\" })"
             ]
           },
-          "verifier_code": "operation(\"write\");\n"
+          "authorizer_code": "operation(\"write\");\n"
         }
       }
     },
@@ -872,7 +872,7 @@
           "result": {
             "Ok": 0
           },
-          "verifier_code": "resource(\"file1\");\noperation(\"read\");\n"
+          "authorizer_code": "resource(\"file1\");\noperation(\"read\");\n"
         }
       }
     }

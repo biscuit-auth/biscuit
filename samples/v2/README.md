@@ -28,12 +28,12 @@ check if resource($0), operation("read"), right($0, "read");
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 resource("file1");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -232,13 +232,13 @@ owner("alice", "file2");
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 resource("file2");
 operation("read");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -292,13 +292,13 @@ right("file2", "read");
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 resource("file2");
 operation("read");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -344,14 +344,14 @@ check if time($date), $date <= 2018-12-20T00:00:00+00:00;
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 resource("file1");
 operation("read");
 time(2020-12-21T09:23:12+00:00);
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -374,7 +374,7 @@ result: `Err(["Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: \"check 
 
 ------------------------------
 
-## verifier scope: test10_verifier_scope.bc
+## authorizer scope: test10_authorizer_scope.bc
 ### token
 
 authority:
@@ -395,7 +395,7 @@ right("file2", "read");
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 resource("file2");
 operation("read");
@@ -403,7 +403,7 @@ operation("read");
 check if right($0, $1), resource($0), operation($1);
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -424,12 +424,12 @@ World {
 }
 ```
 
-result: `Err(["Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"])`
+result: `Err(["Authorizer(FailedAuthorizerCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"])`
 
 
 ------------------------------
 
-## verifier authority checks: test11_verifier_authority_caveats.bc
+## authorizer authority checks: test11_authorizer_authority_caveats.bc
 ### token
 
 authority:
@@ -443,7 +443,7 @@ right("file1", "read");
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 resource("file2");
 operation("read");
@@ -451,7 +451,7 @@ operation("read");
 check if right($0, $1), resource($0), operation($1);
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -470,7 +470,7 @@ World {
 }
 ```
 
-result: `Err(["Verifier(FailedVerifierCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"])`
+result: `Err(["Authorizer(FailedAuthorizerCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"])`
 
 
 ------------------------------
@@ -489,13 +489,13 @@ check if resource("file1");
 
 ### validation for "file1"
 
-verifier code:
+authorizer code:
 ```
 resource("file1");
 operation("read");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -514,13 +514,13 @@ World {
 result: `Ok(0)`
 ### validation for "file2"
 
-verifier code:
+authorizer code:
 ```
 resource("file2");
 operation("read");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -565,13 +565,13 @@ check if valid_date($0), resource($0);
 
 ### validation for "file1"
 
-verifier code:
+authorizer code:
 ```
 resource("file1");
 time(2020-12-21T09:23:12+00:00);
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -594,13 +594,13 @@ World {
 result: `Ok(0)`
 ### validation for "file2"
 
-verifier code:
+authorizer code:
 ```
 resource("file2");
 time(2020-12-21T09:23:12+00:00);
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -638,12 +638,12 @@ check if resource($0), $0.matches("file[0-9]+.txt");
 
 ### validation for "file1"
 
-verifier code:
+authorizer code:
 ```
 resource("file1");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -661,12 +661,12 @@ World {
 result: `Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource($0), $0.matches(\\\"file[0-9]+.txt\\\")\" })"])`
 ### validation for "file123"
 
-verifier code:
+authorizer code:
 ```
 resource("file123.txt");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -700,13 +700,13 @@ must_be_present("hello");
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 
 check if must_be_present($0) or must_be_present($0);
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -749,11 +749,11 @@ check1("test");
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -814,11 +814,11 @@ check if [hex:12ab, hex:34de].contains(hex:34de);
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -858,12 +858,12 @@ operation($unbound, "read") <- operation($any1, $any2);
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 operation("write");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -905,12 +905,12 @@ operation("read") <- operation($any);
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 operation("write");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {
@@ -955,13 +955,13 @@ check if resource($0), operation("read"), right($0, "read");
 
 ### validation
 
-verifier code:
+authorizer code:
 ```
 resource("file1");
 operation("read");
 ```
 
-verifier world:
+authorizer world:
 ```
 World {
   facts: {

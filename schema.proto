@@ -194,7 +194,7 @@ message Policy {
   required Kind kind = 2;
 }
 
-message VerifierPolicies {
+message AuthorizerPolicies {
   repeated string symbols = 1;
   optional uint32 version = 2;
   repeated FactV2 facts = 3;
