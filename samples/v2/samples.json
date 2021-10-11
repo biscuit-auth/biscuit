@@ -875,6 +875,40 @@
           "authorizer_code": "resource(\"file1\");\noperation(\"read\");\n"
         }
       }
+    },
+    {
+      "title": "parsing",
+      "filename": "test21_parsing.bc",
+      "token": [
+        {
+          "symbols": [
+            "ns::fact_123",
+            "hello é\t😁"
+          ],
+          "code": "ns::fact_123(\"hello é\t😁\");\n"
+        }
+      ],
+      "validations": {
+        "": {
+          "world": {
+            "facts": [
+              "ns::fact_123(\"hello é\t😁\")",
+              "revocation_id(0, hex:adf27d92fc268727450a1d03c7cdf1fb14ddd0157a105bd68a14df9aecce7f7cefae743e1bf3bccf994f2578980fb69e2a9f00f633c2b293e928892ec289260b)"
+            ],
+            "rules": [],
+            "checks": [
+              "check if ns::fact_123(\"hello é\t😁\")"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          "result": {
+            "Ok": 0
+          },
+          "authorizer_code": "\ncheck if ns::fact_123(\"hello é\t😁\");\n"
+        }
+      }
     }
   ]
 }

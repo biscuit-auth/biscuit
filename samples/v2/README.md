@@ -24,8 +24,6 @@ symbols: ["check1", "0"]
 check if resource($0), operation("read"), right($0, "read");
 ```
 
-```
-
 ### validation
 
 authorizer code:
@@ -74,8 +72,6 @@ symbols: ["check1", "0"]
 check if resource($0), operation("read"), right($0, "read");
 ```
 
-```
-
 ### validation
 
 result: `Err(["Format(Signature(InvalidSignature(\"signature error\")))"])`
@@ -100,8 +96,6 @@ symbols: ["check1", "0"]
 
 ```
 check if resource($0), operation("read"), right($0, "read");
-```
-
 ```
 
 ### validation
@@ -130,8 +124,6 @@ symbols: ["check1", "0"]
 check if resource($0), operation("read"), right($0, "read");
 ```
 
-```
-
 ### validation
 
 result: `Err(["Format(Signature(InvalidSignature(\"signature error\")))"])`
@@ -156,8 +148,6 @@ symbols: ["check1", "0"]
 
 ```
 check if resource($0), operation("read"), right($0, "read");
-```
-
 ```
 
 ### validation
@@ -193,8 +183,6 @@ symbols: ["check2"]
 check if resource("file1");
 ```
 
-```
-
 ### validation
 
 result: `Err(["Format(Signature(InvalidSignature(\"signature error\")))"])`
@@ -226,8 +214,6 @@ symbols: ["file2"]
 
 ```
 owner("alice", "file2");
-```
-
 ```
 
 ### validation
@@ -288,8 +274,6 @@ symbols: ["file2"]
 right("file2", "read");
 ```
 
-```
-
 ### validation
 
 authorizer code:
@@ -338,8 +322,6 @@ symbols: ["check1", "file1", "expiration", "date", "time"]
 ```
 check if resource("file1");
 check if time($date), $date <= 2018-12-20T00:00:00+00:00;
-```
-
 ```
 
 ### validation
@@ -391,8 +373,6 @@ symbols: ["file2"]
 right("file2", "read");
 ```
 
-```
-
 ### validation
 
 authorizer code:
@@ -439,8 +419,6 @@ symbols: ["file1", "read"]
 right("file1", "read");
 ```
 
-```
-
 ### validation
 
 authorizer code:
@@ -483,8 +461,6 @@ symbols: ["check1", "file1"]
 
 ```
 check if resource("file1");
-```
-
 ```
 
 ### validation for "file1"
@@ -561,8 +537,6 @@ valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59+00:00, !["fi
 check if valid_date($0), resource($0);
 ```
 
-```
-
 ### validation for "file1"
 
 authorizer code:
@@ -634,8 +608,6 @@ symbols: ["resource_match", "0", "file[0-9]+.txt"]
 check if resource($0), $0.matches("file[0-9]+.txt");
 ```
 
-```
-
 ### validation for "file1"
 
 authorizer code:
@@ -696,8 +668,6 @@ symbols: ["must_be_present", "hello"]
 must_be_present("hello");
 ```
 
-```
-
 ### validation
 
 authorizer code:
@@ -743,8 +713,6 @@ symbols: []
 
 ```
 check1("test");
-```
-
 ```
 
 ### validation
@@ -810,8 +778,6 @@ check if ["abc", "def"].contains("abc");
 check if [hex:12ab, hex:34de].contains(hex:34de);
 ```
 
-```
-
 ### validation
 
 authorizer code:
@@ -852,8 +818,6 @@ symbols: ["unbound", "any1", "any2"]
 
 ```
 operation($unbound, "read") <- operation($any1, $any2);
-```
-
 ```
 
 ### validation
@@ -899,8 +863,6 @@ symbols: ["any"]
 
 ```
 operation("read") <- operation($any);
-```
-
 ```
 
 ### validation
@@ -951,8 +913,6 @@ symbols: ["check1", "0"]
 check if resource($0), operation("read"), right($0, "read");
 ```
 
-```
-
 ### validation
 
 authorizer code:
@@ -975,6 +935,46 @@ World {
 }
   rules: {}
   checks: {}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Ok(0)`
+
+
+------------------------------
+
+## parsing: test21_parsing.bc
+### token
+
+authority:
+symbols: ["ns::fact_123", "hello é\t😁"]
+
+```
+ns::fact_123("hello é	😁");
+```
+
+### validation
+
+authorizer code:
+```
+
+check if ns::fact_123("hello é	😁");
+```
+
+authorizer world:
+```
+World {
+  facts: {
+    "ns::fact_123(\"hello é\t😁\")",
+    "revocation_id(0, hex:adf27d92fc268727450a1d03c7cdf1fb14ddd0157a105bd68a14df9aecce7f7cefae743e1bf3bccf994f2578980fb69e2a9f00f633c2b293e928892ec289260b)",
+}
+  rules: {}
+  checks: {
+    "check if ns::fact_123(\"hello é\t😁\")",
+}
   policies: {
     "allow if true",
 }
