@@ -144,6 +144,61 @@ A *boolean* is `true` or `false`.
 A *set* is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets.
 
+#### Grammar
+
+The logic language is descibed by the following EBNF grammar:
+
+```
+<block> ::= (<block_element> | <comment> )*
+<block_element> ::= <sp>? ( <check> | <fact> | <rule> ) <sp>? ";" <sp>?
+<authorizer> ::= (<authorizer_element> | <comment> )*
+<authorizer_element> ::= <sp>? ( <policy> | <check> | <fact> | <rule> ) <sp>? ";" <sp>?
+
+<comment> ::= "//" ([a-z] | [A-Z] ) ([a-z] | [A-Z] | [0-9] | "_" | ":" | " " | "\t" | "(" | ")" | "$" | "[" | "]" )* "\n"
+
+<fact> ::= <name> "(" <sp>? <fact_term> (<sp>? "," <sp>? <fact_term> )* <sp>? ")"
+<rule> ::= <predicate> <sp>? "<-" <sp>? <rule_body>
+<check> ::= "check" <sp> "if" <sp> <rule_body>
+<policy> ::= ("allow" | "deny") <sp> "if" <sp> <rule_body>
+
+<rule_body> ::= <rule_body_element> <sp>? ("," <sp>? <rule_body_element> <sp>?)*
+<rule_body_element> ::= <predicate> | <expression>
+
+<predicate> ::= <name> "(" <sp>? <term> (<sp>? "," <sp>? <term> )* <sp>? ")"
+<term> ::= <fact_term> | <variable>
+<fact_term> ::= <boolean> | <string> | <number> | <bytes> | <date> | <set>
+
+
+<number> ::= [0-9]+
+<bytes> ::= "hex:" ([a-z] | [0-9] )+
+<boolean> ::= "true" | "false"
+<date> ::= [0-9]* "-" [0-9] [0-9] "-" [0-9] [0-9] "T" [0-9] [0-9] ":" [0-9] [0-9] ":" [0-9] [0-9] ( "Z" | ( "+" [0-9] [0-9] ":" [0-9] [0-9] ))
+<set> ::= "[" <sp>? ( <fact_term> ( <sp>? "," <sp>? <fact_term>)* <sp>? )? "]"
+
+<expression> ::= <expression_element> (<sp>? <operator> <sp>? <expression_element>)*
+<expression_element> ::= <expression_unary> | (<expression_term> <expression_method>? ) 
+<expression_unary> ::= "!" <sp>? <expression>
+<expression_method> ::= "." <method_name> "(" <sp>? (<term> ( <sp>? "," <sp>? <term>)* )? <sp>? ")" 
+<method_name> ::= ([a-z] | [A-Z] ) ([a-z] | [A-Z] | [0-9] | "_" )*
+
+<expression_term> ::= <term> | ("(" <sp>? <expression> <sp>? ")")
+<operator> ::= "<" | ">" | "<=" | ">=" | "==" | "&&" | "||" | "+" | "-" | "*" | "/" 
+
+<sp> ::= (" " | "\t" | "\n")+
+```
+
+The `name`, `variable` and `string` rules are defined as:
+- `name`:
+  - first character is any UTF-8 letter character
+  - following characters are any UTF-8 letter character, numbers, `_` or `:`
+- `variable`:
+  - first character is `$`
+  - following characters are any UTF-8 letter character, numbers, `_` or '=`:`
+- ` string`:
+  - first character is `"`
+  - any printable UTF-8 character except `"` which must be escaped as `\"`
+  - last character is `"`
+
 ### Scopes
 
 Since the first block defines the token's rights through facts and rules, and
