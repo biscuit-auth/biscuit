@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/CleverCloud/biscuit](https://badges.gitter.im/CleverCloud/biscuit.svg)](https://gitter.im/CleverCloud/biscuit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-<img src="https://raw.githubusercontent.com/CleverCloud/biscuit/master/assets/brown.png" width="200">
+<img src="https://raw.githubusercontent.com/biscuit-auth/biscuit/master/assets/brown.png" width="200">
 
 ## Goals
 
@@ -31,12 +31,12 @@ specification.
 
 ## Roadmap
 
-You can follow the next steps on the [roadmap](https://github.com/CleverCloud/biscuit/issues/12).
+You can follow the next steps on the [roadmap](https://github.com/biscuit-auth/biscuit/issues/12).
 
 Current status:
 - the credential language, cryptographic primitives and serialization format are done
-- we have implementations in [Rust](https://github.com/clevercloud/biscuit-rust), [Java](https://github.com/clevercloud/biscuit-java), [Go](https://github.com/flynn/biscuit-go) and [Web Assembly](https://github.com/clevercloud/biscuit-wasm) (based on the Rust version)
-- Currently deploying to real world use cases such as [Apache Pulsar](https://github.com/clevercloud/biscuit-pulsar)
+- we have implementations in [Rust](https://github.com/biscuit-auth/biscuit-rust), [Java](https://github.com/clevercloud/biscuit-java), [Go](https://github.com/flynn/biscuit-go) and [Web Assembly](https://github.com/biscuit-auth/biscuit-wasm) (based on the Rust version)
+- Currently deploying to real world use cases such as [Apache Pulsar](https://github.com/clevercloud/biscuit-pulsar) at [Clever Cloud](https://www.clever-cloud.com/)
 - looking for an audit of the token's design, cryptographic primitives and implementations
 
 ## How to help us?
@@ -56,6 +56,8 @@ Current status:
 Licensed under Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
 
 logo by [Mathias Adam](http://www.madgraphism.com/)
+
+originally created at [Clever Cloud](https://www.clever-cloud.com/)
 
 ### Contribution
 
