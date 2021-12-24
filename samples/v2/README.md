@@ -50,7 +50,7 @@ World {
 }
 ```
 
-result: `Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(\\\"read\\\"), right($0, \\\"read\\\")\" })"])`
+result: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: "check if resource($0), operation(\"read\"), right($0, \"read\")" })])))`
 
 
 ------------------------------
@@ -74,7 +74,7 @@ check if resource($0), operation("read"), right($0, "read");
 
 ### validation
 
-result: `Err(["Format(Signature(InvalidSignature(\"signature error\")))"])`
+result: `Err(Format(Signature(InvalidSignature("signature error: Verification equation was not satisfied"))))`
 
 
 ------------------------------
@@ -100,7 +100,7 @@ check if resource($0), operation("read"), right($0, "read");
 
 ### validation
 
-result: `Err(["Format(InvalidSignatureSize(16))"])`
+result: `Err(Format(InvalidSignatureSize(16)))`
 
 
 ------------------------------
@@ -126,7 +126,7 @@ check if resource($0), operation("read"), right($0, "read");
 
 ### validation
 
-result: `Err(["Format(Signature(InvalidSignature(\"signature error\")))"])`
+result: `Err(Format(Signature(InvalidSignature("signature error: Verification equation was not satisfied"))))`
 
 
 ------------------------------
@@ -152,7 +152,7 @@ check if resource($0), operation("read"), right($0, "read");
 
 ### validation
 
-result: `Err(["Format(Signature(InvalidSignature(\"signature error\")))"])`
+result: `Err(Format(Signature(InvalidSignature("signature error: Verification equation was not satisfied"))))`
 
 
 ------------------------------
@@ -185,7 +185,7 @@ check if resource("file1");
 
 ### validation
 
-result: `Err(["Format(Signature(InvalidSignature(\"signature error\")))"])`
+result: `Err(Format(Signature(InvalidSignature("signature error: Verification equation was not satisfied"))))`
 
 
 ------------------------------
@@ -245,7 +245,7 @@ World {
 }
 ```
 
-result: `Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(\\\"read\\\"), right($0, \\\"read\\\")\" })"])`
+result: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: "check if resource($0), operation(\"read\"), right($0, \"read\")" })])))`
 
 
 ------------------------------
@@ -302,7 +302,7 @@ World {
 }
 ```
 
-result: `Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(\\\"read\\\"), right($0, \\\"read\\\")\" })"])`
+result: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: "check if resource($0), operation(\"read\"), right($0, \"read\")" })])))`
 
 
 ------------------------------
@@ -351,7 +351,7 @@ World {
 }
 ```
 
-result: `Err(["Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: \"check if time($date), $date <= 2018-12-20T00:00:00+00:00\" })"])`
+result: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: "check if time($date), $date <= 2018-12-20T00:00:00+00:00" })])))`
 
 
 ------------------------------
@@ -404,7 +404,7 @@ World {
 }
 ```
 
-result: `Err(["Authorizer(FailedAuthorizerCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"])`
+result: `Err(FailedLogic(FailedChecks([Authorizer(FailedAuthorizerCheck { check_id: 0, rule: "check if right($0, $1), resource($0), operation($1)" })])))`
 
 
 ------------------------------
@@ -448,7 +448,7 @@ World {
 }
 ```
 
-result: `Err(["Authorizer(FailedAuthorizerCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"])`
+result: `Err(FailedLogic(FailedChecks([Authorizer(FailedAuthorizerCheck { check_id: 0, rule: "check if right($0, $1), resource($0), operation($1)" })])))`
 
 
 ------------------------------
@@ -512,7 +512,7 @@ World {
 }
 ```
 
-result: `Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(\\\"file1\\\")\" })"])`
+result: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if resource(\"file1\")" })])))`
 
 
 ------------------------------
@@ -593,7 +593,7 @@ World {
 }
 ```
 
-result: `Err(["Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if valid_date($0), resource($0)\" })"])`
+result: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: "check if valid_date($0), resource($0)" })])))`
 
 
 ------------------------------
@@ -630,7 +630,7 @@ World {
 }
 ```
 
-result: `Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource($0), $0.matches(\\\"file[0-9]+.txt\\\")\" })"])`
+result: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if resource($0), $0.matches(\"file[0-9]+.txt\")" })])))`
 ### validation for "file123"
 
 authorizer code:
@@ -737,7 +737,7 @@ World {
 }
 ```
 
-result: `Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(\\\"hello\\\")\" })"])`
+result: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if resource(\"hello\")" })])))`
 
 
 ------------------------------
@@ -843,7 +843,7 @@ World {
 }
 ```
 
-result: `Err(["FailedLogic(InvalidBlockRule(0, \"operation($unbound, \\\"read\\\") <- operation($any1, $any2)\"))"])`
+result: `Err(FailedLogic(InvalidBlockRule(0, "operation($unbound, \"read\") <- operation($any1, $any2)")))`
 
 
 ------------------------------
@@ -889,7 +889,7 @@ World {
 }
 ```
 
-result: `Err(["Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if operation(\\\"read\\\")\" })"])`
+result: `Err(FailedLogic(FailedChecks([Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if operation(\"read\")" })])))`
 
 
 ------------------------------

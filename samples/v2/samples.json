@@ -41,9 +41,19 @@
             ]
           },
           "result": {
-            "Err": [
-              "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(\\\"read\\\"), right($0, \\\"read\\\")\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Block": {
+                      "block_id": 1,
+                      "check_id": 0,
+                      "rule": "check if resource($0), operation(\"read\"), right($0, \"read\")"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "resource(\"file1\");\n"
         }
@@ -72,9 +82,13 @@
         "": {
           "world": null,
           "result": {
-            "Err": [
-              "Format(Signature(InvalidSignature(\"signature error\")))"
-            ]
+            "Err": {
+              "Format": {
+                "Signature": {
+                  "InvalidSignature": "signature error: Verification equation was not satisfied"
+                }
+              }
+            }
           },
           "authorizer_code": ""
         }
@@ -105,9 +119,11 @@
         "": {
           "world": null,
           "result": {
-            "Err": [
-              "Format(InvalidSignatureSize(16))"
-            ]
+            "Err": {
+              "Format": {
+                "InvalidSignatureSize": 16
+              }
+            }
           },
           "authorizer_code": ""
         }
@@ -138,9 +154,13 @@
         "": {
           "world": null,
           "result": {
-            "Err": [
-              "Format(Signature(InvalidSignature(\"signature error\")))"
-            ]
+            "Err": {
+              "Format": {
+                "Signature": {
+                  "InvalidSignature": "signature error: Verification equation was not satisfied"
+                }
+              }
+            }
           },
           "authorizer_code": ""
         }
@@ -171,9 +191,13 @@
         "": {
           "world": null,
           "result": {
-            "Err": [
-              "Format(Signature(InvalidSignature(\"signature error\")))"
-            ]
+            "Err": {
+              "Format": {
+                "Signature": {
+                  "InvalidSignature": "signature error: Verification equation was not satisfied"
+                }
+              }
+            }
           },
           "authorizer_code": ""
         }
@@ -210,9 +234,13 @@
         "": {
           "world": null,
           "result": {
-            "Err": [
-              "Format(Signature(InvalidSignature(\"signature error\")))"
-            ]
+            "Err": {
+              "Format": {
+                "Signature": {
+                  "InvalidSignature": "signature error: Verification equation was not satisfied"
+                }
+              }
+            }
           },
           "authorizer_code": ""
         }
@@ -267,9 +295,19 @@
             ]
           },
           "result": {
-            "Err": [
-              "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(\\\"read\\\"), right($0, \\\"read\\\")\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Block": {
+                      "block_id": 1,
+                      "check_id": 0,
+                      "rule": "check if resource($0), operation(\"read\"), right($0, \"read\")"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n"
         }
@@ -319,9 +357,19 @@
             ]
           },
           "result": {
-            "Err": [
-              "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if resource($0), operation(\\\"read\\\"), right($0, \\\"read\\\")\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Block": {
+                      "block_id": 1,
+                      "check_id": 0,
+                      "rule": "check if resource($0), operation(\"read\"), right($0, \"read\")"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n"
         }
@@ -363,9 +411,19 @@
             ]
           },
           "result": {
-            "Err": [
-              "Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: \"check if time($date), $date <= 2018-12-20T00:00:00+00:00\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Block": {
+                      "block_id": 1,
+                      "check_id": 1,
+                      "rule": "check if time($date), $date <= 2018-12-20T00:00:00+00:00"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "resource(\"file1\");\noperation(\"read\");\ntime(2020-12-21T09:23:12+00:00);\n"
         }
@@ -409,9 +467,18 @@
             ]
           },
           "result": {
-            "Err": [
-              "Authorizer(FailedAuthorizerCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Authorizer": {
+                      "check_id": 0,
+                      "rule": "check if right($0, $1), resource($0), operation($1)"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n\ncheck if right($0, $1), resource($0), operation($1);\n"
         }
@@ -447,9 +514,18 @@
             ]
           },
           "result": {
-            "Err": [
-              "Authorizer(FailedAuthorizerCheck { check_id: 0, rule: \"check if right($0, $1), resource($0), operation($1)\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Authorizer": {
+                      "check_id": 0,
+                      "rule": "check if right($0, $1), resource($0), operation($1)"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n\ncheck if right($0, $1), resource($0), operation($1);\n"
         }
@@ -500,9 +576,19 @@
             ]
           },
           "result": {
-            "Err": [
-              "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(\\\"file1\\\")\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Block": {
+                      "block_id": 0,
+                      "check_id": 0,
+                      "rule": "check if resource(\"file1\")"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "resource(\"file2\");\noperation(\"read\");\n"
         }
@@ -571,9 +657,19 @@
             ]
           },
           "result": {
-            "Err": [
-              "Block(FailedBlockCheck { block_id: 1, check_id: 0, rule: \"check if valid_date($0), resource($0)\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Block": {
+                      "block_id": 1,
+                      "check_id": 0,
+                      "rule": "check if valid_date($0), resource($0)"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "resource(\"file2\");\ntime(2020-12-21T09:23:12+00:00);\n"
         }
@@ -606,9 +702,19 @@
             ]
           },
           "result": {
-            "Err": [
-              "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource($0), $0.matches(\\\"file[0-9]+.txt\\\")\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Block": {
+                      "block_id": 0,
+                      "check_id": 0,
+                      "rule": "check if resource($0), $0.matches(\"file[0-9]+.txt\")"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "resource(\"file1\");\n"
         },
@@ -697,9 +803,19 @@
             ]
           },
           "result": {
-            "Err": [
-              "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if resource(\\\"hello\\\")\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Block": {
+                      "block_id": 0,
+                      "check_id": 0,
+                      "rule": "check if resource(\"hello\")"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": ""
         }
@@ -779,9 +895,14 @@
             ]
           },
           "result": {
-            "Err": [
-              "FailedLogic(InvalidBlockRule(0, \"operation($unbound, \\\"read\\\") <- operation($any1, $any2)\"))"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "InvalidBlockRule": [
+                  0,
+                  "operation($unbound, \"read\") <- operation($any1, $any2)"
+                ]
+              }
+            }
           },
           "authorizer_code": "operation(\"write\");\n"
         }
@@ -822,9 +943,19 @@
             ]
           },
           "result": {
-            "Err": [
-              "Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: \"check if operation(\\\"read\\\")\" })"
-            ]
+            "Err": {
+              "FailedLogic": {
+                "FailedChecks": [
+                  {
+                    "Block": {
+                      "block_id": 0,
+                      "check_id": 0,
+                      "rule": "check if operation(\"read\")"
+                    }
+                  }
+                ]
+              }
+            }
           },
           "authorizer_code": "operation(\"write\");\n"
         }
