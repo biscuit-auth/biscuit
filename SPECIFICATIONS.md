@@ -17,13 +17,20 @@ the token that contains it, represented as a datalog query in biscuit. For the o
 to be valid, all of the checks defined in the token and the verifier must succeed
 - allow/deny policies: a list of datalog queries that are tested in a sequence
 until one of them matches. They can only be defined in the verifier
-- block: a list of datalog facts and rules. The first block is the authority
-block. The other blocks define caveats
-- authority: list of facts and rules defining the initial rights of the token
-- ambient: list of facts related to the operation, like which resource is accessed,
-the current date, or revocation lists
-- symbol: string that is stored in a table and referred to by its index to save space
-
+- block: a list of datalog facts, rules and checks. The first block is the authority
+block, used to define the basic rights of a token
+- (Verified) Biscuit: a completely parsed biscuit, whose signatures and final proof
+  have been successfully verified
+- Unverified Biscuit: a completely parsed biscuit, whose signatures and final proof
+  have not been verified yet. Manipulating unchecked biscuits can be useful for generic
+  tooling (eg inspecting a biscuit without knowing its public key)
+- Authorized Biscuit: a completely parsed biscuit, whose signatures and final proof
+  have been successfully verified and that was authorized in a given context, by running
+  checks and policies.  
+  An authorized biscuit may carry informations about the successful authorization such as
+  the allow query that matched and the facts generated in the process
+- Authorizer: the context in which a biscuit is evaluated. An authorizer may carry facts,
+  rules, checks and policies.
 
 ### Overview
 
@@ -63,7 +70,6 @@ simplifies its implementation and makes the check more precise.
 
 A Biscuit Datalog program contains *facts* and *rules*, which are made of
 *predicates* over the following types:
-- *symbol*
 - *variable*
 - *integer*
 - *string*
@@ -97,35 +103,28 @@ the policy matches, and we stop there, otherwise we test the next one. If an
 succeeds, the token verification fails. Those policies are tested after all of
 the *checks* have passed.
 We will represent the various types as follows:
-- symbol: `#a`
 - variable: `$variable` (the variable name is converted to an integer id through the symbol table)
 - integer: `12`
 - string: `"hello"`
 - byte array: `hex:01A2`
 - date in RFC 3339 format: `1985-04-12T23:20:50.52Z`
 - boolean: `true` or `false`
-- set: `[ #a, #b, #c]`
+- set: `[ "a", "b", "c"]`
 
-As an example, assuming we have the following facts: `parent(#a, #b)`,
-`parent(#b, #c)`, `#parent(#c, #d)`. If we apply the rule
+As an example, assuming we have the following facts: `parent("a", "b")`,
+`parent("b", "c")`, `parent("c", "d")`. If we apply the rule
 `grandparent($x, $z) <- parent($x, $y), parent($y, $z)`, we will try to replace
 the predicates in the body by matching facts. We will get the following
 combinations:
-- `grandparent(#a, #c) <- parent(#a, #b), parent(#b, #c)`
-- `grandparent(#b, #d) <- parent(#b, #c), parent(#c, #d)`
+- `grandparent("a", "c") <- parent("a", "b"), parent("b", "c")`
+- `grandparent("b", "d") <- parent("b", "c"), parent("c", "d")`
 
-The system will now contain the two new facts `grandparent(#a, #c)` and
-`grandparent(#b, #d)`. Whenever we generate new facts, we have to reapply all of
+The system will now contain the two new facts `grandparent("a", "c")` and
+`grandparent("b", "d")`. Whenever we generate new facts, we have to reapply all of
 the system's rules on the facts, because some rules might give a new result. Once
 rules application does not generate any new facts, we can stop.
 
 #### Data types
-
-A *symbol* indicates a value that supports equality, set inclusion and set
-exclusion checks. Its internal representation is an index into the token's
-symbol table, which is a list of strings. The symbol table reduces the size of
-tokens by storing common symbols in a predefined table, and writing new symbols
-only once per token.
 
 An *integer* is a signed 64 bits integer. It supports the following
 operatios: lower, larger, lower or equal, larger or equal, equal, set
@@ -145,24 +144,85 @@ A *boolean* is `true` or `false`.
 A *set* is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets.
 
-### Authority and ambient facts
+#### Grammar
 
-Facts in Biscuit's language have some specific context.
+The logic language is descibed by the following EBNF grammar:
 
-Authority facts can only be created in the authority block, either directly
-or from rules, and are represented by the `#authority` symbol as the first
-element of a fact. They hold the initial rights for the token.
+```
+<block> ::= (<block_element> | <comment> )*
+<block_element> ::= <sp>? ( <check> | <fact> | <rule> ) <sp>? ";" <sp>?
+<authorizer> ::= (<authorizer_element> | <comment> )*
+<authorizer_element> ::= <sp>? ( <policy> | <check> | <fact> | <rule> ) <sp>? ";" <sp>?
 
-Ambient facts can only be provided by the verifier, and are represented by the
-`#ambient` symbol as the first element of a fact. They indicate data related
-to the operation the token is authorizing.
+<comment> ::= "//" ([a-z] | [A-Z] ) ([a-z] | [A-Z] | [0-9] | "_" | ":" | " " | "\t" | "(" | ")" | "$" | "[" | "]" )* "\n"
 
-Facts can also be created in blocks other than the authority block, but they cannot
-be authority or ambient facts.
+<fact> ::= <name> "(" <sp>? <fact_term> (<sp>? "," <sp>? <fact_term> )* <sp>? ")"
+<rule> ::= <predicate> <sp>? "<-" <sp>? <rule_body>
+<check> ::= "check" <sp> "if" <sp> <rule_body>
+<policy> ::= ("allow" | "deny") <sp> "if" <sp> <rule_body>
+
+<rule_body> ::= <rule_body_element> <sp>? ("," <sp>? <rule_body_element> <sp>?)*
+<rule_body_element> ::= <predicate> | <expression>
+
+<predicate> ::= <name> "(" <sp>? <term> (<sp>? "," <sp>? <term> )* <sp>? ")"
+<term> ::= <fact_term> | <variable>
+<fact_term> ::= <boolean> | <string> | <number> | <bytes> | <date> | <set>
+
+
+<number> ::= [0-9]+
+<bytes> ::= "hex:" ([a-z] | [0-9] )+
+<boolean> ::= "true" | "false"
+<date> ::= [0-9]* "-" [0-9] [0-9] "-" [0-9] [0-9] "T" [0-9] [0-9] ":" [0-9] [0-9] ":" [0-9] [0-9] ( "Z" | ( "+" [0-9] [0-9] ":" [0-9] [0-9] ))
+<set> ::= "[" <sp>? ( <fact_term> ( <sp>? "," <sp>? <fact_term>)* <sp>? )? "]"
+
+<expression> ::= <expression_element> (<sp>? <operator> <sp>? <expression_element>)*
+<expression_element> ::= <expression_unary> | (<expression_term> <expression_method>? ) 
+<expression_unary> ::= "!" <sp>? <expression>
+<expression_method> ::= "." <method_name> "(" <sp>? (<term> ( <sp>? "," <sp>? <term>)* )? <sp>? ")" 
+<method_name> ::= ([a-z] | [A-Z] ) ([a-z] | [A-Z] | [0-9] | "_" )*
+
+<expression_term> ::= <term> | ("(" <sp>? <expression> <sp>? ")")
+<operator> ::= "<" | ">" | "<=" | ">=" | "==" | "&&" | "||" | "+" | "-" | "*" | "/" 
+
+<sp> ::= (" " | "\t" | "\n")+
+```
+
+The `name`, `variable` and `string` rules are defined as:
+- `name`:
+  - first character is any UTF-8 letter character
+  - following characters are any UTF-8 letter character, numbers, `_` or `:`
+- `variable`:
+  - first character is `$`
+  - following characters are any UTF-8 letter character, numbers, `_` or '=`:`
+- ` string`:
+  - first character is `"`
+  - any printable UTF-8 character except `"` which must be escaped as `\"`
+  - last character is `"`
+
+### Scopes
+
+Since the first block defines the token's rights through facts and rules, and
+later blocks can define their own facts and rules, we must ensure the token
+cannot increase its rights with later blocks.
+
+This is done through execution scopes: a block's rules and checks can only
+apply on facts created in the current or previous blocks. Facts, rules, checks
+and policies of the verifier are executed in the context of the authority block.
+
+Example:
+- the token contains `right("file1", "read")` in the first block
+- the token holder adds a block with the fact `right("file2", "read")`
+- the verifier adds:
+  - `resource("file2")`
+  - `operation("read")`
+  - `check if resource($res), operation($op), right($res, $op)`
+
+The verifier's check will fail because when it is evaluated, it only sees
+`right("file1", "read")` from the authority block.
 
 ### Checks
 
-Checks are logic queries evaluating conditions on authority and ambient facts.
+Checks are logic queries evaluating conditions on facts.
 To validate an operation, all of a token's checks must succeed.
 
 One block can contain one or more checks.
@@ -187,67 +247,66 @@ The second caveat checks that the resource is `file1`.
 
 ```
 authority:
-  right(#authority, "file1", #read);
-  right(#authority, "file2", #read);
-  right(#authority, "file1", #write);
+  right("file1", "read");
+  right("file2", "read");
+  right("file1", "write");
 ----------
 Block 1:
 check if
-  resource(#ambient, $0),
-  operation(#ambient, #read),
-  right(#authority, $0, #read)  // restrict to read operations
+  resource($0),
+  operation("read"),
+  right($0, "read")  // restrict to read operations
 ----------
 Block 2:
 check if
-  resource(#ambient, "file1")  // restrict to file1 resource
+  resource("file1")  // restrict to file1 resource
 ```
 
-The facts with the `authority` tag can only be defined in the `authority` part of
-the token.
-The verifier side provides the `resource` and `operation` facts with the `ambient`
-fact, with information from the request.
+The verifier side provides the `resource` and `operation` facts with information
+from the request.
 
-If the verifier provided the facts `resource(#ambient, "file2")` and
-`operation(#ambient, #read)`, the rule application of the first check would see
-`resource(#ambient, "file2"), operation(#ambient, #read), right(#authority, "file2", #read)`
+If the verifier provided the facts `resource("file2")` and
+`operation("read")`, the rule application of the first check would see
+`resource("file2"), operation("read"), right("file2", "read")`
 with `X = "file2"`, so it would succeed, but the second check would fail
-because it expects `resource(#ambient, "file1")`.
+because it expects `resource("file1")`.
 
-If the verifier provided the facts `resource(#ambient, "file1")` and
-`operation(#ambient, #read)`, both checks would succeed.
+If the verifier provided the facts `resource("file1")` and
+`operation("read")`, both checks would succeed.
 
 #### Broad authority rules
 
 In this example, we have a token with very large rights, that will be attenuated
 before giving to a user. The authority block can define rules that will generate
-facts depending on ambient data. This helps reduce the size of the token.
+facts depending on data provided by the verifier. This helps reduce the size of
+the token.
 
 ```
 authority:
 
 // if there is an ambient resource and we own it, we can read it
-right(#authority, $0, #read) <- resource(#ambient, $0), owner(#ambient, $1, $0);
+right($0, "read") <- resource($0), owner($1, $0);
 // if there is an ambient resource and we own it, we can write to it
-right(#authority, $0, #write) <- resource(#ambient, $0), owner(#ambient, $1, $0);
+right($0, "write") <- resource($0), owner($1, $0);
 ----------
 Block 1:
 
 check if
-  right(#authority, $0, $1),
-  resource(#ambient, $0),
-  operation(#ambient, $1)
+  right($0, $1),
+  resource($0),
+  operation($1)
 ----------
 Block 2:
 
 check if
-  resource(#ambient, $0),
-  owner(#alice, $0) // defines a token only usable by alice
+  resource($0),
+  owner("alice", $0) // defines a token only usable by alice
 ```
 
-These rules will define authority facts depending on ambient data.
-If we had the ambient facts `resource(#ambient, "file1")` and
-`owner(#ambient, #alice, "file1")`, the authority rules will define
-`right(#authority, "file1", #read)` and `right(#authority, "file1", #write)`,
+These rules will define authority facts depending on verifier data.
+If we had the facts `resource("file1")` and
+`owner("alice", "file1")`, the authority rules will define
+`right"file1", "read")` and `right("file1", "write")`,
 which will allow check 1 and check 2 to succeed.
 
 If the owner ambient fact does not match the restriction in the second check, the
@@ -271,17 +330,17 @@ restrict usage based on ambient values:
 ```
 authority:
 
-right(#authority, "/folder/file1", #read);
-right(#authority, "/folder/file2", #read);
-right(#authority, "/folder2/file3", #read);
+right("/folder/file1", "read");
+right("/folder/file2", "read");
+right("/folder2/file3", "read");
 ----------
-check if resource(#ambient, $0), right(#authority, $0, $1)
+check if resource($0), right($0, $1)
 ----------
-check if time(#ambient, $0), $0 < 2019-02-05T23:00:00Z // expiration date
+check if time($0), $0 < 2019-02-05T23:00:00Z // expiration date
 ----------
-check if source_IP(#ambient, $0), ["1.2.3.4", "5.6.7.8"].contains($0) // set membership
+check if source_IP($0), ["1.2.3.4", "5.6.7.8"].contains($0) // set membership
 ----------
-check if resource(#ambient, $0), $0.starts_with("/folder/") // prefix operation on strings
+check if resource($0), $0.starts_with("/folder/") // prefix operation on strings
 ```
 
 Executing an expression must always return a boolean, and all variables
@@ -313,7 +372,7 @@ Here are the currently defined binary operations:
 - *greater than*, defined on integers and dates, returns a boolean
 - *less or equal*, defined on integers and dates, returns a boolean
 - *greater or equal*, defined on integers and dates, returns a boolean
-- *equal*, defined on integers, strings, byte arrays, dates, symbols, set, returns a boolean
+- *equal*, defined on integers, strings, byte arrays, dates, set, returns a boolean
 - *contains* takes a set and another value as argument, returns a boolean. Between two sets, indicates if the first set is a superset of the second one
 - *prefix*, defined on strings, returns a boolean
 - *suffix*, defined on strings, returns a boolean
@@ -364,7 +423,7 @@ The cryptographic signature must be checked immediately after deserializing. For
 `Biscuit` with a public key signature, the verifier must check that the public key of the
 authority block is the root public key it is expecting.
 
-A `Biscuit` or `SealedBiscuit` contains in its`authority` and `blocks` fields
+A `Biscuit` or `SealedBiscuit` contains in its `authority` and `blocks` fields
 some byte arrays that must be deserialized as a `Block`.
 
 #### Verification process
@@ -373,47 +432,44 @@ The verifier will first create a default symbol table, and will append to that t
 from the `symbols` field of each block, starting from the `authority` block and all the
 following blocks, ordered by their index.
 
-The verifier will create a Datalog "world", and add to this world:
+The verifier will create a Datalog "world", and add to this world its own facts and rules:
+ambient data from the request, lists of users and roles, etc.
 - the facts from the authority block
 - the rules from the authority block
 - for each following block:
-  - add the facts from the block. If it finds an `authority` or `ambient` fact, it stops there and
-  returns an error
-  - add the rules from the block.  If it finds a rule generating `authority` or `ambient` facts, it
-  stops there and returns an error checking that those facts are not `authority` or `ambient` facts
+  - add the facts from the block.
+  - add the rules from the block.
 
 ##### Revocation identifiers
 
 The verifier will generate a list of facts indicating revocation identifiers for
-the token. They are calculated as follows:
-- perform a SHA256 hash of the authority block and the root key
-- generate the hash value, store it as `revocation_id(0, <byte array of the hash)`
-- for each following block:
-  - continue from the previous hash, update with the current block and its public key
-  - generate the hash value, store it as `revocation_id(<block index>, <byte array of the hash)`
+the token. The revocation identifier for a block is its signature (as it uniquely
+identifies the block) serialized to a byte array (as in the Protobuf schema).
+For each of these if, a fact `revocation_id(<index of the block>, <byte array>)` will be generated
 
 ##### Verifying
 
-From there, the verifier can start loading ambient data. First, each block contains a `context`
-field that can give some information on the verifier to know which data to load (to avoid
-loading all of the users, groups, resources, etc). This field is a text field with no restriction
-on its format.
-The verifier then adds facts and rules obtained from looking up the context, and provides
-facts and rules with the `ambient` tag to describe the request.
-
-To perform the verification, the verifier will:
+From there, the verifier can start loading data from each block. First, for the authority block:
+- load facts and rules from the block
 - run the Datalog engine on the facts and rules that were loaded
-- create an error list
-- for each verifier check (check provided on the verifier side), validate it. If it fails,
-add an error to the error list
-- for each block:
-  - for each check, validate it. If it fails, add an error to the error list
-- if the error list is not empty, return the error list
+- for each authority check or verifier check, validate it. If it fails, add an error to the error list
 - for each allow/deny policy:
   - run the query. If it succeeds:
-    - if it is an allow policy, the verification succeeds, stop here
-    - if it is a deny policy, the verification fails, stop here
-- if no policy matched, the verification fails
+    - if it is an allow policy, the verification succeeds, store the result and stop here
+    - if it is a deny policy, the verification fails, store the result and stop here
+
+Then, for each following block:
+- remove all the previous rules (so the previous rules do not apply to new facts)
+- load facts and rules from the block
+- run the Datalog engine on the facts and rules that were loaded
+- for each block check, validate it. If it fails, add an error to the error list
+
+Returning the result:
+- if the error list is not empty, return the error list
+- check policy result:
+  - if an allow policy matched, the verification succeeds
+  - if a deny policy matched, the verification fails
+  - if no policy matched, the verification fails
 
 #### Queries
 
@@ -437,43 +493,37 @@ transmitted over the wire is either the normal Biscuit wrapper:
 
 ```proto
 message Biscuit {
-  required bytes authority = 1;
-  repeated bytes blocks = 2;
-  repeated bytes keys = 3;
-  required Signature signature = 4;
+  optional uint32 rootKeyId = 1;
+  required SignedBlock authority = 2;
+  repeated SignedBlock blocks = 3;
+  required Proof proof = 4;
 }
 
-message Signature {
-  repeated bytes parameters = 1;
-  required bytes z = 2;
-}
-```
-
-The `keys` and `parameters` arrays contain Ristretto points in their
-canonical representation, serialized to a 32 bytes array[CompressedRistretto].
-Thee `z` field is a 32 bytes array containing the canonical representation
-of an element of Ristretto's scalar field[Scalar].
-
-The `keys` field contains the public keys used to sign each block. It contains
-as many elements as the `blocks` field plus one. The first element is the root key.
-
-The `parameters` field must have as many elements as the `keys` field. All of
-their elements must be distinct.
-
-or the "sealed" Biscuit wrapper (a token that cannot be attenuated offline):
-
-```proto
-message SealedBiscuit {
-  required bytes authority = 1;
-  repeated bytes blocks = 2;
+message SignedBlock {
+  required bytes block = 1;
+  required bytes nextKey = 2;
   required bytes signature = 3;
 }
+
+message Proof {
+  oneof Content {
+    bytes nextSecret = 1;
+    bytes finalSignature = 2;
+  }
+}
 ```
 
-The signature part of those tokens covers the content of authority and
-blocks members.
+The `rootKeyId` is a hint to decide which root public key should be used
+for signature verification.
+Each block contains a serialized byte array of the Datalog data (`block`),
+the next public key (`nextKey`) and the signature of that block and key
+by the previous key.
 
-Those members are byte arrays, containing `Block` structures serialized
+The `proof` field contains either the private key corresponding to the
+public key in the last block (attenuable tokens) or a signature of the last
+block by the private key (sealed tokens).
+
+The `block` field is a byte array, containing a `Block` structure serialized
 in Protobuf format as well:
 
 ```proto
@@ -528,92 +578,112 @@ or `sealed-biscuit:` accordingly.
 
 ### Cryptography
 
-#### Attenuable tokens
+Biscuit tokens are based on public key cryptography, with a chain of Ed25519
+signatures. Each block contains the serialized Datalog, the next public key,
+and the signature by the previous key. The token also contains the private key
+corresponding to the last public key, to sign a new block and attenuate the
+token, or a signature of the last block by the last private key, to seal the
+token.
 
-Those tokens are based on public key cryptography, specifically aggregated
-gamma signatures[Aggregated Gamma Signatures]. Signature aggregation allows
-Biscuit to make a new token with a valid signature from an existing one,
-by signing the new data and adding the new signature to the old one.
+#### Signature (one block)
 
-Every public key operation in Biscuit is defined over the Ristretto prime
-order group[Ristretto], that is designed to prevent some implementation
-mistakes.
+* `(pk_0, sk_0)` the root public and private Ed25519 keys
+* `data_0` the serialized Datalog
+* `(pk_1, sk_1)` the next key pair, generated at random
+* `alg_1` the little endian representation of the signature algorithm fr `pk1, sk1` (see protobuf schema)
+* `sig_0 = sign(sk_0, data_0 + alg_1 + pk_1)`
 
-Definitions:
-- `R`: Ristretto group
-- `l`: order of the Ristretto group
-- `Z/l`: scalar of order `l` associated to the Ristretto group
-- `P`: Ristretto base point
-- `H1`: point hashing function
-- `H2`: message hashing function
+The token will contain:
 
-##### Key generation
-
-Private key:
-`x <- Z/l*` chosen at random
-
-Public key:
-`X = sk * P`
-
-##### Signature (one block)
-
-With secret key `x`, public key `X`, message `message`:
-
-* `r <- Z/l*` chosen at random
-* `A = r * P`
-* `d = H1(A)`
-* `e = H2(X, message)`
-* `z = rd - ex mod l`
-
-The signature is `([A], z)`. The `[A]` array corresponds to the `parameters`
-field in the protobuf schema.
+```
+Token {
+  root_key_id: <optional number indicating the root key to use for verification>
+  authority: Block {
+    data_0,
+    pk_1,
+    sig_0,
+  }
+  blocks: [],
+  proof: Proof {
+    nextSecret: sk_1,
+  },
+}```
 
 #### Signature (appending)
-With `([A0, ..., An], s)` the current signature:
 
-Same process as the signature for a single block,
-with secret key `x`, public key `X`, message `message`:
+With a token containing blocks 0 to n:
 
-* `r <- Z/l*` chosen at random
-* `A = r * P`
-* `d = H1(A)`
-* `e = H2(X, message)`
-* `z = rd - ex mod l`
+Block n contains:
+- `data_n`
+- `pk_n+1`
+- `sig_n`
 
-The new signature is `([A0, ..., An, A], s + z)`
+The token also contains `sk_n+1`
+
+We generate at random `(pk_n+2, sk_n+2)` and the signature `sig_n+1 = sign(sk_n+1, data_n+1 + alg_n+2 + pk_n+2)`
+
+The token will contain:
+
+```
+Token {
+  root_key_id: <optional number indicating the root key to use for verification>
+  authority: Block_0,
+  blocks: [Block_1, .., Block_n,
+      Block_n+1 {
+      data_n+1,
+      pk_n+2,
+      sig_n+1,
+    }]
+  proof: Proof {
+    nextSecret: sk_n+2,
+  },
+}```
 
 #### Verifying
 
-With:
+For each block i from 0 to n:
 
-* `([A0, ..., An], s)` the current signature
-* `[P0, ..., Pn]` the list of public keys
-* `[m0, ..., mn]` the list of messages
+- verify(pk_i, sig_i, data_i + alg_i + pk_i+1)
 
-We verify as follows:
-* check that `|[A0, ..., An]| == |[P0, ..., Pn]| == |[m0, ..., mn]|`
-* check that `P0` is the root public key we are expecting
-* check that `[A0, ..., An]` are distinct
-* check that `[(P0, m0), ..., (Pn, mn)]` are distinct
-* `X = H2(P0, m0) * P0 + ... + H2(Pn, mn) * Pn - ( H1(A0) * A0 + ... + H1(An) * An )`
-* if `s * P + X` is the point at infinite, the signature is verified
+If all signatures are verified, extract pk_n+1 from the last block and
+sk_n+1 from the proof field, and check that they are from the same
+key pair.
 
-##### Point hashing
+#### Signature (appending)
 
-`H1(X) = Scalar::from_hash(sha512(X.compress().to_bytes()))`
+With a token containing blocks 0 to n:
 
-##### Message hashing
+Block n contains:
+- `data_n`
+- `pk_n+1`
+- `sig_n`
 
-`H2(X, message) = Scalar::from_hash(sha512(X.compress().to_bytes()|message))` (with `|` the concatenation operator)
+The token also contains `sk_n+1`
 
-#### Sealed tokens
+We generate the signature `sig_n+1 = sign(sk_n+1, data_n + pk_n+1 + sig_n)` (we sign
+the last block with the last private key).
 
-A sealed token contains the same kind of block as regular tokens,
-but it cannot be attenuated offline, and can only be verified by
-knowing the secret used to create it.
+The token will contain:
 
-The signature is the HMAC-SHA256 hash of the secret key and the
-concatenation of all the blocks.
+```
+Token {
+  root_key_id: <optional number indicating the root key to use for verification>
+  authority: Block_0,
+  blocks: [Block_1, .., Block_n]
+  proof: Proof {
+    finalSignature: sig_n+1
+  },
+}
+```
+
+#### Verifying (sealed)
+
+For each block i from 0 to n:
+
+- verify(pk_i, sig_i, data_i+pk_i+1)
+
+If all signatures are verified, extract pk_n+1 from the last block and
+sig from the proof field, and check `verify(pk_n+1, sig_n+1, data_n+pk_n+1+sig_n)`
 
 ### Blocks
 
@@ -635,9 +705,6 @@ is the authority block.
 
 Each block can provide facts either from its facts list, or generate
 them with its rules list.
-The authority block can contain facts marked with the `#authority`
-symbol as first id, and rules that generate facts marked with
-the `#authority` symbol.
 
 ### Symbol table
 
@@ -685,8 +752,4 @@ We provide sample tokens and the expected result of their verification at
  - DATALOG: "Datalog with Constraints: A Foundation for Trust Management Languages" http://crypto.stanford.edu/~ninghui/papers/cdatalog_padl03.pdf
  - Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf
  - MACAROONS: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
- - Aggregated Gamma Signatures: "Aggregation of Gamma-Signatures and Applications to Bitcoin, Yunlei Zhao" https://eprint.iacr.org/2018/414.pdf
- - Ristretto: "Ristretto: prime order elliptic curve groups with non-malleable encodings" https://ristretto.group
- - Scalar: https://doc.dalek.rs/curve25519_dalek/scalar/struct.Scalar.html
- - CompressedRistretto: https://doc.dalek.rs/curve25519_dalek/ristretto/struct.CompressedRistretto.html
 
