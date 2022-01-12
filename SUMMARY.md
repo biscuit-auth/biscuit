@@ -140,7 +140,7 @@ It has the following base types (for elements inside of a fact):
 - boolean (true or false)
 - set: a deduplicated list of values, that can be of any type except variables or sets
 
-Rules can contain expressions that evaluate variable defined in the other
+Rules can contain expressions that evaluate variables defined in the other
 predicates. An expression must always evaluate to a boolean. If it returns
 false, the rule evaluation fails. The following rule will generate a fact only
 if there's a `file` fact and its value starts with `/folder/`:
@@ -181,7 +181,7 @@ which `$path` matches a pattern.
 
 The validation in Biscuit relies on a list of allow or deny policies, that are
 evaluated after all of the checks have succeeded. Like checks; they are queries
-that must find a matching set of fact to succeed. If they do not match, we try
+that must find a matching set of facts to succeed. If they do not match, we try
 the next one. If they succeed, an allow policy will make the request validation
 succeed, while a deny policy will make it fail. If no policy matched, the
 validation will fail.
@@ -206,7 +206,7 @@ deny if true
 
 The verifier will generate a list of facts indicating revocation identifiers for
 the token. They uniquely identify the token and each of its parent tokens through
-a serie of SHA256 hashes. That way, if a token is revoked, we will be able to
+a series of SHA256 hashes. That way, if a token is revoked, we will be able to
 refuse all the tokens derived from it.
 
 To check revocation status, we can either:
@@ -260,7 +260,7 @@ A block comes with new symbols it adds to the system. It can
 contain facts, rules and checks. A block contains:
 
  - `symbols`:  a block can introduce new symbols: these symbols are available in the current block, _and the following blocks_. **It is not possible to re-declare an existing symbol**.
- - `context`: free form text used either for documentation purpose, or to give a hind about which facts should be retrieved from DB
+ - `context`: free form text used either for documentation purpose, or to give a hint about which facts should be retrieved from DB
  - `facts`: each block can define new facts
  - `rules` each block can define new rules but they only have access to facts from the current and previous blocks
  - `checks` each block can define new checks (queries that need to match in order to make the biscuit valid) but they only have access to facts from the current and previous blocks
@@ -279,7 +279,7 @@ current_time(2020-11-17T12:00:00+00:00);
 The verifier would also be able to load authorization data from its database,
 like ownership information: `owner("user_1234", "bucket_1234")`,
 `owner("user_1234", "bucket_5678")` `owner("user_ABCD", "bucket_ABCD")`.
-In practice,this data could be filtered by limiting it to facts related to
+In practice, this data could be filtered by limiting it to facts related to
 the current ressource, or extracting the user id from the token with a query.
 
 The verifier can also load its own rules, like creating one specifying rights
