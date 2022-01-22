@@ -1,8 +1,10 @@
 # Biscuit authentication/authorization token
 
-[![Join the chat at https://gitter.im/CleverCloud/biscuit](https://badges.gitter.im/CleverCloud/biscuit.svg)](https://gitter.im/CleverCloud/biscuit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[Join the Matrix chat](https://matrix.to/#/#biscuit-auth:matrix.org)
 
 <img src="https://raw.githubusercontent.com/biscuit-auth/biscuit/master/assets/brown.png" width="200">
+
+<https://biscuitsec.org>
 
 ## Goals
 
@@ -34,8 +36,15 @@ specification.
 You can follow the next steps on the [roadmap](https://github.com/biscuit-auth/biscuit/issues/12).
 
 Current status:
-- the credential language, cryptographic primitives and serialization format are done
-- we have implementations in [Rust](https://github.com/biscuit-auth/biscuit-rust), [Java](https://github.com/clevercloud/biscuit-java), [Go](https://github.com/flynn/biscuit-go) and [Web Assembly](https://github.com/biscuit-auth/biscuit-wasm) (based on the Rust version)
+- the credentials language, cryptographic primitives and serialization format are done
+- we have implementations for biscuits v2 in
+  - [Rust](https://github.com/biscuit-auth/biscuit-rust)
+  - [Web Assembly](https://github.com/biscuit-auth/biscuit-wasm) (based on the Rust version)
+  - [Haskell](https://github.com/divarvel/biscuit-haskell)
+- we have implementations for biscuits v1 in
+  - [Java](https://github.com/clevercloud/biscuit-java) (migration to v2 is in progress)
+  - [Go](https://github.com/flynn/biscuit-go)
+- a website with documentation and an interactive playground is live at <https://biscuitsec.org>
 - Currently deploying to real world use cases such as [Apache Pulsar](https://github.com/clevercloud/biscuit-pulsar) at [Clever Cloud](https://www.clever-cloud.com/)
 - looking for an audit of the token's design, cryptographic primitives and implementations
 
@@ -43,6 +52,7 @@ Current status:
 
 - provide use cases that we can test the token on (some specific kind of caveats, auth delegation, etc)
 - cryptographic design audit: we need reviews of algorithms, their usage and implementation in various languages
+- add support for biscuit v2 to java and go implementations
 
 ## Project organisation
 
