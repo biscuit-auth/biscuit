@@ -1,6 +1,6 @@
 # Biscuit authentication/authorization token
 
-[![Join the chat at https://gitter.im/CleverCloud/biscuit](https://badges.gitter.im/CleverCloud/biscuit.svg)](https://gitter.im/CleverCloud/biscuit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[Join the Matrix chat](https://matrix.to/#/#biscuit-auth:matrix.org)
 
 <img src="https://raw.githubusercontent.com/biscuit-auth/biscuit/master/assets/brown.png" width="200">
 
