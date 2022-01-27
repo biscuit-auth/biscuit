@@ -4,7 +4,7 @@
 
 <img src="https://raw.githubusercontent.com/biscuit-auth/biscuit/master/assets/brown.png" width="200">
 
-<https://biscuitsec.org>
+<https://www.biscuitsec.org>
 
 ## Goals
 
