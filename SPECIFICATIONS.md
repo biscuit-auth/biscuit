@@ -719,7 +719,7 @@ The symbol table is created from a default table containing, in order:
 - resource
 - operation
 - right
-- time
+- current_time
 - revocation_id
 
 tokens can be created from a different default table, as long as the creator,
