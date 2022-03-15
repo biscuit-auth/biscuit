@@ -714,8 +714,8 @@ running the logic engine does not need to know the content of that list,
 pretty printing facts, rules and results will use it.
 
 The symbol table is created from a default table containing, in order:
-- authority
-- ambient
+- read
+- write
 - resource
 - operation
 - right

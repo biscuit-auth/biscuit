@@ -9,7 +9,7 @@ root public key: acdd6d5b53bfee478bf689f8e012fe7988bf755e3d7c5152947abc149bc2018
 ### token
 
 authority:
-symbols: ["file1", "read", "file2", "write"]
+symbols: ["file1", "file2"]
 
 ```
 right("file1", "read");
@@ -36,8 +36,8 @@ authorizer world:
 World {
   facts: {
     "resource(\"file1\")",
-    "revocation_id(0, hex:9d3e984bd0447eea9f31a56df51ba606160c66102063dd29410a2c85601a2139ce0cd212daf755ed0b8fe1f0e9388a89074b009b7169499e51df83c308e8d20b)",
-    "revocation_id(1, hex:5cade9fd3690b72bf90c29c529cb5b1bb50832554ba525b15c5d3f7c994814af522c5a68d61a950bc5f98d9ff4e3e20ffecef65ddaa2858251768ec999ed8b06)",
+    "revocation_id(0, hex:776ba45c736c502fb9af546b1757a04dfb7d13e2e22bee8ab87f2ec894e6f01eeb2757bdcd83874f0d1160fd16dfaee0a95c3dad640dd7f65e3ec231d31dcd02)",
+    "revocation_id(1, hex:366f557a51b3d2fd8370f01bd099375f5395d08a52ee6a539b874fc439cf0eb80f2ce79ed31f5c5243aaa9ba2ec08dc4d5de7851ddf81e8785e24ab4ff09720b)",
     "right(\"file1\", \"read\")",
     "right(\"file1\", \"write\")",
     "right(\"file2\", \"read\")",
@@ -59,7 +59,7 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 ### token
 
 authority:
-symbols: ["file1", "read"]
+symbols: ["file1"]
 
 ```
 right("file1", "read");
@@ -83,7 +83,7 @@ result: `Err(Format(Signature(InvalidSignature("signature error: Verification eq
 ### token
 
 authority:
-symbols: ["file1", "read", "file2", "write"]
+symbols: ["file1", "file2"]
 
 ```
 right("file1", "read");
@@ -109,7 +109,7 @@ result: `Err(Format(InvalidSignatureSize(16)))`
 ### token
 
 authority:
-symbols: ["file1", "read", "file2", "write"]
+symbols: ["file1", "file2"]
 
 ```
 right("file1", "read");
@@ -135,7 +135,7 @@ result: `Err(Format(Signature(InvalidSignature("signature error: Verification eq
 ### token
 
 authority:
-symbols: ["file1", "read", "file2", "write"]
+symbols: ["file1", "file2"]
 
 ```
 right("file1", "read");
@@ -161,7 +161,7 @@ result: `Err(Format(Signature(InvalidSignature("signature error: Verification eq
 ### token
 
 authority:
-symbols: ["file1", "read", "file2", "write"]
+symbols: ["file1", "file2"]
 
 ```
 right("file1", "read");
@@ -202,7 +202,7 @@ owner("alice", "file1");
 ```
 
 1:
-symbols: ["0", "read", "1", "check1"]
+symbols: ["0", "1", "check1"]
 
 ```
 right($0, "read") <- resource($0), user_id($1), owner($1, $0);
@@ -233,8 +233,8 @@ World {
     "owner(\"alice\", \"file2\")",
     "resource(\"file2\")",
     "revocation_id(0, hex:d2454c600567418982b2787c1fbc4e04d6f59f1576b6613d1cacd30440f673a0c44728457a39fb8085e4152a8195e0bdfbe3a5fdcfafd08b33ad53c3274c6d0c)",
-    "revocation_id(1, hex:aad436b9239c4df033f0ad88276981f7738033df4562c0e2ae3da1fa9629c050e00a44e5831520cdb4dba879cfb047cde523ef5fbffc19e5fcd5969177466400)",
-    "revocation_id(2, hex:ca46c3c9099242ea594642ea6fa75c47df463b2548f090e0800fc10375d2cd464571c54316cfbee863c01f49ccd72492483d95134090327ea92984202c07d004)",
+    "revocation_id(1, hex:f97d7643129a295c4a634cc87b5cce94cdbfbebdc3b77a311b0fda097a93375c47e38d9f084738729d26ee87c54d443d7d5051cce50f7f8d470a9e1c5301e10e)",
+    "revocation_id(2, hex:27d5e1eca67c509298a46a9bf980d3f02e936a4972b90f794a746436201aa1f48e34f32841570a3211d2b88304999e5781010d1c6e7f1d335fa9773a74f4e707)",
     "user_id(\"alice\")",
 }
   rules: {}
@@ -254,7 +254,7 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 ### token
 
 authority:
-symbols: ["file1", "read"]
+symbols: ["file1"]
 
 ```
 right("file1", "read");
@@ -288,9 +288,9 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:593c16b2bb2a00c02a9be0504206a142c77917af234ea7b5109b1bad22459fc4e6680ff38c852ca75959f637ebb02479d60d63d47e1514636c34acf3b378c40e)",
-    "revocation_id(1, hex:8dddcbff3fd9dfd494b98a9c15225e1064e5c96eaf977e6a06e6581bdea2440c67ea7a88d7d51badf732217351ead40041beda6d4f892518e46b187207bc840c)",
-    "revocation_id(2, hex:587e3b1a03c3247db490c246adf0e02e00abda4b2cccb1dbf1adb5ccb5b978d9a9bbf8fcdcc81680e0f9d89e57cb1537a4e71a50e8b1542761b585d9a204f504)",
+    "revocation_id(0, hex:2a2172129529841b80440183bdd088f6756d34a8526519bd9d24a55a6101a0c1d9605fa15e6c2d973caf22d3c301f58615c78ac464b04c1bea8a281761742108)",
+    "revocation_id(1, hex:71671cff60f4384436782998a498407db952ae4b9229047d3e925891254df64bebf26d8dfa611d0db26998c07140959b874a3ea45ce0204bd60708fea8924100)",
+    "revocation_id(2, hex:1cd06aae69a90d9b9fca61a2a3d5f7bbc57f329f4fe5fa55550c5258b76c3394a6afd41bb3c44c50a40e3dc72cb58ee6dd4604e2a3ddeae257300d427a4aac0d)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
 }
@@ -317,11 +317,11 @@ symbols: []
 ```
 
 1:
-symbols: ["check1", "file1", "expiration", "date", "time"]
+symbols: ["check1", "file1", "expiration", "date"]
 
 ```
 check if resource("file1");
-check if time($date), $date <= 2018-12-20T00:00:00+00:00;
+check if time($date), $date <= 2018-12-20T00:00:00Z;
 ```
 
 ### validation
@@ -330,7 +330,7 @@ authorizer code:
 ```
 resource("file1");
 operation("read");
-time(2020-12-21T09:23:12+00:00);
+time(2020-12-21T09:23:12Z);
 ```
 
 authorizer world:
@@ -340,8 +340,8 @@ World {
     "operation(\"read\")",
     "resource(\"file1\")",
     "revocation_id(0, hex:16d0a9d7f3d29ee2112d67451c8e4ff07bd5366a6cdb082cf4fcb66e6d15a57a22009ef1018fc4d0f9184edb0900df161807bc6f8287275f32eae6b5b1c57100)",
-    "revocation_id(1, hex:0670d948462e0cc248ce45b7ea04cbfb126a7559c8d60b533f7f0a92696900ee4e432780b526462b845d372c9b7b223c43efc22e0441b14b0bc4661e05ebfe03)",
-    "time(2020-12-21T09:23:12+00:00)",
+    "revocation_id(1, hex:24d6379a0248af1d13732e97731b7fd05335b1ccdd32aab84c3204ba5b10e63ca278817672197df40ec6904866b1f16560ac578403f66cd3d4382718a6f5a70c)",
+    "time(2020-12-21T09:23:12Z)",
 }
   rules: {}
   checks: {}
@@ -351,7 +351,7 @@ World {
 }
 ```
 
-result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: "check if time($date), $date <= 2018-12-20T00:00:00+00:00" })] }))`
+result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: "check if time($date), $date <= 2018-12-20T00:00:00Z" })] }))`
 
 
 ------------------------------
@@ -360,7 +360,7 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 ### token
 
 authority:
-symbols: ["file1", "read"]
+symbols: ["file1"]
 
 ```
 right("file1", "read");
@@ -389,8 +389,8 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:5e626c4991877dd41d9e506d51a3888454cc764e11622945b24df99ca0bcc7f144d41aea0fb88778e67cf0f8609e47302d11007dc456bcdb98c14a25a6eecc05)",
-    "revocation_id(1, hex:1c5896cc25959f456db10fa142164f90e99791313d65025e2058e4f990314f12965a22ca394f448083c64fd29438ff9ad25634320f8907a0587153d905adc108)",
+    "revocation_id(0, hex:2e84bc1153e8a893c3dd6a5f0ca3f0931f70c5a19215d388ec81fc8ccef711503c4ee50066c007bdc18fe958aa128c2975c9e5934f33372126f99da03833150e)",
+    "revocation_id(1, hex:69442c29c7546b752f1cb0800c397800df00ef2828158f10a04fb56b66ea58413ea827e5c050d5d931c5f3f51361fc314c288bf9182bf7a72e38bdfda8e5af0b)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
 }
@@ -413,7 +413,7 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Authorizer(Fa
 ### token
 
 authority:
-symbols: ["file1", "read"]
+symbols: ["file1"]
 
 ```
 right("file1", "read");
@@ -435,7 +435,7 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:7c0601144e26538ed4870f844a970b2b8bdabab13dd676763956ae9a8e3ec830fbb8a031b92abd4eb66124d9f8d86576a5161cd1499f29539372676fdb740505)",
+    "revocation_id(0, hex:c71f68430e917e4db2e9c935b5fc23f04ec7bad4ad690b566b7232f148aa2f5be18db42f10ca105e5f9a65b3102ab7beb00f5b7d3dcca72ee368520e4414e900)",
     "right(\"file1\", \"read\")",
 }
   rules: {}
@@ -521,7 +521,7 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 ### token
 
 authority:
-symbols: ["file1", "read", "file2"]
+symbols: ["file1", "file2"]
 
 ```
 right("file1", "read");
@@ -529,11 +529,11 @@ right("file2", "read");
 ```
 
 1:
-symbols: ["valid_date", "time", "0", "1", "check1"]
+symbols: ["valid_date", "0", "1", "check1"]
 
 ```
-valid_date("file1") <- time($0), resource("file1"), $0 <= 2030-12-31T12:59:59+00:00;
-valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59+00:00, !["file1"].contains($1);
+valid_date("file1") <- time($0), resource("file1"), $0 <= 2030-12-31T12:59:59Z;
+valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, !["file1"].contains($1);
 check if valid_date($0), resource($0);
 ```
 
@@ -542,7 +542,7 @@ check if valid_date($0), resource($0);
 authorizer code:
 ```
 resource("file1");
-time(2020-12-21T09:23:12+00:00);
+time(2020-12-21T09:23:12Z);
 ```
 
 authorizer world:
@@ -550,11 +550,11 @@ authorizer world:
 World {
   facts: {
     "resource(\"file1\")",
-    "revocation_id(0, hex:893ff2daf44325f05849f581de561732094f14223d724202ce2f3d4058cead2ba238e4ef3a6b18f076f155e5e21ec30eded28f98d29979a39eb7f72da128a404)",
-    "revocation_id(1, hex:3189fe4ccec73777fcb0a63fb497c4391bc967c1cc02ec409ae19e7e30fd2bfeb2c309e67c615bcae986a0de15a1a21b5623ccdab5afe36c11c539ac7e475202)",
+    "revocation_id(0, hex:c5958dec7ca5ae3cc043794655ed50ded0da3abdb2cb304d19aec65247533e836df530cb5038ce095615f236300324b5e00c28e61bdedb18af6c3c37a87b3200)",
+    "revocation_id(1, hex:13fe46046589e018f14cab7fe3aaad91cea7b4637d53f2dcdbec3f7305783c69b23ee18443f328db4b7f2e50b7b8d7822e48af735f11e7fbaa5de4c954712202)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
-    "time(2020-12-21T09:23:12+00:00)",
+    "time(2020-12-21T09:23:12Z)",
     "valid_date(\"file1\")",
 }
   rules: {}
@@ -571,7 +571,7 @@ result: `Ok(0)`
 authorizer code:
 ```
 resource("file2");
-time(2020-12-21T09:23:12+00:00);
+time(2020-12-21T09:23:12Z);
 ```
 
 authorizer world:
@@ -579,11 +579,11 @@ authorizer world:
 World {
   facts: {
     "resource(\"file2\")",
-    "revocation_id(0, hex:893ff2daf44325f05849f581de561732094f14223d724202ce2f3d4058cead2ba238e4ef3a6b18f076f155e5e21ec30eded28f98d29979a39eb7f72da128a404)",
-    "revocation_id(1, hex:3189fe4ccec73777fcb0a63fb497c4391bc967c1cc02ec409ae19e7e30fd2bfeb2c309e67c615bcae986a0de15a1a21b5623ccdab5afe36c11c539ac7e475202)",
+    "revocation_id(0, hex:c5958dec7ca5ae3cc043794655ed50ded0da3abdb2cb304d19aec65247533e836df530cb5038ce095615f236300324b5e00c28e61bdedb18af6c3c37a87b3200)",
+    "revocation_id(1, hex:13fe46046589e018f14cab7fe3aaad91cea7b4637d53f2dcdbec3f7305783c69b23ee18443f328db4b7f2e50b7b8d7822e48af735f11e7fbaa5de4c954712202)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
-    "time(2020-12-21T09:23:12+00:00)",
+    "time(2020-12-21T09:23:12Z)",
 }
   rules: {}
   checks: {}
@@ -763,16 +763,16 @@ check if 1 + 2 * 3 - 4 / 2 == 5;
 check if "hello world".starts_with("hello") && "hello world".ends_with("world");
 check if "aaabde".matches("a*c?.e");
 check if "abcD12" == "abcD12";
-check if 2019-12-04T09:46:41+00:00 < 2020-12-04T09:46:41+00:00;
-check if 2020-12-04T09:46:41+00:00 > 2019-12-04T09:46:41+00:00;
-check if 2019-12-04T09:46:41+00:00 <= 2020-12-04T09:46:41+00:00;
-check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00;
-check if 2020-12-04T09:46:41+00:00 >= 2019-12-04T09:46:41+00:00;
-check if 2020-12-04T09:46:41+00:00 >= 2020-12-04T09:46:41+00:00;
-check if 2020-12-04T09:46:41+00:00 == 2020-12-04T09:46:41+00:00;
+check if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;
+check if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;
+check if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z;
+check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;
+check if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z;
+check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;
+check if 2020-12-04T09:46:41Z == 2020-12-04T09:46:41Z;
 check if hex:12ab == hex:12ab;
 check if [1, 2].contains(2);
-check if [2019-12-04T09:46:41+00:00, 2020-12-04T09:46:41+00:00].contains(2020-12-04T09:46:41+00:00);
+check if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z);
 check if [false, true].contains(true);
 check if ["abc", "def"].contains("abc");
 check if [hex:12ab, hex:34de].contains(hex:34de);
@@ -807,7 +807,7 @@ result: `Ok(0)`
 ### token
 
 authority:
-symbols: ["check1", "test", "read"]
+symbols: ["check1", "test"]
 
 ```
 check if operation("read");
@@ -832,8 +832,8 @@ authorizer world:
 World {
   facts: {
     "operation(\"write\")",
-    "revocation_id(0, hex:33756b656cbb74acea3613b37ba27be1c761ebeacfb5143bab0e284febb04f048eda846b1419558f38d08628b141cd1b38a261c6e865d1c8ed65722a839ec803)",
-    "revocation_id(1, hex:05b10a427cfb7e4712bf8b56edaba207200a53b68a4e8b79afe935b37791e7ac5bfb89ff6c6f20795a82a8b18d60194b92db55d0a82edd8ce3a744459fe3130b)",
+    "revocation_id(0, hex:3556aa839ffa045eaf9b648fa8567d2b52595bec5e425380ea5cc5c39e20af01d0ac6f31d6f42cda53b5b0d244c7a36dd1c0aaa782f5bf75d2f7f9418e17ea06)",
+    "revocation_id(1, hex:56207b912460b8d319c16541fb0bcd95282fa022c8591cf7898c36aed82b4bfe8449348e90dd32174790222a93c3c6fc65d57eac3b54f95300c6eae098d1b700)",
 }
   rules: {}
   checks: {}
@@ -852,7 +852,7 @@ result: `Err(FailedLogic(InvalidBlockRule(0, "operation($unbound, \"read\") <- o
 ### token
 
 authority:
-symbols: ["check1", "test", "read"]
+symbols: ["check1", "test"]
 
 ```
 check if operation("read");
@@ -878,8 +878,8 @@ World {
   facts: {
     "operation(\"read\")",
     "operation(\"write\")",
-    "revocation_id(0, hex:f2bb00974734d38dd729b0cf8e6625a63186cc03b43d48b662d7e9f5821f90881359802ebac1fdf3407f15a65c1584363f8ea03f50eb66105df55275415a910c)",
-    "revocation_id(1, hex:72f9a076f221f3458db15b373df023245bd0fc811ea28a9f99b79bd908224ea317986692c159a54f3aba1f15ba771c8e3ac6bc998a36e79a08aedbc25f1e200d)",
+    "revocation_id(0, hex:98030c61bf4e130289d435faf5ee967911c603aac8d69332c5cf6e645ed5a85df73f97f4fd6268faaee0061be491e9274713eb8d59395e2c54ad025f70463302)",
+    "revocation_id(1, hex:702f7b9e5b8bbde0fdd4169c9c9e2d098574f56b6583202dbef9bf572fec83d1074cb747e56c1263e7680ada4bfad60f4840e76d6fdb61b646cdde085bc9300f)",
 }
   rules: {}
   checks: {}
@@ -898,7 +898,7 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 ### token
 
 authority:
-symbols: ["file1", "read", "file2", "write"]
+symbols: ["file1", "file2"]
 
 ```
 right("file1", "read");
@@ -927,8 +927,8 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file1\")",
-    "revocation_id(0, hex:669be0e6d07eb7a34be1f48921976e70ff9491845f4c983c59bfd0aac449a76c239120f152e1ed10d1c86da73cf7ff6f3bdde0f42e242d0f911e0b938d516c04)",
-    "revocation_id(1, hex:05c5f63076fb7ad5d6eef8a486d8a460c8fa8d986e1d8f9a0b28997687b0541fccd42fb974c4ed3032a0f5553f7c8022c4ad734df87e589ca25efcab8552b009)",
+    "revocation_id(0, hex:3cfbf57a818e942fd59fef67c616b4f0b5df673f5ae2407fcbecb3e3ee9f90019db7da7cf933e87a7377477b07527061ef5231d749f414445d45bb3fe3fb4306)",
+    "revocation_id(1, hex:5d58832964b3b6f605fb0818414e6ac0f8ffa778516321a111c6be42ea473a7913d558476bd1b6ec0cb47e7c0324ed0a9e826659f407f540de218efc8afd6704)",
     "right(\"file1\", \"read\")",
     "right(\"file1\", \"write\")",
     "right(\"file2\", \"read\")",
