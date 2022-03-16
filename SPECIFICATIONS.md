@@ -714,13 +714,13 @@ running the logic engine does not need to know the content of that list,
 pretty printing facts, rules and results will use it.
 
 The symbol table is created from a default table containing, in order:
-- authority
-- ambient
+- read
+- write
 - resource
 - operation
 - right
 - time
-- revocation_id
+- role
 
 tokens can be created from a different default table, as long as the creator,
 the verifier, and any user attenuating tokens are starting from the same
