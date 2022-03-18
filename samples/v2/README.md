@@ -983,3 +983,57 @@ World {
 
 result: `Ok(0)`
 
+
+------------------------------
+
+## execution scope: test22_execution_scope.bc
+### token
+
+authority:
+symbols: ["authority_fact"]
+
+```
+authority_fact(1);
+```
+
+1:
+symbols: ["block1_fact"]
+
+```
+block1_fact(1);
+```
+
+2:
+symbols: ["query", "var"]
+
+```
+check if authority_fact($var);
+check if block1_fact($var);
+```
+
+### validation
+
+authorizer code:
+```
+```
+
+authorizer world:
+```
+World {
+  facts: {
+    "authority_fact(1)",
+    "block1_fact(1)",
+    "revocation_id(0, hex:62354683692b0a865c3081e4cbd61fd35b999e3f733e9b3109c604161692d2db93a24e8d5aab05675f04e893b4f0e277c9bdc2833842f1b373d6ecb0b8dc1607)",
+    "revocation_id(1, hex:6d798092e4869150cd26f7a76fb399b6bd071fc6ebd9f830d8f20db9a107357e26c77986314a22933fe78bfdcbb5bda90297e789a8fdcf4912142f0258f6d00e)",
+    "revocation_id(2, hex:0582c3e7d48c0a3d9501f191cfb84bd05b3f41f302b37b57998ea7176fea49b1c598e3049382c2c155602042a7503be9c8062421a8dceb9e900f98a1f324ff07)",
+}
+  rules: {}
+  checks: {}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 2, check_id: 1, rule: "check if block1_fact($var)" })] }))`
+
