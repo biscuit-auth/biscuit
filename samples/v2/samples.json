@@ -26,8 +26,8 @@
           "world": {
             "facts": [
               "resource(\"file1\")",
-              "revocation_id(0, hex:776ba45c736c502fb9af546b1757a04dfb7d13e2e22bee8ab87f2ec894e6f01eeb2757bdcd83874f0d1160fd16dfaee0a95c3dad640dd7f65e3ec231d31dcd02)",
-              "revocation_id(1, hex:366f557a51b3d2fd8370f01bd099375f5395d08a52ee6a539b874fc439cf0eb80f2ce79ed31f5c5243aaa9ba2ec08dc4d5de7851ddf81e8785e24ab4ff09720b)",
+              "revocation_id(0, hex:08a14cbcc6b7fdc73f484ff6a3fe6c1d4fd80c5d655e9531a39a486d70bc263f1a5ea77a6321840bd486e2e534b4a6728ecb4ccf82e62490416b2eda8e342c0d)",
+              "revocation_id(1, hex:fee2de2bae9f9cf9c6965c5ad014bd56d97a1ab8d19daf55eb725d98ebc9ad6eaceb6712c8434f6afb4347caa01572af312c8eab5c0fc1fb683e5fbb5fc1730a)",
               "right(\"file1\", \"read\")",
               "right(\"file1\", \"write\")",
               "right(\"file2\", \"read\")"
@@ -58,7 +58,7 @@
               }
             }
           },
-          "authorizer_code": "resource(\"file1\");\nrevocation_id(0, hex:776ba45c736c502fb9af546b1757a04dfb7d13e2e22bee8ab87f2ec894e6f01eeb2757bdcd83874f0d1160fd16dfaee0a95c3dad640dd7f65e3ec231d31dcd02);\nrevocation_id(1, hex:366f557a51b3d2fd8370f01bd099375f5395d08a52ee6a539b874fc439cf0eb80f2ce79ed31f5c5243aaa9ba2ec08dc4d5de7851ddf81e8785e24ab4ff09720b);\n"
+          "authorizer_code": "resource(\"file1\");\nrevocation_id(0, hex:08a14cbcc6b7fdc73f484ff6a3fe6c1d4fd80c5d655e9531a39a486d70bc263f1a5ea77a6321840bd486e2e534b4a6728ecb4ccf82e62490416b2eda8e342c0d);\nrevocation_id(1, hex:fee2de2bae9f9cf9c6965c5ad014bd56d97a1ab8d19daf55eb725d98ebc9ad6eaceb6712c8434f6afb4347caa01572af312c8eab5c0fc1fb683e5fbb5fc1730a);\n"
         }
       }
     },
@@ -248,7 +248,6 @@
           "symbols": [
             "user_id",
             "alice",
-            "owner",
             "file1"
           ],
           "code": "user_id(\"alice\");\nowner(\"alice\", \"file1\");\n"
@@ -276,9 +275,9 @@
               "owner(\"alice\", \"file1\")",
               "owner(\"alice\", \"file2\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:d2454c600567418982b2787c1fbc4e04d6f59f1576b6613d1cacd30440f673a0c44728457a39fb8085e4152a8195e0bdfbe3a5fdcfafd08b33ad53c3274c6d0c)",
-              "revocation_id(1, hex:f97d7643129a295c4a634cc87b5cce94cdbfbebdc3b77a311b0fda097a93375c47e38d9f084738729d26ee87c54d443d7d5051cce50f7f8d470a9e1c5301e10e)",
-              "revocation_id(2, hex:27d5e1eca67c509298a46a9bf980d3f02e936a4972b90f794a746436201aa1f48e34f32841570a3211d2b88304999e5781010d1c6e7f1d335fa9773a74f4e707)",
+              "revocation_id(0, hex:a3848ba5a492586edd7b69ce1dc6c33382194dc3d944026f3a5049ee24f810d1054f5190ab2937884d6c9ccdf0b47fc6569448672df0cef5fca4a1e26dc58d00)",
+              "revocation_id(1, hex:8ac7e3634939c2aff05eac984ccc7aea2436fc7b37b09df9cda9f1f31904e9f16756914086a826951a78a9928183c3ccb9e77dfceaa861cf5ad5ddf94904490e)",
+              "revocation_id(2, hex:6c04546552ac0b8c70e6df94561915b172f1efce21b749ebab710142cfab12c584713117b9d8e0faa8080997c778bb704a52095b0789600dcdca974dc8396b07)",
               "user_id(\"alice\")"
             ],
             "rules": [],
@@ -307,7 +306,7 @@
               }
             }
           },
-          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:d2454c600567418982b2787c1fbc4e04d6f59f1576b6613d1cacd30440f673a0c44728457a39fb8085e4152a8195e0bdfbe3a5fdcfafd08b33ad53c3274c6d0c);\nrevocation_id(1, hex:f97d7643129a295c4a634cc87b5cce94cdbfbebdc3b77a311b0fda097a93375c47e38d9f084738729d26ee87c54d443d7d5051cce50f7f8d470a9e1c5301e10e);\nrevocation_id(2, hex:27d5e1eca67c509298a46a9bf980d3f02e936a4972b90f794a746436201aa1f48e34f32841570a3211d2b88304999e5781010d1c6e7f1d335fa9773a74f4e707);\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:a3848ba5a492586edd7b69ce1dc6c33382194dc3d944026f3a5049ee24f810d1054f5190ab2937884d6c9ccdf0b47fc6569448672df0cef5fca4a1e26dc58d00);\nrevocation_id(1, hex:8ac7e3634939c2aff05eac984ccc7aea2436fc7b37b09df9cda9f1f31904e9f16756914086a826951a78a9928183c3ccb9e77dfceaa861cf5ad5ddf94904490e);\nrevocation_id(2, hex:6c04546552ac0b8c70e6df94561915b172f1efce21b749ebab710142cfab12c584713117b9d8e0faa8080997c778bb704a52095b0789600dcdca974dc8396b07);\n"
         }
       }
     },
@@ -341,9 +340,9 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:2a2172129529841b80440183bdd088f6756d34a8526519bd9d24a55a6101a0c1d9605fa15e6c2d973caf22d3c301f58615c78ac464b04c1bea8a281761742108)",
-              "revocation_id(1, hex:71671cff60f4384436782998a498407db952ae4b9229047d3e925891254df64bebf26d8dfa611d0db26998c07140959b874a3ea45ce0204bd60708fea8924100)",
-              "revocation_id(2, hex:1cd06aae69a90d9b9fca61a2a3d5f7bbc57f329f4fe5fa55550c5258b76c3394a6afd41bb3c44c50a40e3dc72cb58ee6dd4604e2a3ddeae257300d427a4aac0d)",
+              "revocation_id(0, hex:5e1c9b2baa2711a68dfca5321807aa4442e9260ea68909d985990a8047b8abc974677085d666cbd62885d70c51a48387212440094ab4abd3c2bbe0a385ae3f07)",
+              "revocation_id(1, hex:2cac6266b01c5affb2d943110fe1286de8b9c90d3169495a93bb142b7d0e7274bd8db983320d27c06f36e7d10f58bc94a53360836a532e55ba759f67ab9e9407)",
+              "revocation_id(2, hex:23e47df948b32effec6c4fd75ba34abcd6d31d99dc3fba4e05c6d8a939a10e94b55cf7f2d27df5bda0b3455c835d2284032f32723734546b76925e835bff9e05)",
               "right(\"file1\", \"read\")",
               "right(\"file2\", \"read\")"
             ],
@@ -373,7 +372,7 @@
               }
             }
           },
-          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:2a2172129529841b80440183bdd088f6756d34a8526519bd9d24a55a6101a0c1d9605fa15e6c2d973caf22d3c301f58615c78ac464b04c1bea8a281761742108);\nrevocation_id(1, hex:71671cff60f4384436782998a498407db952ae4b9229047d3e925891254df64bebf26d8dfa611d0db26998c07140959b874a3ea45ce0204bd60708fea8924100);\nrevocation_id(2, hex:1cd06aae69a90d9b9fca61a2a3d5f7bbc57f329f4fe5fa55550c5258b76c3394a6afd41bb3c44c50a40e3dc72cb58ee6dd4604e2a3ddeae257300d427a4aac0d);\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:5e1c9b2baa2711a68dfca5321807aa4442e9260ea68909d985990a8047b8abc974677085d666cbd62885d70c51a48387212440094ab4abd3c2bbe0a385ae3f07);\nrevocation_id(1, hex:2cac6266b01c5affb2d943110fe1286de8b9c90d3169495a93bb142b7d0e7274bd8db983320d27c06f36e7d10f58bc94a53360836a532e55ba759f67ab9e9407);\nrevocation_id(2, hex:23e47df948b32effec6c4fd75ba34abcd6d31d99dc3fba4e05c6d8a939a10e94b55cf7f2d27df5bda0b3455c835d2284032f32723734546b76925e835bff9e05);\n"
         }
       }
     },
@@ -402,7 +401,7 @@
               "operation(\"read\")",
               "resource(\"file1\")",
               "revocation_id(0, hex:16d0a9d7f3d29ee2112d67451c8e4ff07bd5366a6cdb082cf4fcb66e6d15a57a22009ef1018fc4d0f9184edb0900df161807bc6f8287275f32eae6b5b1c57100)",
-              "revocation_id(1, hex:24d6379a0248af1d13732e97731b7fd05335b1ccdd32aab84c3204ba5b10e63ca278817672197df40ec6904866b1f16560ac578403f66cd3d4382718a6f5a70c)",
+              "revocation_id(1, hex:f76fa6f572a2a68010e4e49a08c78f9fdeccbd90473de5576a48bc9456b620d8a16e786c431553cf1e0de281e8d6b1da60c22f412e80a90d43d2e14f58c9f30a)",
               "time(2020-12-21T09:23:12Z)"
             ],
             "rules": [],
@@ -431,7 +430,7 @@
               }
             }
           },
-          "authorizer_code": "resource(\"file1\");\noperation(\"read\");\ntime(2020-12-21T09:23:12Z);\nrevocation_id(0, hex:16d0a9d7f3d29ee2112d67451c8e4ff07bd5366a6cdb082cf4fcb66e6d15a57a22009ef1018fc4d0f9184edb0900df161807bc6f8287275f32eae6b5b1c57100);\nrevocation_id(1, hex:24d6379a0248af1d13732e97731b7fd05335b1ccdd32aab84c3204ba5b10e63ca278817672197df40ec6904866b1f16560ac578403f66cd3d4382718a6f5a70c);\n"
+          "authorizer_code": "resource(\"file1\");\noperation(\"read\");\ntime(2020-12-21T09:23:12Z);\nrevocation_id(0, hex:16d0a9d7f3d29ee2112d67451c8e4ff07bd5366a6cdb082cf4fcb66e6d15a57a22009ef1018fc4d0f9184edb0900df161807bc6f8287275f32eae6b5b1c57100);\nrevocation_id(1, hex:f76fa6f572a2a68010e4e49a08c78f9fdeccbd90473de5576a48bc9456b620d8a16e786c431553cf1e0de281e8d6b1da60c22f412e80a90d43d2e14f58c9f30a);\n"
         }
       }
     },
@@ -458,8 +457,8 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:2e84bc1153e8a893c3dd6a5f0ca3f0931f70c5a19215d388ec81fc8ccef711503c4ee50066c007bdc18fe958aa128c2975c9e5934f33372126f99da03833150e)",
-              "revocation_id(1, hex:69442c29c7546b752f1cb0800c397800df00ef2828158f10a04fb56b66ea58413ea827e5c050d5d931c5f3f51361fc314c288bf9182bf7a72e38bdfda8e5af0b)",
+              "revocation_id(0, hex:6475387371a58738bca267a1f5c8b713109e7e53259bc106977b88a5eb33fc5295d7c8d267954935b27b61dd7f3e9f60dfe6ee5a6eb76fdaa83aadec97a40e05)",
+              "revocation_id(1, hex:dce08dfaabbe02fa2d0449ef90e67c8817770acabcd21ebe32f8dc62b2990d5b1675af4ade1eb9e82a5687110efe40a113efcc43b23ea181c78fbd61de73990d)",
               "right(\"file1\", \"read\")",
               "right(\"file2\", \"read\")"
             ],
@@ -490,7 +489,7 @@
               }
             }
           },
-          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:2e84bc1153e8a893c3dd6a5f0ca3f0931f70c5a19215d388ec81fc8ccef711503c4ee50066c007bdc18fe958aa128c2975c9e5934f33372126f99da03833150e);\nrevocation_id(1, hex:69442c29c7546b752f1cb0800c397800df00ef2828158f10a04fb56b66ea58413ea827e5c050d5d931c5f3f51361fc314c288bf9182bf7a72e38bdfda8e5af0b);\n\ncheck if right($0, $1), resource($0), operation($1);\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:6475387371a58738bca267a1f5c8b713109e7e53259bc106977b88a5eb33fc5295d7c8d267954935b27b61dd7f3e9f60dfe6ee5a6eb76fdaa83aadec97a40e05);\nrevocation_id(1, hex:dce08dfaabbe02fa2d0449ef90e67c8817770acabcd21ebe32f8dc62b2990d5b1675af4ade1eb9e82a5687110efe40a113efcc43b23ea181c78fbd61de73990d);\n\ncheck if right($0, $1), resource($0), operation($1);\n"
         }
       }
     },
@@ -511,7 +510,7 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:c71f68430e917e4db2e9c935b5fc23f04ec7bad4ad690b566b7232f148aa2f5be18db42f10ca105e5f9a65b3102ab7beb00f5b7d3dcca72ee368520e4414e900)",
+              "revocation_id(0, hex:f2aa2478c132ca4190aef9a3bef31607d30e4f05c80e9e857a6e484857984f7950d3166fade298f3aa88879c55c27f24bca15db30bcc7d459fdea5572d877a01)",
               "right(\"file1\", \"read\")"
             ],
             "rules": [],
@@ -541,7 +540,7 @@
               }
             }
           },
-          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:c71f68430e917e4db2e9c935b5fc23f04ec7bad4ad690b566b7232f148aa2f5be18db42f10ca105e5f9a65b3102ab7beb00f5b7d3dcca72ee368520e4414e900);\n\ncheck if right($0, $1), resource($0), operation($1);\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:f2aa2478c132ca4190aef9a3bef31607d30e4f05c80e9e857a6e484857984f7950d3166fade298f3aa88879c55c27f24bca15db30bcc7d459fdea5572d877a01);\n\ncheck if right($0, $1), resource($0), operation($1);\n"
         }
       }
     },
@@ -563,7 +562,7 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file1\")",
-              "revocation_id(0, hex:0d313cc11a09af8844290865c919220aebfb260aa5a1f738c8a8f3df677902e5ea06f408fa316d527926a688764a2c5e06cdecf14bc1ace3e6128323dcb8c801)"
+              "revocation_id(0, hex:dd0dec7cf2fb479eec0839a7cfca500633cf324eefb938a12e55e689b571c558b68ca3d3843fa6a016df8b2ec27bce5d35bfd4064654a791d59b69a0cbdc4d0a)"
             ],
             "rules": [],
             "checks": [],
@@ -574,14 +573,14 @@
           "result": {
             "Ok": 0
           },
-          "authorizer_code": "resource(\"file1\");\noperation(\"read\");\nrevocation_id(0, hex:0d313cc11a09af8844290865c919220aebfb260aa5a1f738c8a8f3df677902e5ea06f408fa316d527926a688764a2c5e06cdecf14bc1ace3e6128323dcb8c801);\n"
+          "authorizer_code": "resource(\"file1\");\noperation(\"read\");\nrevocation_id(0, hex:dd0dec7cf2fb479eec0839a7cfca500633cf324eefb938a12e55e689b571c558b68ca3d3843fa6a016df8b2ec27bce5d35bfd4064654a791d59b69a0cbdc4d0a);\n"
         },
         "file2": {
           "world": {
             "facts": [
               "operation(\"read\")",
               "resource(\"file2\")",
-              "revocation_id(0, hex:0d313cc11a09af8844290865c919220aebfb260aa5a1f738c8a8f3df677902e5ea06f408fa316d527926a688764a2c5e06cdecf14bc1ace3e6128323dcb8c801)"
+              "revocation_id(0, hex:dd0dec7cf2fb479eec0839a7cfca500633cf324eefb938a12e55e689b571c558b68ca3d3843fa6a016df8b2ec27bce5d35bfd4064654a791d59b69a0cbdc4d0a)"
             ],
             "rules": [],
             "checks": [],
@@ -609,7 +608,7 @@
               }
             }
           },
-          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:0d313cc11a09af8844290865c919220aebfb260aa5a1f738c8a8f3df677902e5ea06f408fa316d527926a688764a2c5e06cdecf14bc1ace3e6128323dcb8c801);\n"
+          "authorizer_code": "resource(\"file2\");\noperation(\"read\");\nrevocation_id(0, hex:dd0dec7cf2fb479eec0839a7cfca500633cf324eefb938a12e55e689b571c558b68ca3d3843fa6a016df8b2ec27bce5d35bfd4064654a791d59b69a0cbdc4d0a);\n"
         }
       }
     },
@@ -639,8 +638,8 @@
           "world": {
             "facts": [
               "resource(\"file1\")",
-              "revocation_id(0, hex:c5958dec7ca5ae3cc043794655ed50ded0da3abdb2cb304d19aec65247533e836df530cb5038ce095615f236300324b5e00c28e61bdedb18af6c3c37a87b3200)",
-              "revocation_id(1, hex:13fe46046589e018f14cab7fe3aaad91cea7b4637d53f2dcdbec3f7305783c69b23ee18443f328db4b7f2e50b7b8d7822e48af735f11e7fbaa5de4c954712202)",
+              "revocation_id(0, hex:7cf0fc712614da926a7b88edf2e9ece077d3f0c77dc7f0c671b68db4fea43c5d3c74840ad9429475723ae2fdf9b59a2fe345338bb901419f5941121231507701)",
+              "revocation_id(1, hex:f439b4ed241f963891318ae03ddcb7f76d9c00128ad3b3508e81852249118e766f2c7dda5ca347946807b0c5097aaac94498c541c22f9bf6bcf6fa54e728a103)",
               "right(\"file1\", \"read\")",
               "right(\"file2\", \"read\")",
               "time(2020-12-21T09:23:12Z)",
@@ -655,14 +654,14 @@
           "result": {
             "Ok": 0
           },
-          "authorizer_code": "resource(\"file1\");\ntime(2020-12-21T09:23:12Z);\nrevocation_id(0, hex:c5958dec7ca5ae3cc043794655ed50ded0da3abdb2cb304d19aec65247533e836df530cb5038ce095615f236300324b5e00c28e61bdedb18af6c3c37a87b3200);\nrevocation_id(1, hex:13fe46046589e018f14cab7fe3aaad91cea7b4637d53f2dcdbec3f7305783c69b23ee18443f328db4b7f2e50b7b8d7822e48af735f11e7fbaa5de4c954712202);\n"
+          "authorizer_code": "resource(\"file1\");\ntime(2020-12-21T09:23:12Z);\nrevocation_id(0, hex:7cf0fc712614da926a7b88edf2e9ece077d3f0c77dc7f0c671b68db4fea43c5d3c74840ad9429475723ae2fdf9b59a2fe345338bb901419f5941121231507701);\nrevocation_id(1, hex:f439b4ed241f963891318ae03ddcb7f76d9c00128ad3b3508e81852249118e766f2c7dda5ca347946807b0c5097aaac94498c541c22f9bf6bcf6fa54e728a103);\n"
         },
         "file2": {
           "world": {
             "facts": [
               "resource(\"file2\")",
-              "revocation_id(0, hex:c5958dec7ca5ae3cc043794655ed50ded0da3abdb2cb304d19aec65247533e836df530cb5038ce095615f236300324b5e00c28e61bdedb18af6c3c37a87b3200)",
-              "revocation_id(1, hex:13fe46046589e018f14cab7fe3aaad91cea7b4637d53f2dcdbec3f7305783c69b23ee18443f328db4b7f2e50b7b8d7822e48af735f11e7fbaa5de4c954712202)",
+              "revocation_id(0, hex:7cf0fc712614da926a7b88edf2e9ece077d3f0c77dc7f0c671b68db4fea43c5d3c74840ad9429475723ae2fdf9b59a2fe345338bb901419f5941121231507701)",
+              "revocation_id(1, hex:f439b4ed241f963891318ae03ddcb7f76d9c00128ad3b3508e81852249118e766f2c7dda5ca347946807b0c5097aaac94498c541c22f9bf6bcf6fa54e728a103)",
               "right(\"file1\", \"read\")",
               "right(\"file2\", \"read\")",
               "time(2020-12-21T09:23:12Z)"
@@ -693,7 +692,7 @@
               }
             }
           },
-          "authorizer_code": "resource(\"file2\");\ntime(2020-12-21T09:23:12Z);\nrevocation_id(0, hex:c5958dec7ca5ae3cc043794655ed50ded0da3abdb2cb304d19aec65247533e836df530cb5038ce095615f236300324b5e00c28e61bdedb18af6c3c37a87b3200);\nrevocation_id(1, hex:13fe46046589e018f14cab7fe3aaad91cea7b4637d53f2dcdbec3f7305783c69b23ee18443f328db4b7f2e50b7b8d7822e48af735f11e7fbaa5de4c954712202);\n"
+          "authorizer_code": "resource(\"file2\");\ntime(2020-12-21T09:23:12Z);\nrevocation_id(0, hex:7cf0fc712614da926a7b88edf2e9ece077d3f0c77dc7f0c671b68db4fea43c5d3c74840ad9429475723ae2fdf9b59a2fe345338bb901419f5941121231507701);\nrevocation_id(1, hex:f439b4ed241f963891318ae03ddcb7f76d9c00128ad3b3508e81852249118e766f2c7dda5ca347946807b0c5097aaac94498c541c22f9bf6bcf6fa54e728a103);\n"
         }
       }
     },
@@ -715,7 +714,7 @@
           "world": {
             "facts": [
               "resource(\"file1\")",
-              "revocation_id(0, hex:9752ecf19b270129471b459de5b8fbf6c04ad652d1ebd042f79efd8ceb6d14fd3a92ff5f2ada3996895bc4e9effe2b723b775d28ddcdc2365294a4420b67790f)"
+              "revocation_id(0, hex:39a6a882163f3ae8577ed53e533feb3f44f0e7e4e7f4a4e65c7c5df8d6f4555389e137f27358efd5f59c574edeb6d867b32221ffb00a16aa13e588b424b1c30b)"
             ],
             "rules": [],
             "checks": [],
@@ -743,13 +742,13 @@
               }
             }
           },
-          "authorizer_code": "resource(\"file1\");\nrevocation_id(0, hex:9752ecf19b270129471b459de5b8fbf6c04ad652d1ebd042f79efd8ceb6d14fd3a92ff5f2ada3996895bc4e9effe2b723b775d28ddcdc2365294a4420b67790f);\n"
+          "authorizer_code": "resource(\"file1\");\nrevocation_id(0, hex:39a6a882163f3ae8577ed53e533feb3f44f0e7e4e7f4a4e65c7c5df8d6f4555389e137f27358efd5f59c574edeb6d867b32221ffb00a16aa13e588b424b1c30b);\n"
         },
         "file123": {
           "world": {
             "facts": [
               "resource(\"file123.txt\")",
-              "revocation_id(0, hex:9752ecf19b270129471b459de5b8fbf6c04ad652d1ebd042f79efd8ceb6d14fd3a92ff5f2ada3996895bc4e9effe2b723b775d28ddcdc2365294a4420b67790f)"
+              "revocation_id(0, hex:39a6a882163f3ae8577ed53e533feb3f44f0e7e4e7f4a4e65c7c5df8d6f4555389e137f27358efd5f59c574edeb6d867b32221ffb00a16aa13e588b424b1c30b)"
             ],
             "rules": [],
             "checks": [],
@@ -760,7 +759,7 @@
           "result": {
             "Ok": 0
           },
-          "authorizer_code": "resource(\"file123.txt\");\nrevocation_id(0, hex:9752ecf19b270129471b459de5b8fbf6c04ad652d1ebd042f79efd8ceb6d14fd3a92ff5f2ada3996895bc4e9effe2b723b775d28ddcdc2365294a4420b67790f);\n"
+          "authorizer_code": "resource(\"file123.txt\");\nrevocation_id(0, hex:39a6a882163f3ae8577ed53e533feb3f44f0e7e4e7f4a4e65c7c5df8d6f4555389e137f27358efd5f59c574edeb6d867b32221ffb00a16aa13e588b424b1c30b);\n"
         }
       }
     },
@@ -781,7 +780,7 @@
           "world": {
             "facts": [
               "must_be_present(\"hello\")",
-              "revocation_id(0, hex:aa4293d9e62461c2871071a3c40c515427927fa47e7e123e857ba1f41275a87ca53db2183023d09a4ad09cf6c1e70c816a48ab0b532a49c3ebb903cfbc66cf01)"
+              "revocation_id(0, hex:cbdccb19bfffbaebccac4c7eec7e2c7e5174f14fdd362cc36dc646a0a532910abda242e7be369eb63c9157c0718677ed450cb2cf85ebef1f893193e766f6300a)"
             ],
             "rules": [],
             "checks": [
@@ -794,7 +793,7 @@
           "result": {
             "Ok": 0
           },
-          "authorizer_code": "revocation_id(0, hex:aa4293d9e62461c2871071a3c40c515427927fa47e7e123e857ba1f41275a87ca53db2183023d09a4ad09cf6c1e70c816a48ab0b532a49c3ebb903cfbc66cf01);\n\ncheck if must_be_present($0) or must_be_present($0);\n"
+          "authorizer_code": "revocation_id(0, hex:cbdccb19bfffbaebccac4c7eec7e2c7e5174f14fdd362cc36dc646a0a532910abda242e7be369eb63c9157c0718677ed450cb2cf85ebef1f893193e766f6300a);\n\ncheck if must_be_present($0) or must_be_present($0);\n"
         }
       }
     },
@@ -820,8 +819,8 @@
           "world": {
             "facts": [
               "check1(\"test\")",
-              "revocation_id(0, hex:aa8f26e32b6a55fe99decfb0f2c229776cc30360e5b68a5b06e730f1e9a13697f87929592f37b7b58dd00dececd6fa40540a3879f74bd232505f1c419907000c)",
-              "revocation_id(1, hex:02766fa2dbb0bd5a2d4d3fc4e0dd9252ec4dc118fe5bc0eafb67fbce0ddf6a86f4db7ecc0b1da14c210b8dcae53fcfc44565edb32ba18bfc9ca9f97258c4db0d)"
+              "revocation_id(0, hex:2952658438834023409506b686f6a3784614ed7e0a59dd8f4007257c494ccbab493788bb0d51844bff433748f1d93a389a5c02b592d4ed67b07c1adeecc62502)",
+              "revocation_id(1, hex:54d4bd848faa41f7c96c9facf7d949b5bf80a689758eb99b8cc7b12a18e1d12bcb926266dcef0b56b6a608d0de64bc96be1810812e3271d4de3d15a937aa5002)"
             ],
             "rules": [],
             "checks": [],
@@ -849,7 +848,7 @@
               }
             }
           },
-          "authorizer_code": "revocation_id(0, hex:aa8f26e32b6a55fe99decfb0f2c229776cc30360e5b68a5b06e730f1e9a13697f87929592f37b7b58dd00dececd6fa40540a3879f74bd232505f1c419907000c);\nrevocation_id(1, hex:02766fa2dbb0bd5a2d4d3fc4e0dd9252ec4dc118fe5bc0eafb67fbce0ddf6a86f4db7ecc0b1da14c210b8dcae53fcfc44565edb32ba18bfc9ca9f97258c4db0d);\n"
+          "authorizer_code": "revocation_id(0, hex:2952658438834023409506b686f6a3784614ed7e0a59dd8f4007257c494ccbab493788bb0d51844bff433748f1d93a389a5c02b592d4ed67b07c1adeecc62502);\nrevocation_id(1, hex:54d4bd848faa41f7c96c9facf7d949b5bf80a689758eb99b8cc7b12a18e1d12bcb926266dcef0b56b6a608d0de64bc96be1810812e3271d4de3d15a937aa5002);\n"
         }
       }
     },
@@ -876,7 +875,7 @@
         "": {
           "world": {
             "facts": [
-              "revocation_id(0, hex:39e2c7e2319cc614acf881d06bfd5e344a0e7ed2c4c15e0d068f66467276dead3db6d4aca2cf5b688fc84f13861c7c89c047adde161f962dee18099902da5608)"
+              "revocation_id(0, hex:7fb90d58685eb610713a02ea31d602d8ce220bbe8be83a35900d93f156e0d4d18d81616123a3b01f9aefc318239011c67ec5ec4c492b30e9a871399e8896950c)"
             ],
             "rules": [],
             "checks": [],
@@ -887,7 +886,7 @@
           "result": {
             "Ok": 0
           },
-          "authorizer_code": "revocation_id(0, hex:39e2c7e2319cc614acf881d06bfd5e344a0e7ed2c4c15e0d068f66467276dead3db6d4aca2cf5b688fc84f13861c7c89c047adde161f962dee18099902da5608);\n"
+          "authorizer_code": "revocation_id(0, hex:7fb90d58685eb610713a02ea31d602d8ce220bbe8be83a35900d93f156e0d4d18d81616123a3b01f9aefc318239011c67ec5ec4c492b30e9a871399e8896950c);\n"
         }
       }
     },
@@ -916,8 +915,8 @@
           "world": {
             "facts": [
               "operation(\"write\")",
-              "revocation_id(0, hex:3556aa839ffa045eaf9b648fa8567d2b52595bec5e425380ea5cc5c39e20af01d0ac6f31d6f42cda53b5b0d244c7a36dd1c0aaa782f5bf75d2f7f9418e17ea06)",
-              "revocation_id(1, hex:56207b912460b8d319c16541fb0bcd95282fa022c8591cf7898c36aed82b4bfe8449348e90dd32174790222a93c3c6fc65d57eac3b54f95300c6eae098d1b700)"
+              "revocation_id(0, hex:eb1f81c754303090748dc37d83cc710de6dd39708328928f72472683ef253f23d769bf58e7b9ecac1fd9331b18175feb24c3d33dd38357e78f4a0d5580d6c800)",
+              "revocation_id(1, hex:3f3a43a64e9f77e0afebbddd390cbd665cafee898d3558ca78363df1aa9cc5d1be41fe28b01e62ad9358e24e4c1f79b2ceeb211ffcc20d446ba9a88543a0bf03)"
             ],
             "rules": [],
             "checks": [],
@@ -935,7 +934,7 @@
               }
             }
           },
-          "authorizer_code": "operation(\"write\");\nrevocation_id(0, hex:3556aa839ffa045eaf9b648fa8567d2b52595bec5e425380ea5cc5c39e20af01d0ac6f31d6f42cda53b5b0d244c7a36dd1c0aaa782f5bf75d2f7f9418e17ea06);\nrevocation_id(1, hex:56207b912460b8d319c16541fb0bcd95282fa022c8591cf7898c36aed82b4bfe8449348e90dd32174790222a93c3c6fc65d57eac3b54f95300c6eae098d1b700);\n"
+          "authorizer_code": "operation(\"write\");\nrevocation_id(0, hex:eb1f81c754303090748dc37d83cc710de6dd39708328928f72472683ef253f23d769bf58e7b9ecac1fd9331b18175feb24c3d33dd38357e78f4a0d5580d6c800);\nrevocation_id(1, hex:3f3a43a64e9f77e0afebbddd390cbd665cafee898d3558ca78363df1aa9cc5d1be41fe28b01e62ad9358e24e4c1f79b2ceeb211ffcc20d446ba9a88543a0bf03);\n"
         }
       }
     },
@@ -963,8 +962,8 @@
             "facts": [
               "operation(\"read\")",
               "operation(\"write\")",
-              "revocation_id(0, hex:98030c61bf4e130289d435faf5ee967911c603aac8d69332c5cf6e645ed5a85df73f97f4fd6268faaee0061be491e9274713eb8d59395e2c54ad025f70463302)",
-              "revocation_id(1, hex:702f7b9e5b8bbde0fdd4169c9c9e2d098574f56b6583202dbef9bf572fec83d1074cb747e56c1263e7680ada4bfad60f4840e76d6fdb61b646cdde085bc9300f)"
+              "revocation_id(0, hex:b42231acf5bcd6b48bc2bed7189cb7d0f42e07585188f94a1978b121c3b71969ee149b6948d31b3f0eabe735e131e008516aff0539f84420276bc5cebfcfd906)",
+              "revocation_id(1, hex:3482e9af639de8aee1de2ee2ecfb9b0aaae5f3ff7a1a173f2fa4c87184110173a62ee0cce216cb5eaafaf805ccd7c653149ab9f6f5ce368c52f29b2badb9f90e)"
             ],
             "rules": [],
             "checks": [],
@@ -992,7 +991,7 @@
               }
             }
           },
-          "authorizer_code": "operation(\"write\");\nrevocation_id(0, hex:98030c61bf4e130289d435faf5ee967911c603aac8d69332c5cf6e645ed5a85df73f97f4fd6268faaee0061be491e9274713eb8d59395e2c54ad025f70463302);\nrevocation_id(1, hex:702f7b9e5b8bbde0fdd4169c9c9e2d098574f56b6583202dbef9bf572fec83d1074cb747e56c1263e7680ada4bfad60f4840e76d6fdb61b646cdde085bc9300f);\n"
+          "authorizer_code": "operation(\"write\");\nrevocation_id(0, hex:b42231acf5bcd6b48bc2bed7189cb7d0f42e07585188f94a1978b121c3b71969ee149b6948d31b3f0eabe735e131e008516aff0539f84420276bc5cebfcfd906);\nrevocation_id(1, hex:3482e9af639de8aee1de2ee2ecfb9b0aaae5f3ff7a1a173f2fa4c87184110173a62ee0cce216cb5eaafaf805ccd7c653149ab9f6f5ce368c52f29b2badb9f90e);\n"
         }
       }
     },
@@ -1021,8 +1020,8 @@
             "facts": [
               "operation(\"read\")",
               "resource(\"file1\")",
-              "revocation_id(0, hex:3cfbf57a818e942fd59fef67c616b4f0b5df673f5ae2407fcbecb3e3ee9f90019db7da7cf933e87a7377477b07527061ef5231d749f414445d45bb3fe3fb4306)",
-              "revocation_id(1, hex:5d58832964b3b6f605fb0818414e6ac0f8ffa778516321a111c6be42ea473a7913d558476bd1b6ec0cb47e7c0324ed0a9e826659f407f540de218efc8afd6704)",
+              "revocation_id(0, hex:a3436bb24e9809510c2aacf23f9d5cc06d46c5a54af6cc9ed796abb148403503c07a49474557f239eeec773bb7cc07376dc2d42213d9225415abbc77702dae09)",
+              "revocation_id(1, hex:43466cca6e79f58b18e69cd6d25f14e6f0e07b1f71bfd0ff13d44fda9c0f2169ee7a05749e59c20c9edff3b0998fb19f45ce51cbecfdc45f24b6bf98efa56f00)",
               "right(\"file1\", \"read\")",
               "right(\"file1\", \"write\")",
               "right(\"file2\", \"read\")"
@@ -1036,7 +1035,7 @@
           "result": {
             "Ok": 0
           },
-          "authorizer_code": "resource(\"file1\");\noperation(\"read\");\nrevocation_id(0, hex:3cfbf57a818e942fd59fef67c616b4f0b5df673f5ae2407fcbecb3e3ee9f90019db7da7cf933e87a7377477b07527061ef5231d749f414445d45bb3fe3fb4306);\nrevocation_id(1, hex:5d58832964b3b6f605fb0818414e6ac0f8ffa778516321a111c6be42ea473a7913d558476bd1b6ec0cb47e7c0324ed0a9e826659f407f540de218efc8afd6704);\n"
+          "authorizer_code": "resource(\"file1\");\noperation(\"read\");\nrevocation_id(0, hex:a3436bb24e9809510c2aacf23f9d5cc06d46c5a54af6cc9ed796abb148403503c07a49474557f239eeec773bb7cc07376dc2d42213d9225415abbc77702dae09);\nrevocation_id(1, hex:43466cca6e79f58b18e69cd6d25f14e6f0e07b1f71bfd0ff13d44fda9c0f2169ee7a05749e59c20c9edff3b0998fb19f45ce51cbecfdc45f24b6bf98efa56f00);\n"
         }
       }
     },
@@ -1057,7 +1056,7 @@
           "world": {
             "facts": [
               "ns::fact_123(\"hello é\t😁\")",
-              "revocation_id(0, hex:adf27d92fc268727450a1d03c7cdf1fb14ddd0157a105bd68a14df9aecce7f7cefae743e1bf3bccf994f2578980fb69e2a9f00f633c2b293e928892ec289260b)"
+              "revocation_id(0, hex:31e5d9df576e2d54ed6d5bdad69cb0928b7d6893d90a9ab22343c132ab618a7454d2059a77f0aae7e61249fe1908a1ddb04d2645b494da02cdac8ed9f9a29107)"
             ],
             "rules": [],
             "checks": [
@@ -1070,7 +1069,7 @@
           "result": {
             "Ok": 0
           },
-          "authorizer_code": "revocation_id(0, hex:adf27d92fc268727450a1d03c7cdf1fb14ddd0157a105bd68a14df9aecce7f7cefae743e1bf3bccf994f2578980fb69e2a9f00f633c2b293e928892ec289260b);\n\ncheck if ns::fact_123(\"hello é\t😁\");\n"
+          "authorizer_code": "revocation_id(0, hex:31e5d9df576e2d54ed6d5bdad69cb0928b7d6893d90a9ab22343c132ab618a7454d2059a77f0aae7e61249fe1908a1ddb04d2645b494da02cdac8ed9f9a29107);\n\ncheck if ns::fact_123(\"hello é\t😁\");\n"
         }
       }
     }

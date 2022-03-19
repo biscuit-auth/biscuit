@@ -720,7 +720,27 @@ The symbol table is created from a default table containing, in order:
 - operation
 - right
 - time
-- revocation_id
+- rule
+- owner
+- tenant
+- namespace
+- user
+- team
+- service
+- admin
+- email
+- group
+- member
+- ip_address
+- client
+- client_ip
+- domain
+- path
+- version
+- cluster
+- node
+- hostname
+- nonce
 
 tokens can be created from a different default table, as long as the creator,
 the verifier, and any user attenuating tokens are starting from the same
