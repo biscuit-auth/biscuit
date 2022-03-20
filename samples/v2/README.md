@@ -1015,3 +1015,96 @@ World {
 
 result: `Ok(0)`
 
+
+------------------------------
+
+## default_symbols: test22_default_symbols.bc
+### token
+
+authority:
+symbols: []
+
+```
+read(0);
+write(1);
+resource(2);
+operation(3);
+right(4);
+time(5);
+role(6);
+owner(7);
+tenant(8);
+namespace(9);
+user(10);
+team(11);
+service(12);
+admin(13);
+email(14);
+group(15);
+member(16);
+ip_address(17);
+client(18);
+client_ip(19);
+domain(20);
+path(21);
+version(22);
+cluster(23);
+node(24);
+hostname(25);
+nonce(26);
+```
+
+### validation
+
+authorizer code:
+```
+revocation_id(0, hex:dabb7816ea8ba2e5b647ffc1a0eada744e7da4753f35bc845424066b5d56572a180626c865d6143980ba6e311804a93d36677573548958379a59ee5b1d068306);
+
+check if read(0), write(1), resource(2), operation(3), right(4), time(5), role(6), owner(7), tenant(8), namespace(9), user(10), team(11), service(12), admin(13), email(14), group(15), member(16), ip_address(17), client(18), client_ip(19), domain(20), path(21), version(22), cluster(23), node(24), hostname(25), nonce(26);
+```
+
+authorizer world:
+```
+World {
+  facts: {
+    "admin(13)",
+    "client(18)",
+    "client_ip(19)",
+    "cluster(23)",
+    "domain(20)",
+    "email(14)",
+    "group(15)",
+    "hostname(25)",
+    "ip_address(17)",
+    "member(16)",
+    "namespace(9)",
+    "node(24)",
+    "nonce(26)",
+    "operation(3)",
+    "owner(7)",
+    "path(21)",
+    "read(0)",
+    "resource(2)",
+    "revocation_id(0, hex:dabb7816ea8ba2e5b647ffc1a0eada744e7da4753f35bc845424066b5d56572a180626c865d6143980ba6e311804a93d36677573548958379a59ee5b1d068306)",
+    "right(4)",
+    "role(6)",
+    "service(12)",
+    "team(11)",
+    "tenant(8)",
+    "time(5)",
+    "user(10)",
+    "version(22)",
+    "write(1)",
+}
+  rules: {}
+  checks: {
+    "check if read(0), write(1), resource(2), operation(3), right(4), time(5), role(6), owner(7), tenant(8), namespace(9), user(10), team(11), service(12), admin(13), email(14), group(15), member(16), ip_address(17), client(18), client_ip(19), domain(20), path(21), version(22), cluster(23), node(24), hostname(25), nonce(26)",
+}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Ok(0)`
+

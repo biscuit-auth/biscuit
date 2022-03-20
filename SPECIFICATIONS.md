@@ -720,7 +720,7 @@ The symbol table is created from a default table containing, in order:
 - operation
 - right
 - time
-- rule
+- role
 - owner
 - tenant
 - namespace
