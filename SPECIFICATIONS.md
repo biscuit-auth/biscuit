@@ -720,11 +720,31 @@ The symbol table is created from a default table containing, in order:
 - operation
 - right
 - time
-- revocation_id
+- role
+- owner
+- tenant
+- namespace
+- user
+- team
+- service
+- admin
+- email
+- group
+- member
+- ip_address
+- client
+- client_ip
+- domain
+- path
+- version
+- cluster
+- node
+- hostname
+- nonce
+- query
 
-tokens can be created from a different default table, as long as the creator,
-the verifier, and any user attenuating tokens are starting from the same
-table.
+Symbol table indexes from 0 to 1023 are reserved for the default symbols. Symbols
+defined in a token or authorizer must start from 1024.
 
 #### Adding content to the symbol table
 
