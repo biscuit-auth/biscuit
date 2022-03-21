@@ -770,12 +770,14 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 ### token
 
 authority:
-symbols: ["hello world", "hello", "world", "aaabde", "a*c?.e", "abcD12", "abc", "def"]
+symbols: ["hello world", "hello", "world", "aaabde", "a*c?.e", "abd", "aaa", "b", "de", "abcD12", "abc", "def"]
 
 ```
 check if true;
 check if !false;
+check if !false && true;
 check if false or true;
+check if (true || false) && true;
 check if 1 < 2;
 check if 2 > 1;
 check if 1 <= 2;
@@ -786,6 +788,8 @@ check if 3 == 3;
 check if 1 + 2 * 3 - 4 / 2 == 5;
 check if "hello world".starts_with("hello") && "hello world".ends_with("world");
 check if "aaabde".matches("a*c?.e");
+check if "aaabde".contains("abd");
+check if "aaabde" == "aaa" + "b" + "de";
 check if "abcD12" == "abcD12";
 check if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;
 check if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;
@@ -806,14 +810,14 @@ check if [hex:12ab, hex:34de].contains(hex:34de);
 
 authorizer code:
 ```
-revocation_id(0, hex:e541a7e2bad3ebc838787c3461beb0b9a850a3e6b588dd8e3eb085f464d0ba181766407d9affd96752e1d9dafe5ffb770281a2b51fc660c75241f8dff4cecd06);
+revocation_id(0, hex:01356b71906d821ed72f2083465ed06afb0eb1d50412a8badd229cfc39746cda761dd9e3f8d8dda10f1b1aefb29fb8937f52326e2516c7b77bec57b4ba3d780b);
 ```
 
 authorizer world:
 ```
 World {
   facts: {
-    "revocation_id(0, hex:e541a7e2bad3ebc838787c3461beb0b9a850a3e6b588dd8e3eb085f464d0ba181766407d9affd96752e1d9dafe5ffb770281a2b51fc660c75241f8dff4cecd06)",
+    "revocation_id(0, hex:01356b71906d821ed72f2083465ed06afb0eb1d50412a8badd229cfc39746cda761dd9e3f8d8dda10f1b1aefb29fb8937f52326e2516c7b77bec57b4ba3d780b)",
 }
   rules: {}
   checks: {}
