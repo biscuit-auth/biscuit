@@ -741,6 +741,7 @@ The symbol table is created from a default table containing, in order:
 - node
 - hostname
 - nonce
+- query
 
 Symbol table indexes from 0 to 1023 are reserved for the default symbols. Symbols
 defined in a token or authorizer must start from 1024.
