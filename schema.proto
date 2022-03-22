@@ -77,67 +77,6 @@ message TermSet {
   repeated TermV2 set = 1;
 }
 
-message ConstraintV2 {
-  required uint32 term = 1;
-
-  oneof Constraint {
-    IntConstraintV2 int = 2;
-    StringConstraintV2 string = 3;
-    DateConstraintV2 date = 4;
-    BytesConstraintV2 bytes = 5;
-  }
-}
-
-message IntConstraintV2 {
-  oneof Constraint {
-    int64 less_than = 1;
-    int64 greater_than = 2;
-    int64 less_or_equal = 3;
-    int64 greater_or_equal = 4;
-    int64 equal = 5;
-    IntSet in_set = 6;
-    IntSet not_in_set = 7;
-  }
-}
-
-message IntSet {
-  repeated int64 set = 7 [packed=true];
-}
-
-message StringConstraintV2 {
-  oneof Constraint {
-    string prefix = 1;
-    string suffix = 2;
-    string equal = 3;
-    StringSet in_set = 4;
-    StringSet not_in_set = 5;
-    string regex = 6;
-  }
-}
-
-message StringSet {
-  repeated uint64 set = 1 [packed=true];
-}
-
-message DateConstraintV2 {
-  oneof Constraint {
-    uint64 before = 1;
-    uint64 after = 2;
-  }
-}
-
-message BytesConstraintV2 {
-  oneof Constraint {
-    bytes equal = 1;
-    BytesSet in_set = 2;
-    BytesSet not_in_set = 3;
-  }
-}
-
-message BytesSet {
-  repeated bytes set = 1;
-}
-
 message ExpressionV2 {
   repeated Op ops = 1;
 }
