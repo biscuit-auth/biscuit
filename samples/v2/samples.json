@@ -1133,6 +1133,69 @@
           "authorizer_code": "revocation_id(0, hex:5c2e95d83d52a9b0af91aa3fc82acdce1b62e96091f2ac5efd30688151284d0ffc3f9b52dcace4073aba8b99c62b228de3c4d4bc2baadff8eef1a1aff9b68709);\n\ncheck if read(0), write(1), resource(2), operation(3), right(4), time(5), role(6), owner(7), tenant(8), namespace(9), user(10), team(11), service(12), admin(13), email(14), group(15), member(16), ip_address(17), client(18), client_ip(19), domain(20), path(21), version(22), cluster(23), node(24), hostname(25), nonce(26), query(27);\n"
         }
       }
+    },
+    {
+      "title": "execution scope",
+      "filename": "test23_execution_scope.bc",
+      "token": [
+        {
+          "symbols": [
+            "authority_fact"
+          ],
+          "code": "authority_fact(1);\n"
+        },
+        {
+          "symbols": [
+            "block1_fact"
+          ],
+          "code": "block1_fact(1);\n"
+        },
+        {
+          "symbols": [
+            "var"
+          ],
+          "code": "check if authority_fact($var);\ncheck if block1_fact($var);\n"
+        }
+      ],
+      "validations": {
+        "": {
+          "world": {
+            "facts": [
+              "authority_fact(1)",
+              "block1_fact(1)",
+              "revocation_id(0, hex:c7e0e1b3563664312cfe8378dcd95ba04a74928cbe852241d044ba4b20fbaf649ab624619b5ab5b1b5ee8e0bd00512ca5cfbeb216fc795350789eca7aac96504)",
+              "revocation_id(1, hex:3ffaab1d6f0c1a7b6e6b0d96839749813a8c07712913a0bd90fecae47184212d061acc8fb2e20c91db647a763100bb5154759cbd854659332eeebc96d0fca40e)",
+              "revocation_id(2, hex:af61590a37c0837c91393e70652ca67e31d58e29739355dff4db2c54c1dfc62c1f6b61dd37834c839d766b701d7e7fd988f54354188482d5cdd7400b0444c505)"
+            ],
+            "rules": [],
+            "checks": [],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          "result": {
+            "Err": {
+              "FailedLogic": {
+                "Unauthorized": {
+                  "policy": {
+                    "Allow": 0
+                  },
+                  "checks": [
+                    {
+                      "Block": {
+                        "block_id": 2,
+                        "check_id": 1,
+                        "rule": "check if block1_fact($var)"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "authorizer_code": "revocation_id(0, hex:c7e0e1b3563664312cfe8378dcd95ba04a74928cbe852241d044ba4b20fbaf649ab624619b5ab5b1b5ee8e0bd00512ca5cfbeb216fc795350789eca7aac96504);\nrevocation_id(1, hex:3ffaab1d6f0c1a7b6e6b0d96839749813a8c07712913a0bd90fecae47184212d061acc8fb2e20c91db647a763100bb5154759cbd854659332eeebc96d0fca40e);\nrevocation_id(2, hex:af61590a37c0837c91393e70652ca67e31d58e29739355dff4db2c54c1dfc62c1f6b61dd37834c839d766b701d7e7fd988f54354188482d5cdd7400b0444c505);\n"
+        }
+      }
     }
   ]
 }

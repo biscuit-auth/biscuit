@@ -1114,3 +1114,60 @@ World {
 
 result: `Ok(0)`
 
+
+------------------------------
+
+## execution scope: test23_execution_scope.bc
+### token
+
+authority:
+symbols: ["authority_fact"]
+
+```
+authority_fact(1);
+```
+
+1:
+symbols: ["block1_fact"]
+
+```
+block1_fact(1);
+```
+
+2:
+symbols: ["var"]
+
+```
+check if authority_fact($var);
+check if block1_fact($var);
+```
+
+### validation
+
+authorizer code:
+```
+revocation_id(0, hex:c7e0e1b3563664312cfe8378dcd95ba04a74928cbe852241d044ba4b20fbaf649ab624619b5ab5b1b5ee8e0bd00512ca5cfbeb216fc795350789eca7aac96504);
+revocation_id(1, hex:3ffaab1d6f0c1a7b6e6b0d96839749813a8c07712913a0bd90fecae47184212d061acc8fb2e20c91db647a763100bb5154759cbd854659332eeebc96d0fca40e);
+revocation_id(2, hex:af61590a37c0837c91393e70652ca67e31d58e29739355dff4db2c54c1dfc62c1f6b61dd37834c839d766b701d7e7fd988f54354188482d5cdd7400b0444c505);
+```
+
+authorizer world:
+```
+World {
+  facts: {
+    "authority_fact(1)",
+    "block1_fact(1)",
+    "revocation_id(0, hex:c7e0e1b3563664312cfe8378dcd95ba04a74928cbe852241d044ba4b20fbaf649ab624619b5ab5b1b5ee8e0bd00512ca5cfbeb216fc795350789eca7aac96504)",
+    "revocation_id(1, hex:3ffaab1d6f0c1a7b6e6b0d96839749813a8c07712913a0bd90fecae47184212d061acc8fb2e20c91db647a763100bb5154759cbd854659332eeebc96d0fca40e)",
+    "revocation_id(2, hex:af61590a37c0837c91393e70652ca67e31d58e29739355dff4db2c54c1dfc62c1f6b61dd37834c839d766b701d7e7fd988f54354188482d5cdd7400b0444c505)",
+}
+  rules: {}
+  checks: {}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 2, check_id: 1, rule: "check if block1_fact($var)" })] }))`
+
