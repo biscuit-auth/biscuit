@@ -565,8 +565,10 @@ token generated at version N-1, new implementations must be able to recognize
 older formats. Moreover, when appending a new block, they cannot convert the
 old blocks to the new format (since that would invalidate the signature). So
 each block must carry its own version.
-An implementation must refuse token with a newer format than the one they know.
+An implementation must refuse a token with a newer format than the range they know.
+An implementation must refuse a token with an older format than the range they know.
 An implementation must always generate tokens at the highest version it can do.
+The current minimum version number is 3.
 
 # Version 2
 
