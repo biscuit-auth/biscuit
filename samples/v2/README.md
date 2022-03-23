@@ -29,17 +29,17 @@ check if resource($0), operation("read"), right($0, "read");
 authorizer code:
 ```
 resource("file1");
-revocation_id(0, hex:1d5f4e65ee45896f32708462af0e82c18ca953cd2e87e340c8a5c2e4e82a45639b9853ee92442273cdebde3c0f3692597d31d116e53593c813726946cdca4205);
-revocation_id(1, hex:d4a96909b2d51a25b65079bb1e91dff8047a8754da8827123ae5bfc28b121afd9cca1acb266a3162c0d1d0371ee1b9011f6bfc278cafa7dae0dbe03848bc7f03);
 ```
+
+revocation ids:
+- `3ee1c0f42ba69ec63b1f39a6b3c57d25a4ccec452233ca6d40530ecfe83af4918fa78d9346f8b7c498545b54663960342b9ed298b2c8bbe2085b80c237b56f09`
+- `12ae3232773614db9bbbdb62ebd07c369c822f1a31fd7ddfc60bc0cc0985839d15223d19847a746e737de65b9e2574d873362a7c1b69127cf5b69f0f6f10dc04`
 
 authorizer world:
 ```
 World {
   facts: {
     "resource(\"file1\")",
-    "revocation_id(0, hex:1d5f4e65ee45896f32708462af0e82c18ca953cd2e87e340c8a5c2e4e82a45639b9853ee92442273cdebde3c0f3692597d31d116e53593c813726946cdca4205)",
-    "revocation_id(1, hex:d4a96909b2d51a25b65079bb1e91dff8047a8754da8827123ae5bfc28b121afd9cca1acb266a3162c0d1d0371ee1b9011f6bfc278cafa7dae0dbe03848bc7f03)",
     "right(\"file1\", \"read\")",
     "right(\"file1\", \"write\")",
     "right(\"file2\", \"read\")",
@@ -224,10 +224,12 @@ authorizer code:
 ```
 resource("file2");
 operation("read");
-revocation_id(0, hex:c471ae436d91168805955ad0667ed764fc7f2379268c638715dcfa4e00ccdba7a550f02ca1255f29773da9ecf16c8a8ca7993ebdc2788eaa0074f03169a2b301);
-revocation_id(1, hex:24829d3b1e1adf1ea484e352703cae457b2e658cde3a1a01afe7c8b6827a4b4c8a847de9065f58045da9bf939f77bf5a5c340350189af281dbc9089a95259905);
-revocation_id(2, hex:2468bc17a2431da4e1999aed29b7dc8d5137308a98aec879faca12a6f677306ecc4f5e9d44a49ed8319005ea2512049e4eec69fb8ecb7bbb6f8e2e3c0fc26103);
 ```
+
+revocation ids:
+- `02d287b0e5b22780192f8351538583c17f7d0200e064b32a1fcf07899e64ffb10e4de324f5c5ebc72c89a63e424317226cf555eb42dae81b2fd4639cf7591108`
+- `0037d613778198f715d51300ee9a7e997e1608428aa921fa93f6689e2aa96b1843b81a0c1b0966a6e3a8cef3b7c24620364c965bfab7f04b782b195dfa648606`
+- `95a0a288af1a34b28090aa910ff0ac6e3caee45476fabb4748a3fa596d17f5164a360609a3cc8badb3d4b262ae5ac4f05f23dfcdef4c773b7cadb82d274c3408`
 
 authorizer world:
 ```
@@ -237,9 +239,6 @@ World {
     "owner(\"alice\", \"file1\")",
     "owner(\"alice\", \"file2\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:c471ae436d91168805955ad0667ed764fc7f2379268c638715dcfa4e00ccdba7a550f02ca1255f29773da9ecf16c8a8ca7993ebdc2788eaa0074f03169a2b301)",
-    "revocation_id(1, hex:24829d3b1e1adf1ea484e352703cae457b2e658cde3a1a01afe7c8b6827a4b4c8a847de9065f58045da9bf939f77bf5a5c340350189af281dbc9089a95259905)",
-    "revocation_id(2, hex:2468bc17a2431da4e1999aed29b7dc8d5137308a98aec879faca12a6f677306ecc4f5e9d44a49ed8319005ea2512049e4eec69fb8ecb7bbb6f8e2e3c0fc26103)",
     "user_id(\"alice\")",
 }
   rules: {}
@@ -285,10 +284,12 @@ authorizer code:
 ```
 resource("file2");
 operation("read");
-revocation_id(0, hex:365b58d5fe581c5e34da38d2fce8c1f6b1ea544f19ee83106e862cf4dcd5cd92bea611b2f5d5b1170950dee243221c802b637c59614e3e40dc65dfae3d879707);
-revocation_id(1, hex:db119dee84b43ef9489300a455fad700cd1e649a002fe4fa779fe5f15dc34864b42a8e0558e8c0f61bd9fd1e51c0ba3fdf2e4294357e5188697450c4e5382804);
-revocation_id(2, hex:1e3cd0c672bdbf955ec1fb1dd04fd07c9c2dc78c921b52407f988a88f9735e6c650854614d171ad88d2d819ca6881d402442c9f9cdcdf14af89757f6059cd80f);
 ```
+
+revocation ids:
+- `567682495bf002eb84c46491e40fad8c55943d918c65e2c110b1b88511bf393072c0305a243e3d632ca5f1e9b0ace3e3582de84838c3a258480657087c267f02`
+- `a6ff5553b573a28717ceba206f9afb6c4052879303e6566183736f66c4f381db219adb630fd61b340e5a843c4bd9e0a66c802a46c2aaeb364c239b396c11040d`
+- `6ddd3bb88b98c0624f5b6b85dd35d0227b2c4085cd8ea67ebb3d2cec92f0c501cae4cdae766aa6d03667ab4553cd9d003f1ddb54cecf183a09aa6bb68c7b8002`
 
 authorizer world:
 ```
@@ -296,9 +297,6 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:365b58d5fe581c5e34da38d2fce8c1f6b1ea544f19ee83106e862cf4dcd5cd92bea611b2f5d5b1170950dee243221c802b637c59614e3e40dc65dfae3d879707)",
-    "revocation_id(1, hex:db119dee84b43ef9489300a455fad700cd1e649a002fe4fa779fe5f15dc34864b42a8e0558e8c0f61bd9fd1e51c0ba3fdf2e4294357e5188697450c4e5382804)",
-    "revocation_id(2, hex:1e3cd0c672bdbf955ec1fb1dd04fd07c9c2dc78c921b52407f988a88f9735e6c650854614d171ad88d2d819ca6881d402442c9f9cdcdf14af89757f6059cd80f)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
 }
@@ -339,9 +337,11 @@ authorizer code:
 resource("file1");
 operation("read");
 time(2020-12-21T09:23:12Z);
-revocation_id(0, hex:16d0a9d7f3d29ee2112d67451c8e4ff07bd5366a6cdb082cf4fcb66e6d15a57a22009ef1018fc4d0f9184edb0900df161807bc6f8287275f32eae6b5b1c57100);
-revocation_id(1, hex:2545cef5c2872ef2fe0f0e78752e1d692b6956b6018fa397ad78ca70e5cabbadc0014382390b48a7ec5811e18719e0f691cdcc3abaf3424304b03176a320120e);
 ```
+
+revocation ids:
+- `b2474f3e0a5788cdeff811f2599497a04d1ad71ca48dbafb90f20a950d565dda0b86bd6c9072a727c19b6b20a1ae10d8cb88155186550b77016ffd1dca9a6203`
+- `acbf0c948ba0271866ecc15a04fa3effa9485c543d70e1d5e4ce0a5d70d91c208d7d526151a2ad01a93caf46df2ecfb92fdedab03586ca895a12d869c8ad350e`
 
 authorizer world:
 ```
@@ -349,8 +349,6 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file1\")",
-    "revocation_id(0, hex:16d0a9d7f3d29ee2112d67451c8e4ff07bd5366a6cdb082cf4fcb66e6d15a57a22009ef1018fc4d0f9184edb0900df161807bc6f8287275f32eae6b5b1c57100)",
-    "revocation_id(1, hex:2545cef5c2872ef2fe0f0e78752e1d692b6956b6018fa397ad78ca70e5cabbadc0014382390b48a7ec5811e18719e0f691cdcc3abaf3424304b03176a320120e)",
     "time(2020-12-21T09:23:12Z)",
 }
   rules: {}
@@ -389,11 +387,13 @@ authorizer code:
 ```
 resource("file2");
 operation("read");
-revocation_id(0, hex:2ea3411339db9331e8156bdb23edb2667f7b927486b36a0220b1d37c5f650907c795932b430ac31a2eb5917c6d47756c1d863bc55d70ebec307698a03ab3ff0f);
-revocation_id(1, hex:5c66dfd95e2a0212f7915c5564df381e02e13b7814013de228996c929445befd549a19d71de35bb3ea15c2db808c373b805f0e848f46da4b03f13e431ee2b801);
 
 check if right($0, $1), resource($0), operation($1);
 ```
+
+revocation ids:
+- `b9ecf192ecb1bbb10e45320c1c86661f0c6b6bd28e89fdd8fa838fe0ab3f754229f7fbbf92ad978d36f744c345c69bc156a2a91a2979a3c235a9d936d401b404`
+- `839728735701e589c2612e655afa2b53f573480e6a0477ae68ed71587987d1af398a31296bdec0b6eccee9348f4b4c23ca1031e809991626c579fef80b1d380d`
 
 authorizer world:
 ```
@@ -401,8 +401,6 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:2ea3411339db9331e8156bdb23edb2667f7b927486b36a0220b1d37c5f650907c795932b430ac31a2eb5917c6d47756c1d863bc55d70ebec307698a03ab3ff0f)",
-    "revocation_id(1, hex:5c66dfd95e2a0212f7915c5564df381e02e13b7814013de228996c929445befd549a19d71de35bb3ea15c2db808c373b805f0e848f46da4b03f13e431ee2b801)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
 }
@@ -437,10 +435,12 @@ authorizer code:
 ```
 resource("file2");
 operation("read");
-revocation_id(0, hex:e5cb2bbd5a7e91fb48766f535b230ceceab4aa98f495abab315d351a8cb3a0a07edc6730b19b1f631c7b1b6b8dfca8d8816861c1eb2e9c3978993b3d201eca0d);
 
 check if right($0, $1), resource($0), operation($1);
 ```
+
+revocation ids:
+- `593d273d141bf23a3e89b55fffe1b3f96f683a022bb763e78f4e49f31a7cf47668c3fd5e0f580727ac9113ede302d34264597f6f1e6c6dd4167836d57aedf504`
 
 authorizer world:
 ```
@@ -448,7 +448,6 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:e5cb2bbd5a7e91fb48766f535b230ceceab4aa98f495abab315d351a8cb3a0a07edc6730b19b1f631c7b1b6b8dfca8d8816861c1eb2e9c3978993b3d201eca0d)",
     "right(\"file1\", \"read\")",
 }
   rules: {}
@@ -482,8 +481,10 @@ authorizer code:
 ```
 resource("file1");
 operation("read");
-revocation_id(0, hex:c9324eef7b7ac5b5af5b0be2970fe2db90797ea07cf80a1fd5a3eb7fdc8df22543ab984d7357f8a110bc7a9a92dca597a568e96a07c27fb3ae1cbe5751d0270e);
 ```
+
+revocation ids:
+- `548609f44a483e7d41f647bec72056c9d8bba25a52b613a31560f147bf3674224d4814174ee5081c4b21e9020887284a9c316757b4c328447f9d585c249aeb08`
 
 authorizer world:
 ```
@@ -491,7 +492,6 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file1\")",
-    "revocation_id(0, hex:c9324eef7b7ac5b5af5b0be2970fe2db90797ea07cf80a1fd5a3eb7fdc8df22543ab984d7357f8a110bc7a9a92dca597a568e96a07c27fb3ae1cbe5751d0270e)",
 }
   rules: {}
   checks: {}
@@ -508,8 +508,10 @@ authorizer code:
 ```
 resource("file2");
 operation("read");
-revocation_id(0, hex:c9324eef7b7ac5b5af5b0be2970fe2db90797ea07cf80a1fd5a3eb7fdc8df22543ab984d7357f8a110bc7a9a92dca597a568e96a07c27fb3ae1cbe5751d0270e);
 ```
+
+revocation ids:
+- `548609f44a483e7d41f647bec72056c9d8bba25a52b613a31560f147bf3674224d4814174ee5081c4b21e9020887284a9c316757b4c328447f9d585c249aeb08`
 
 authorizer world:
 ```
@@ -517,7 +519,6 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file2\")",
-    "revocation_id(0, hex:c9324eef7b7ac5b5af5b0be2970fe2db90797ea07cf80a1fd5a3eb7fdc8df22543ab984d7357f8a110bc7a9a92dca597a568e96a07c27fb3ae1cbe5751d0270e)",
 }
   rules: {}
   checks: {}
@@ -558,17 +559,17 @@ authorizer code:
 ```
 resource("file1");
 time(2020-12-21T09:23:12Z);
-revocation_id(0, hex:519a90ef066d3e2885ed86a76e9a3d0e68898e84f203dea515e857a2ec9611e3b471ec11b6258ed4f1f5a0d6e96dc3c842240f49c58d2a6b4da32ca0e3e14708);
-revocation_id(1, hex:f34063891ed7193b4485edaee11f7afed277e1a2db65c9fc7f4d27b4f281e65f0f0b0d0b7ff052da73c7c1fddf7ba80b4ee6cfb463514e2bd4ef81d276089209);
 ```
+
+revocation ids:
+- `d251352efd4e4c72e8a1609fce002f558f1a0bb5e36cd3d8b3a6c6599e3960880f21bea6fe1857f4ecbc2c399dd77829b154e75f1323e9dec413aad70f97650d`
+- `b5c6b0423d971306ba360347b9f0b04d49b8bc07a9e577346df6839ceac418c75197b65fbb648cbc9b9296e15e601ba143b1c59b7329e66a569f0f141b09750e`
 
 authorizer world:
 ```
 World {
   facts: {
     "resource(\"file1\")",
-    "revocation_id(0, hex:519a90ef066d3e2885ed86a76e9a3d0e68898e84f203dea515e857a2ec9611e3b471ec11b6258ed4f1f5a0d6e96dc3c842240f49c58d2a6b4da32ca0e3e14708)",
-    "revocation_id(1, hex:f34063891ed7193b4485edaee11f7afed277e1a2db65c9fc7f4d27b4f281e65f0f0b0d0b7ff052da73c7c1fddf7ba80b4ee6cfb463514e2bd4ef81d276089209)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
     "time(2020-12-21T09:23:12Z)",
@@ -589,17 +590,17 @@ authorizer code:
 ```
 resource("file2");
 time(2020-12-21T09:23:12Z);
-revocation_id(0, hex:519a90ef066d3e2885ed86a76e9a3d0e68898e84f203dea515e857a2ec9611e3b471ec11b6258ed4f1f5a0d6e96dc3c842240f49c58d2a6b4da32ca0e3e14708);
-revocation_id(1, hex:f34063891ed7193b4485edaee11f7afed277e1a2db65c9fc7f4d27b4f281e65f0f0b0d0b7ff052da73c7c1fddf7ba80b4ee6cfb463514e2bd4ef81d276089209);
 ```
+
+revocation ids:
+- `d251352efd4e4c72e8a1609fce002f558f1a0bb5e36cd3d8b3a6c6599e3960880f21bea6fe1857f4ecbc2c399dd77829b154e75f1323e9dec413aad70f97650d`
+- `b5c6b0423d971306ba360347b9f0b04d49b8bc07a9e577346df6839ceac418c75197b65fbb648cbc9b9296e15e601ba143b1c59b7329e66a569f0f141b09750e`
 
 authorizer world:
 ```
 World {
   facts: {
     "resource(\"file2\")",
-    "revocation_id(0, hex:519a90ef066d3e2885ed86a76e9a3d0e68898e84f203dea515e857a2ec9611e3b471ec11b6258ed4f1f5a0d6e96dc3c842240f49c58d2a6b4da32ca0e3e14708)",
-    "revocation_id(1, hex:f34063891ed7193b4485edaee11f7afed277e1a2db65c9fc7f4d27b4f281e65f0f0b0d0b7ff052da73c7c1fddf7ba80b4ee6cfb463514e2bd4ef81d276089209)",
     "right(\"file1\", \"read\")",
     "right(\"file2\", \"read\")",
     "time(2020-12-21T09:23:12Z)",
@@ -632,15 +633,16 @@ check if resource($0), $0.matches("file[0-9]+.txt");
 authorizer code:
 ```
 resource("file1");
-revocation_id(0, hex:40e5e16383509469950240ad0d20c806e2700900133e66e6ab592da2cf90181e23fecb34083f3b78ca53851448372bd8ebd57e4ef8c287eef3164ad2dbb6b300);
 ```
+
+revocation ids:
+- `4bb969d5cf558d831892f3ef52115a217fb059968eb1d109958076cd3521cd88ddd161f864bf3335e5534a504947d6c4f684bd62a37ba2b23fa30260a825bf04`
 
 authorizer world:
 ```
 World {
   facts: {
     "resource(\"file1\")",
-    "revocation_id(0, hex:40e5e16383509469950240ad0d20c806e2700900133e66e6ab592da2cf90181e23fecb34083f3b78ca53851448372bd8ebd57e4ef8c287eef3164ad2dbb6b300)",
 }
   rules: {}
   checks: {}
@@ -656,15 +658,16 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 authorizer code:
 ```
 resource("file123.txt");
-revocation_id(0, hex:40e5e16383509469950240ad0d20c806e2700900133e66e6ab592da2cf90181e23fecb34083f3b78ca53851448372bd8ebd57e4ef8c287eef3164ad2dbb6b300);
 ```
+
+revocation ids:
+- `4bb969d5cf558d831892f3ef52115a217fb059968eb1d109958076cd3521cd88ddd161f864bf3335e5534a504947d6c4f684bd62a37ba2b23fa30260a825bf04`
 
 authorizer world:
 ```
 World {
   facts: {
     "resource(\"file123.txt\")",
-    "revocation_id(0, hex:40e5e16383509469950240ad0d20c806e2700900133e66e6ab592da2cf90181e23fecb34083f3b78ca53851448372bd8ebd57e4ef8c287eef3164ad2dbb6b300)",
 }
   rules: {}
   checks: {}
@@ -693,17 +696,18 @@ must_be_present("hello");
 
 authorizer code:
 ```
-revocation_id(0, hex:f9ee6baab57eb5cf14ad003a7f964691ec4eea1d1ec86de95cace3056bc4cf7c12836a2fc0241acaaea9365ba1a411be69baea54a45f18ea4c66d82cc9cc5c01);
 
 check if must_be_present($0) or must_be_present($0);
 ```
+
+revocation ids:
+- `d3eee8a74eacec9c51d4d1eb29b479727dfaafa9df7d4c651d07c493c56f3a5f037a51139ebd036f50d1159d12bccec3e377bbd32db90a39dd52c4776757ad0b`
 
 authorizer world:
 ```
 World {
   facts: {
     "must_be_present(\"hello\")",
-    "revocation_id(0, hex:f9ee6baab57eb5cf14ad003a7f964691ec4eea1d1ec86de95cace3056bc4cf7c12836a2fc0241acaaea9365ba1a411be69baea54a45f18ea4c66d82cc9cc5c01)",
 }
   rules: {}
   checks: {
@@ -741,17 +745,17 @@ check1("test");
 
 authorizer code:
 ```
-revocation_id(0, hex:efd90e4a128ef2cbedf66c63331c151517f4b79320771902875d67ee4b18a55a9c22e7593eaf76fc4705f3ed46c1f847fbe3f042e05077129f9298dbdca1a10b);
-revocation_id(1, hex:669e300264a304194dbb3945ceb37d5de862ad18e0dd25c4d8bd8426dc85fcab18f83a180daae0d044959198faffed3adee7a45eebe9b9e1c14a77292118dc0a);
 ```
+
+revocation ids:
+- `c88d4b7afeac437596964e403a36ee113da1c20c4fec8a340fa97613ff585f520eb5fc0cbbd80dd6b6fa0127d03a1c773d7c5605197d5382e660dac3c957bb01`
+- `3213d5bbef6e3bcfc09ab54d16e824d69a243a90f748c41f60c7a4a8a81bc47ce16f57a3d252b00143c7a554d926988fbbba5abdb2ef826c933cce8c2122710f`
 
 authorizer world:
 ```
 World {
   facts: {
     "check1(\"test\")",
-    "revocation_id(0, hex:efd90e4a128ef2cbedf66c63331c151517f4b79320771902875d67ee4b18a55a9c22e7593eaf76fc4705f3ed46c1f847fbe3f042e05077129f9298dbdca1a10b)",
-    "revocation_id(1, hex:669e300264a304194dbb3945ceb37d5de862ad18e0dd25c4d8bd8426dc85fcab18f83a180daae0d044959198faffed3adee7a45eebe9b9e1c14a77292118dc0a)",
 }
   rules: {}
   checks: {}
@@ -810,15 +814,15 @@ check if [hex:12ab, hex:34de].contains(hex:34de);
 
 authorizer code:
 ```
-revocation_id(0, hex:01356b71906d821ed72f2083465ed06afb0eb1d50412a8badd229cfc39746cda761dd9e3f8d8dda10f1b1aefb29fb8937f52326e2516c7b77bec57b4ba3d780b);
 ```
+
+revocation ids:
+- `f1391d7549f4c165dd58878c8433bdc23634533f4910bcd37fc53d5b3b29c542ef1b46a38a42beb2df911d526a52f65774e1d60f910dbe15ca1591735617240b`
 
 authorizer world:
 ```
 World {
-  facts: {
-    "revocation_id(0, hex:01356b71906d821ed72f2083465ed06afb0eb1d50412a8badd229cfc39746cda761dd9e3f8d8dda10f1b1aefb29fb8937f52326e2516c7b77bec57b4ba3d780b)",
-}
+  facts: {}
   rules: {}
   checks: {}
   policies: {
@@ -854,17 +858,17 @@ operation($unbound, "read") <- operation($any1, $any2);
 authorizer code:
 ```
 operation("write");
-revocation_id(0, hex:8830178822f145eb66cb2e65668fd692d9f143612d9015ec032dba87b4e152925d60b78dbe40567c1e497d2d9892bcce99082f7e7afc461cac996887f47d1009);
-revocation_id(1, hex:7f975546191401e64623ba6ccbb0317b801911860e6205d6413bd7c77b2463503138959a18231c2755642d7c37b2fb6669fe76f25e8ed2dac2da7c5a0653e401);
 ```
+
+revocation ids:
+- `bc12e3a0f15ba41b7f14dd9776d359f81d7a8372ec8e46ac5a211bc52f5ad7777c273a1925015a92f88e230a97d3b435ff060b8079bce6f28fc3530416be6f0f`
+- `2385d7b5cbafc2ef556fc8f032fc7945a51ea724904e0ff06900764c86faac3a0cfb0b27f5a4275d59f037a3956090e40fb95e84b3cf71901d12c0994427dc0c`
 
 authorizer world:
 ```
 World {
   facts: {
     "operation(\"write\")",
-    "revocation_id(0, hex:8830178822f145eb66cb2e65668fd692d9f143612d9015ec032dba87b4e152925d60b78dbe40567c1e497d2d9892bcce99082f7e7afc461cac996887f47d1009)",
-    "revocation_id(1, hex:7f975546191401e64623ba6ccbb0317b801911860e6205d6413bd7c77b2463503138959a18231c2755642d7c37b2fb6669fe76f25e8ed2dac2da7c5a0653e401)",
 }
   rules: {}
   checks: {}
@@ -901,9 +905,11 @@ operation("read") <- operation($any);
 authorizer code:
 ```
 operation("write");
-revocation_id(0, hex:94baf24f6d75230dd299edf408aba593bcba3099e80e9144ede2b6fce7e6d2a939f40aa6d5e8f7313d2135b411bda11632496bcbc22741169fc283f01b1aa80b);
-revocation_id(1, hex:ba2174f6204dfb9fbdff4052571fa671701979385eaef97ee1cc761eb52fa63418b5ad9c7fa48c39c14f91b2e06116a9183a92be434ddc376c429787da555503);
 ```
+
+revocation ids:
+- `467ae49d69ccd51f8c47e371966b4db2bb615f66a19759c86b6f3d09d46430b5f4caac419bd5c9da8d93ffa349310ca8f99ad10f50bbd6c0a4039a65ccb59a0d`
+- `8855d4ea222a90718665534e6437444623bc7edd5695e65b85d90ee229264654c05be45538582070fb88cfceb250fc59666b0e3b674e0839411d6fc5a6d17a0e`
 
 authorizer world:
 ```
@@ -911,8 +917,6 @@ World {
   facts: {
     "operation(\"read\")",
     "operation(\"write\")",
-    "revocation_id(0, hex:94baf24f6d75230dd299edf408aba593bcba3099e80e9144ede2b6fce7e6d2a939f40aa6d5e8f7313d2135b411bda11632496bcbc22741169fc283f01b1aa80b)",
-    "revocation_id(1, hex:ba2174f6204dfb9fbdff4052571fa671701979385eaef97ee1cc761eb52fa63418b5ad9c7fa48c39c14f91b2e06116a9183a92be434ddc376c429787da555503)",
 }
   rules: {}
   checks: {}
@@ -952,9 +956,11 @@ authorizer code:
 ```
 resource("file1");
 operation("read");
-revocation_id(0, hex:2f166a81e685b07754e571d7dd624e5034695b485145376c213e86d0aac44a3fc7b2f8b79b56ed07f396ee9a89430fc666440c4cf2d0ae5a4e6d82c0162ede07);
-revocation_id(1, hex:397a8ada46db65ade4b7367483586060371527bff2047c337bb24462b4a4c653b32487a251a8dfcedb26ea786e327cfad1e9ddfdba84bd4b6965d375c2d9d60e);
 ```
+
+revocation ids:
+- `b279f8c6fee5ea3c3fcb5109d8c6b35ba3fecea64d83a4dc387102b9401633a1558ac6ac50ddd7fd9e9877f936f9f4064abd467faeca2bef3114b9695eb0580e`
+- `b3baf8fe8c41cedbc7b7d0abe3aa20535b1226693df8be2a46827d33f46d77b3a23898fda4ce44e05203cb35de54541225744ac49216d86faffd389188865504`
 
 authorizer world:
 ```
@@ -962,8 +968,6 @@ World {
   facts: {
     "operation(\"read\")",
     "resource(\"file1\")",
-    "revocation_id(0, hex:2f166a81e685b07754e571d7dd624e5034695b485145376c213e86d0aac44a3fc7b2f8b79b56ed07f396ee9a89430fc666440c4cf2d0ae5a4e6d82c0162ede07)",
-    "revocation_id(1, hex:397a8ada46db65ade4b7367483586060371527bff2047c337bb24462b4a4c653b32487a251a8dfcedb26ea786e327cfad1e9ddfdba84bd4b6965d375c2d9d60e)",
     "right(\"file1\", \"read\")",
     "right(\"file1\", \"write\")",
     "right(\"file2\", \"read\")",
@@ -995,17 +999,18 @@ ns::fact_123("hello é	😁");
 
 authorizer code:
 ```
-revocation_id(0, hex:3c6dd38df9982126d9581f43f29511716ba571e3b95c25dd079a451819184ec92d50edeace7b213b89726d2d74ea91a37ab91d48aa5c93bff4617bfd4019280c);
 
 check if ns::fact_123("hello é	😁");
 ```
+
+revocation ids:
+- `4797a528328c8b5fb7939cc8956d8cda2513f552466eee501e26ea13a6cf6b4a381fd74ae547a9b50b627825142287d899b9d7bd1b5cfb18664a1be78320ea06`
 
 authorizer world:
 ```
 World {
   facts: {
     "ns::fact_123(\"hello é\t😁\")",
-    "revocation_id(0, hex:3c6dd38df9982126d9581f43f29511716ba571e3b95c25dd079a451819184ec92d50edeace7b213b89726d2d74ea91a37ab91d48aa5c93bff4617bfd4019280c)",
 }
   rules: {}
   checks: {
@@ -1063,10 +1068,12 @@ query(27);
 
 authorizer code:
 ```
-revocation_id(0, hex:5c2e95d83d52a9b0af91aa3fc82acdce1b62e96091f2ac5efd30688151284d0ffc3f9b52dcace4073aba8b99c62b228de3c4d4bc2baadff8eef1a1aff9b68709);
 
 check if read(0), write(1), resource(2), operation(3), right(4), time(5), role(6), owner(7), tenant(8), namespace(9), user(10), team(11), service(12), admin(13), email(14), group(15), member(16), ip_address(17), client(18), client_ip(19), domain(20), path(21), version(22), cluster(23), node(24), hostname(25), nonce(26), query(27);
 ```
+
+revocation ids:
+- `38094260b324eff92db2ef79e715d88c18503c0dafa400bff900399f2ab0840cedc5ac25bdd3e97860b3f9e78ca5e0df67a113eb87be50265d49278efb13210f`
 
 authorizer world:
 ```
@@ -1091,7 +1098,6 @@ World {
     "query(27)",
     "read(0)",
     "resource(2)",
-    "revocation_id(0, hex:5c2e95d83d52a9b0af91aa3fc82acdce1b62e96091f2ac5efd30688151284d0ffc3f9b52dcace4073aba8b99c62b228de3c4d4bc2baadff8eef1a1aff9b68709)",
     "right(4)",
     "role(6)",
     "service(12)",
@@ -1146,10 +1152,12 @@ check if block1_fact($var);
 
 authorizer code:
 ```
-revocation_id(0, hex:c7e0e1b3563664312cfe8378dcd95ba04a74928cbe852241d044ba4b20fbaf649ab624619b5ab5b1b5ee8e0bd00512ca5cfbeb216fc795350789eca7aac96504);
-revocation_id(1, hex:3ffaab1d6f0c1a7b6e6b0d96839749813a8c07712913a0bd90fecae47184212d061acc8fb2e20c91db647a763100bb5154759cbd854659332eeebc96d0fca40e);
-revocation_id(2, hex:af61590a37c0837c91393e70652ca67e31d58e29739355dff4db2c54c1dfc62c1f6b61dd37834c839d766b701d7e7fd988f54354188482d5cdd7400b0444c505);
 ```
+
+revocation ids:
+- `6a3606836bc63b858f96ce5000c9bead8eda139ab54679a2a8d7a9984c2e5d864b93280acc1b728bed0be42b5b1c3be10f48a13a4dbd05fd5763de5be3855108`
+- `5f1468fc60999f22c4f87fa088a83961188b4e654686c5b04bdc977b9ff4666d51a3d8be5594f4cef08054d100f31d1637b50bb394de7cccafc643c9b650390b`
+- `3eda05ddb65ee90d715cefc046837c01de944d8c4a7ff67e3d9a9d8470b5e214a20a8b9866bfe5e0d385e530b75ec8fcfde46b7dd6d4d6647d1e955c9d2fb90d`
 
 authorizer world:
 ```
@@ -1157,9 +1165,6 @@ World {
   facts: {
     "authority_fact(1)",
     "block1_fact(1)",
-    "revocation_id(0, hex:c7e0e1b3563664312cfe8378dcd95ba04a74928cbe852241d044ba4b20fbaf649ab624619b5ab5b1b5ee8e0bd00512ca5cfbeb216fc795350789eca7aac96504)",
-    "revocation_id(1, hex:3ffaab1d6f0c1a7b6e6b0d96839749813a8c07712913a0bd90fecae47184212d061acc8fb2e20c91db647a763100bb5154759cbd854659332eeebc96d0fca40e)",
-    "revocation_id(2, hex:af61590a37c0837c91393e70652ca67e31d58e29739355dff4db2c54c1dfc62c1f6b61dd37834c839d766b701d7e7fd988f54354188482d5cdd7400b0444c505)",
 }
   rules: {}
   checks: {}
