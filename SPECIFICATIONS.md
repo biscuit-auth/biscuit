@@ -519,8 +519,24 @@ message Biscuit {
 
 message SignedBlock {
   required bytes block = 1;
-  required bytes nextKey = 2;
+  required PublicKey nextKey = 2;
   required bytes signature = 3;
+  optional ExternalSignature externalSignature = 4;
+}
+
+message ExternalSignature {
+  required bytes signature = 1;
+  required PublicKey publicKey = 2;
+}
+
+message PublicKey {
+  required Algorithm algorithm = 1;
+
+  enum Algorithm {
+    Ed25519 = 0;
+  }
+
+  required bytes key = 2;
 }
 
 message Proof {
@@ -553,6 +569,8 @@ message Block {
   repeated FactV2 facts_v2 = 4;
   repeated RuleV2 rules_v2 = 5;
   repeated CheckV2 checks_v2 = 6;
+  repeated Scope scope = 7;
+  repeated PublicKey publicKeys = 8;
 }
 ```
 
@@ -565,7 +583,9 @@ each block must carry its own version.
 An implementation must refuse a token with a newer format than the range they know.
 An implementation must refuse a token with an older format than the range they know.
 An implementation must always generate tokens at the highest version it can do.
-The current minimum version number is 3.
+
+The current minimum version number is 3.  
+The current maximum version number is 4.
 
 # Version 2
 
@@ -704,6 +724,8 @@ message Block {
   repeated FactV2 facts_v2 = 4;
   repeated RuleV2 rules_v2 = 5;
   repeated CheckV2 checks_v2 = 6;
+  repeated Scope scope = 7;
+  repeated PublicKey publicKeys = 8;
 }
 ```
 
