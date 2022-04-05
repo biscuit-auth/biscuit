@@ -905,6 +905,49 @@ present, to avoid having it twice in the symbol table.
 Same as for symbols, the `publicKeys` field should only contain public keys
 that were not present in the table yet.
 
+## Appending a third-party block
+
+Third party blocks are special blocks, that are meant to be signed by a trusted party, to either expand a token or fulfill special checks with dedicated public key constraints.
+
+Unlike first-party blocks, the party signing the token should not have access to the token itself. The third party needs however some context in order to be able to properly serialize and sign block contents. Additionally, the third party needs to return both the serialized block and the external signature.
+
+To support this use-case, the protobuf schema defines two message types: `ThirdPartyBlockRequest` and `ThirdPartyBlockContents`:
+
+```
+message ThirdPartyBlockRequest {
+  required PublicKey previousKey = 1;
+  repeated PublicKey publicKeys = 2;
+}
+
+message ThirdPartyBlockContents {
+  required bytes payload = 1;
+  required ExternalSignature externalSignature = 2;
+}
+```
+
+`ThirdPartyBlockRequest` contains the necessary context for serializing and signing a datalog block:
+
+- `previousKey` is needed for the signature (it makes sure that a third-party block can only be used for a specific biscuit token
+- `publicKeys` is the list of public keys already present in the token table; they are used for serialization
+
+`ThirdPartyBlockContents` contains both the serialized `Block` and the external signature.
+
+The expected sequence is
+
+- the token holder generates a `ThirdPartyBlockRequest` from their token;
+- they send it, along with domain-specific information, to the third party that's responsible for providing a third-party block;
+- the third party creates a datalog block (based on domain-specific information), serializes it and signs it, and returns
+  a `ThirdPartyBlockContents` to the token holder
+- the token holder now uses `ThirdPartyBlockContents` to append a new signed block to the token
+
+An implemenation must be able to:
+
+- generate a `ThirdPartyBlockRequest` from a token (by extracting its last ephemeral public key and its public key table)
+- apply a `ThirdPartyBlockContents` on a token by appending the serialized block like a regular block
+
+Same as biscuit tokens, the `ThirdPartyBlockRequest` and `ThirdPartyBlockContents` values can be transfered in text format
+by encoding them with base64url.
+
 ## Test cases
 
 We provide sample tokens and the expected result of their verification at
