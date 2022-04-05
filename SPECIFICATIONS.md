@@ -477,9 +477,10 @@ for the final decision on request validation.
 
 The token must first be deserialized according to the protobuf format definition,
 of `Biscuit`.
-The cryptographic signature must be checked immediately after deserializing. For the
-`Biscuit` with a public key signature, the verifier must check that the public key of the
-authority block is the root public key it is expecting.
+
+The cryptographic signature must be checked immediately after
+deserializing. The verifier must check that the public key of the authority
+block is the root public key it is expecting.
 
 A `Biscuit` contains in its `authority` and `blocks` fields
 some byte arrays that must be deserialized as a `Block`.
@@ -855,6 +856,8 @@ defined in a token or authorizer must start from 1024.
 
 #### Adding content to the symbol table
 
+##### Regular blocks (no external signature)
+
 When creating a new block, we start from the current symbol table of the token.
 For each fact or rule that introduces a new symbol, we add the corresponding
 string to the table, and convert the fact or rule to use its index instead.
@@ -867,6 +870,40 @@ block in order, the block's symbols.
 
 It is important to verify that different blocks do not contain the same symbol in
 their list.
+
+##### 3rd party blocks (with an external signature)
+
+Blocks that are signed by an external key don't use the token symbol table
+and start from the default symbol table. Following blocks ignore the symbols
+declared in their `symbols` field.
+
+The reason for this is that the party signing the block is not supposed to have
+access to the token itself and can't use the token's symbol table.
+
+### Public key tables
+
+Public keys carried in `SignedBlock`s are stored as is, as they are required for verification.
+
+Public keys carried in datalog scope annotations are stored in a table, to reduce token size.
+
+Public keys are interned the same way for first-party and third-party tokens, unlike symbols.
+
+#### Reading
+
+Building a symbol table for a token can be done this way:
+
+for each block:
+
+- add the external public key if defined (and if not already present)
+- add the contents of the `publicKeys` field of the `Block` message
+
+It is important to only add the external public key if it's not already
+present, to avoid having it twice in the symbol table.
+
+#### Appending
+
+Same as for symbols, the `publicKeys` field should only contain public keys
+that were not present in the table yet.
 
 ## Test cases
 
