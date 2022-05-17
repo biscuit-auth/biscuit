@@ -204,7 +204,7 @@ The `name`, `variable` and `string` rules are defined as:
   - following characters are any UTF-8 letter character, numbers, `_` or `:`
 - `variable`:
   - first character is `$`
-  - following characters are any UTF-8 letter character, numbers, `_` or '=`:`
+  - following characters are any UTF-8 letter character, numbers, `_` or `:`
 - ` string`:
   - first character is `"`
   - any printable UTF-8 character except `"` which must be escaped as `\"`
