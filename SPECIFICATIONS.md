@@ -221,8 +221,9 @@ later blocks can define their own facts and rules, we must ensure the token
 cannot increase its rights with later blocks.
 
 This is done through execution scopes: by default, a block's rules and checks can only
-apply on facts created in the current or previous blocks. Facts, rules, checks
-and policies of the verifier are executed in the context of the authority block.
+apply on facts created in the authority, in the current block or in the authorizer.
+Rules, checks and policies defined in the authorizer can only apply on facts created
+in the authority or in the authorizer.
 
 Example:
 
@@ -239,19 +240,29 @@ The verifier's check will fail because when it is evaluated, it only sees
 #### Scope annotations
 
 Rules (and blocks) can specify _trusted origins_ through a special `trusting` annotation. By default,
-only the current block and the authority block are trusted. This default can be overriden:
+only the current block, the authority block and the verifier are trusted. This default can be overriden:
 
  - at the block level
  - at the rule level (which takes precedence over block-level annotations)
 
 The scope annotation can be a combination of either:
 
- - `authority` (default behaviour): the current block and the authority one are trusted
- - `previous`: the previous blocks (including the authority) are trusted.
- - a public key: the blocks carrying an external signature verified by the provided public key are trusted
+ - `authority` (default behaviour): the authorizer, the current block
+    and the authority one are trusted;
+ - `previous`: the authorizer, the current block and the previous
+   blocks (including the authority) are trusted;
+ - a public key: the authorizer, the current block and the blocks
+   carrying an external signature verified by the provided public key
+   are trusted.
 
-This scope annotation is then turned into a set of block ids. Only facts which origin is a _subset_ of these trusted
-origins are matched. The current block id is always a part of these trusted origins.
+When there are multiple scope annotations, the trusted origins are _added_. Note that the current block and the authorizer
+are _always_ trusted.
+
+This scope annotation is then turned into a set of block ids before evaluation. Authorizer facts and rules are assigned a dedicated
+block id that's distinct from the authority and from the extra blocks.
+
+Only facts which origin is a _subset_ of these trusted origins are matched. The authorizer block id and the current block id are always
+part of these trusted origins.
 
 ### Checks
 
