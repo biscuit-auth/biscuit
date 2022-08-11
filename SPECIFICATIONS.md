@@ -626,12 +626,14 @@ token generated at version N-1, new implementations must be able to recognize
 older formats. Moreover, when appending a new block, they cannot convert the
 old blocks to the new format (since that would invalidate the signature). So
 each block must carry its own version.
-An implementation must refuse a token with a newer format than the range they know.
-An implementation must refuse a token with an older format than the range they know.
-An implementation must always generate tokens at the highest version it can do.
 
-The current minimum version number is 3.  
-The current maximum version number is 4.
+- An implementation must refuse a token containing blocks with a newer format than the range they know.
+- An implementation must refuse a token containing blocks with an older format than the range they know.
+- An implementation may generate blocks with older formats to help with backwards compatibility,
+  when possible, especially for biscuit versions that are only additive in terms of features.
+
+- The lowest supported biscuit version is `3`;
+- The highest supported biscuit version is `4`;
 
 # Version 2
 
@@ -949,7 +951,7 @@ The expected sequence is
   a `ThirdPartyBlockContents` to the token holder
 - the token holder now uses `ThirdPartyBlockContents` to append a new signed block to the token
 
-An implemenation must be able to:
+An implementation must be able to:
 
 - generate a `ThirdPartyBlockRequest` from a token (by extracting its last ephemeral public key and its public key table)
 - apply a `ThirdPartyBlockContents` on a token by appending the serialized block like a regular block
