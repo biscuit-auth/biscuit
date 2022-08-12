@@ -691,9 +691,11 @@ Block n contains:
 - `pk_n+1`
 - `sig_n`
 
-The token also contains `sk_n+1`
+The token also contains `sk_n+1`.
 
-We generate at random `(pk_n+2, sk_n+2)` and the signature `sig_n+1 = sign(sk_n+1, data_n+1 + alg_n+2 + pk_n+2)`
+The new block can optionally be signed by an external keypair `(epk, esk)` and carry an external signature `esig`.
+
+We generate at random `(pk_n+2, sk_n+2)` and the signature `sig_n+1 = sign(sk_n+1, data_n+1 + esig? + alg_n+2 + pk_n+2)`. If the block is not signed by an external keypair, then `esig` is not part of the signed payload.
 
 The token will contain:
 
@@ -706,6 +708,7 @@ Token {
       data_n+1,
       pk_n+2,
       sig_n+1,
+      epk?, esig?
     }]
   proof: Proof {
     nextSecret: sk_n+2,
@@ -725,7 +728,7 @@ the root key is not ephemeral and can be trusted directly).
 
 This is necessary to make sure an external signature can't be used for any other token.
 
-This additional signature does not affect the regular signature in any way.
+The presence of an external signature affects the regular signature: the external signature is part of the payload signed by the regular signature.
 
 The token will contain:
 
