@@ -249,11 +249,13 @@ The scope annotation can be a combination of either:
 
  - `authority` (default behaviour): the authorizer, the current block
     and the authority one are trusted;
- - `previous`: the authorizer, the current block and the previous
+ - `previous` (only available in blocks): the authorizer, the current block and the previous
    blocks (including the authority) are trusted;
  - a public key: the authorizer, the current block and the blocks
    carrying an external signature verified by the provided public key
    are trusted.
+
+`previous` is only available in blocks, and is ignored when used in the authorizer.
 
 When there are multiple scope annotations, the trusted origins are _added_. Note that the current block and the authorizer
 are _always_ trusted.
