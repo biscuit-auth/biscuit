@@ -183,7 +183,7 @@ The logic language is descibed by the following EBNF grammar:
 <bytes> ::= "hex:" ([a-z] | [0-9])+
 <boolean> ::= "true" | "false"
 <date> ::= [0-9]* "-" [0-9] [0-9] "-" [0-9] [0-9] "T" [0-9] [0-9] ":" [0-9] [0-9] ":" [0-9] [0-9] ( "Z" | ( ("+" | "-") [0-9] [0-9] ":" [0-9] [0-9] ))
-<set> ::= "[" <sp>? ( <fact_term> ( <sp>? "," <sp>? <set_term>)* <sp>? )? "]"
+<set> ::= "[" <sp>? ( <set_term> ( <sp>? "," <sp>? <set_term>)* <sp>? )? "]"
 
 <expression> ::= <expression_element> (<sp>? <operator> <sp>? <expression_element>)*
 <expression_element> ::= <expression_unary> | (<expression_term> <expression_method>? ) 
