@@ -137,7 +137,7 @@ rules application does not generate any new facts, we can stop.
 
 An _integer_ is a signed 64 bits integer. It supports the following
 operations: lower than, greater than, lower than or equal, greater than or equal, equal, set
-inclusion.
+inclusion, addition, subtraction, mutiplication, division, bitwise and (v4 only), bitwise or (v4 only), bitwise xor (v4 only).
 
 A _string_ is a suite of UTF-8 characters. It supports the following
 operations: prefix, suffix, equal, set inclusion, regular expression, concatenation (with `+`), substring test (with `.contains()`).
@@ -192,7 +192,7 @@ The logic language is descibed by the following EBNF grammar:
 <method_name> ::= ([a-z] | [A-Z] ) ([a-z] | [A-Z] | [0-9] | "_" )*
 
 <expression_term> ::= <term> | ("(" <sp>? <expression> <sp>? ")")
-<operator> ::= "<" | ">" | "<=" | ">=" | "==" | "&&" | "||" | "+" | "-" | "*" | "/"
+<operator> ::= "<" | ">" | "<=" | ">=" | "==" | "&&" | "||" | "+" | "-" | "*" | "/" | "&" | "|" | "^"
 
 <sp> ::= (" " | "\t" | "\n")+
 ```
@@ -399,6 +399,9 @@ Here are the currently defined binary operations:
 - _or_, defined on booleans, returns a boolean
 - _intersection_, defined on sets, return a set that is the intersection of both arguments
 - _union_, defined on sets, return a set that is the union of both arguments
+- _bitwiseAnd_, defined on integers, returns an integer
+- _bitwiseOr_, defined on integers, returns an integer
+- _bitwiseXor_, defined on integers, returns an integer
 
 Integer operations must have overflow checks. If it overflows, the expression
 fails.
