@@ -167,7 +167,7 @@ The logic language is descibed by the following EBNF grammar:
 
 <fact> ::= <name> "(" <sp>? <fact_term> (<sp>? "," <sp>? <fact_term> )* <sp>? ")"
 <rule> ::= <predicate> <sp>? "<-" <sp>? <rule_body>
-<check> ::= "check" <sp> "if" <sp> <rule_body> (<sp>? " or " <sp>? <rule_body>)* <sp>?
+<check> ::= "check" <sp> ( "if" | "all" ) <sp> <rule_body> (<sp>? " or " <sp>? <rule_body>)* <sp>?
 <policy> ::= ("allow" | "deny") <sp> "if" <sp> <rule_body> (<sp>? " or " <sp>? <rule_body>)* <sp>?
 
 <rule_body> ::= <rule_body_element> <sp>? ("," <sp>? <rule_body_element> <sp>?)*
