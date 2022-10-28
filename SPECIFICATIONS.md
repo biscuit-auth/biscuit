@@ -239,13 +239,13 @@ To validate an operation, all of a token's checks must succeed.
 
 One block can contain one or more checks.
 
-Their text representation is `check if` followed by the body of the query.
-There can be multiple queries inside of a check, it will succeed if any of them
-succeeds.
-
-Their text representation is `check if` followed by the body of the query.
+Their text representation is `check if` or `check all` followed by the body of the query.
 There can be multiple queries inside of a check, it will succeed if any of them
 succeeds. They are separated by a `or` token.
+
+- a `check if` query succeeds if it finds one set of facts that matches the body and expressions
+- a `check all` query succeeds if all the sets of facts that match the body also succeed the expression.
+`check all` can only be used starting from block version 3
 
 Here are some examples of writing checks:
 
