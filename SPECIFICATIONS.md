@@ -5,20 +5,20 @@
 Biscuit is a bearer token that supports offline attenuation, can be verified
 by any system that knows the root public key, and provides a flexible
 caveat language based on logic programming. It is serialized as
-Protocol Buffers [^Protobuf], and designed to be small enough for storage in
+Protocol Buffers [^protobuf], and designed to be small enough for storage in
 HTTP cookies.
 
 ### Vocabulary
 
 - Datalog: a declarative logic language that works on facts defining data relationship,
-rules creating more facts if conditions are met, and queries to test such conditions
+  rules creating more facts if conditions are met, and queries to test such conditions
 - check: a restriction on the kind of operation that can be performed with
-the token that contains it, represented as a datalog query in biscuit. For the operation
-to be valid, all of the checks defined in the token and the authorizer must succeed
+  the token that contains it, represented as a datalog query in biscuit. For the operation
+  to be valid, all of the checks defined in the token and the authorizer must succeed
 - allow/deny policies: a list of datalog queries that are tested in a sequence
-until one of them matches. They can only be defined in the authorizer
+  until one of them matches. They can only be defined in the authorizer
 - block: a list of datalog facts, rules and checks. The first block is the authority
-block, used to define the basic rights of a token
+  block, used to define the basic rights of a token
 - (Verified) Biscuit: a completely parsed biscuit, whose signatures and final proof
   have been successfully verified
 - Unverified Biscuit: a completely parsed biscuit, whose signatures and final proof
@@ -54,60 +54,60 @@ variant of datalog that accepts expressions on some data types.
 
 ## Semantics
 
-A biscuit is structured as an append-only list of blocks, containing *checks*,
-and describing authorization properties.  As with Macaroons[^MACAROONS],
+A biscuit is structured as an append-only list of blocks, containing _checks_,
+and describing authorization properties. As with Macaroons[^macaroons],
 an operation must comply with all checks in order to be allowed by the biscuit.
 
 Checks are written as queries defined in a flavor of Datalog that supports
-expressions on some data types[^DATALOG], without support for negation. This
+expressions on some data types[^datalog], without support for negation. This
 simplifies its implementation and makes the check more precise.
 
 ### Logic language
 
 #### Terminology
 
-A Biscuit Datalog program contains *facts* and *rules*, which are made of
-*predicates* over the following types:
+A Biscuit Datalog program contains _facts_ and _rules_, which are made of
+_predicates_ over the following types:
 
-- *variable*
-- *integer*
-- *string*
-- *byte array*
-- *date*
-- *boolean*
-- *set* a deduplicated list of values of any type, except *variable* or *set*
+- _variable_
+- _integer_
+- _string_
+- _byte array_
+- _date_
+- _boolean_
+- _set_ a deduplicated list of values of any type, except _variable_ or _set_
 
 While a Biscuit token does not use a textual representation for storage, we
 use one for parsing and pretty printing of Datalog elements.
 
-A *predicate* has the form `Predicate(v0, v1, ..., vn)`.
+A _predicate_ has the form `Predicate(v0, v1, ..., vn)`.
 
-A *fact* is a *predicate* that does not contain any *variable*.
+A _fact_ is a _predicate_ that does not contain any _variable_.
 
-A *rule* has the form:
-`Pr(r0, r1, ..., rk) <- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), E0(v0, ..., vi), ..., Ex(vx, ..., vy)`.
-The part of the left of the arrow is called the *head* and on the right, the
-*body*. In a *rule*, each of the `ri` or `ti_j` terms can be of any type. A
-*rule* is safe if all of the variables in the head appear somewhere in the body.
-We also define an *expression* `Ex` over the variables `v0` to `vi`. *Expressions*
-define a test of variable values when applying the *rule*. If the *expression*
-returns `false`, the *rule* application fails.
+A _rule_ has the form:
+`Pr(r0, r1, ..., rk) <- P0(t0_1, t0_2, ..., t0_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), E0(v0, ..., vi), ..., Ex(vx, ..., vy)`.
+The part of the left of the arrow is called the _head_ and on the right, the
+_body_. In a _rule_, each of the `ri` or `ti_j` terms can be of any type. A
+_rule_ is safe if all of the variables in the head appear somewhere in the body.
+We also define an _expression_ `Ex` over the variables `v0` to `vi`. _Expressions_
+define a test of variable values when applying the _rule_. If the _expression_
+returns `false`, the _rule_ application fails.
 
-A *query* is a type of *rule* that has no head. It has the following form:
+A _query_ is a type of _rule_ that has no head. It has the following form:
 `?- P0(t1_1, t1_2, ..., t1_m1), ..., Pn(tn_1, tn_2, ..., tn_mn), C0(v0), ..., Cx(vx)`.
-When applying a *rule*, if there is a combination of *facts* that matches the
-body's predicates, we generate a new *fact* corresponding to the head (with the
+When applying a _rule_, if there is a combination of _facts_ that matches the
+body's predicates, we generate a new _fact_ corresponding to the head (with the
 variables bound to the corresponding values).
 
-A *check* is a list of *query* for which the token validation will fail if it cannot
+A _check_ is a list of _query_ for which the token validation will fail if it cannot
 produce any fact. A single query needs to match for the fact to succeed.
 If any of the cheks fails, the entire verification fails.
 
-An *allow policy* or *deny policy* is a list of *query*. If any of the queries produces something,
+An _allow policy_ or _deny policy_ is a list of _query_. If any of the queries produces something,
 the policy matches, and we stop there, otherwise we test the next one. If an
-*allow policy* succeeds, the token verification succeeds, while if a *deny policy*
+_allow policy_ succeeds, the token verification succeeds, while if a _deny policy_
 succeeds, the token verification fails. Those policies are tested after all of
-the *checks* have passed.
+the _checks_ have passed.
 
 We will represent the various types as follows:
 
@@ -135,22 +135,22 @@ rules application does not generate any new facts, we can stop.
 
 #### Data types
 
-An *integer* is a signed 64 bits integer. It supports the following
+An _integer_ is a signed 64 bits integer. It supports the following
 operations: lower than, greater than, lower than or equal, greater than or equal, equal, set
 inclusion.
 
-A *string* is a suite of UTF-8 characters. It supports the following
+A _string_ is a suite of UTF-8 characters. It supports the following
 operations: prefix, suffix, equal, set inclusion, regular expression, concatenation (with `+`), substring test (with `.contains()`).
 
-A *byte array* is a suite of bytes. It supports the following
+A _byte array_ is a suite of bytes. It supports the following
 operations: equal, set inclusion.
 
-A *date* is a 64 bit unsigned integer representing a TAI64. It supports the
+A _date_ is a 64 bit unsigned integer representing a TAI64. It supports the
 following operations: `<`, `<=` (before), `>`, `>=` (after), equality, set inclusion.
 
-A *boolean* is `true` or `false`. It supports the following operations: `==`, `||`, `&&`, set inclusion. 
+A _boolean_ is `true` or `false`. It supports the following operations: `==`, `||`, `&&`, set inclusion.
 
-A *set* is a deduplicated list of terms of the same type. It cannot contain
+A _set_ is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets. It supports equality, intersection, union, set inclusion.
 
 #### Grammar
@@ -187,16 +187,16 @@ The logic language is described by the following EBNF grammar:
 <bytes> ::= "hex:" ([a-z] | [0-9])+
 <boolean> ::= "true" | "false"
 <date> ::= [0-9]* "-" [0-9] [0-9] "-" [0-9] [0-9] "T" [0-9] [0-9] ":" [0-9] [0-9] ":" [0-9] [0-9] ( "Z" | ( ("+" | "-") [0-9] [0-9] ":" [0-9] [0-9] ))
-<set> ::= "[" <sp>? ( <fact_term> ( <sp>? "," <sp>? <set_term>)* <sp>? )? "]"
+<set> ::= "[" <sp>? ( <set_term> ( <sp>? "," <sp>? <set_term>)* <sp>? )? "]"
 
 <expression> ::= <expression_element> (<sp>? <operator> <sp>? <expression_element>)*
-<expression_element> ::= <expression_unary> | (<expression_term> <expression_method>? ) 
+<expression_element> ::= <expression_unary> | (<expression_term> <expression_method>? )
 <expression_unary> ::= "!" <sp>? <expression>
-<expression_method> ::= "." <method_name> "(" <sp>? (<term> ( <sp>? "," <sp>? <term>)* )? <sp>? ")" 
+<expression_method> ::= "." <method_name> "(" <sp>? (<term> ( <sp>? "," <sp>? <term>)* )? <sp>? ")"
 <method_name> ::= ([a-z] | [A-Z] ) ([a-z] | [A-Z] | [0-9] | "_" )*
 
 <expression_term> ::= <term> | ("(" <sp>? <expression> <sp>? ")")
-<operator> ::= "<" | ">" | "<=" | ">=" | "==" | "&&" | "||" | "+" | "-" | "*" | "/" 
+<operator> ::= "<" | ">" | "<=" | ">=" | "==" | "&&" | "||" | "+" | "-" | "*" | "/"
 
 <sp> ::= (" " | "\t" | "\n")+
 ```
@@ -208,8 +208,8 @@ The `name`, `variable` and `string` rules are defined as:
   - following characters are any UTF-8 letter character, numbers, `_` or `:`
 - `variable`:
   - first character is `$`
-  - following characters are any UTF-8 letter character, numbers, `_` or '=`:`
-- ` string`:
+  - following characters are any UTF-8 letter character, numbers, `_` or `:`
+- `string`:
   - first character is `"`
   - any printable UTF-8 character except `"` which must be escaped as `\"`
   - last character is `"`
@@ -272,10 +272,6 @@ Checks are logic queries evaluating conditions on facts.
 To validate an operation, all of a token's checks must succeed.
 
 One block can contain one or more checks.
-
-Their text representation is `check if` followed by the body of the query.
-There can be multiple queries inside of a check, it will succeed if any of them
-succeeds.
 
 Their text representation is `check if` followed by the body of the query.
 There can be multiple queries inside of a check, it will succeed if any of them
@@ -352,7 +348,7 @@ check if
 These rules will define authority facts depending on verifier data.
 If we had the facts `resource("file1")` and
 `owner("alice", "file1")`, the authority rules will define
-`right"file1", "read")` and `right("file1", "write")`,
+`right("file1", "read")` and `right("file1", "write")`,
 which will allow check 1 and check 2 to succeed.
 
 If the owner ambient fact does not match the restriction in the second check, the
@@ -400,42 +396,43 @@ rule.
 Expressions are internally represented as a series of opcodes for a stack based
 virtual machine. There are three kinds of opcodes:
 
-- *value*: a raw value of any type. If it is a variable, the variable must also
-appear in a predicate, so the variable gets a real value for execution. When
-encountering a *value* opcode, we push it onto the stack
-- *unary operation*: an operation that applies on one argument. When executed,
-it pops a value from the stack, applies the operation, then pushes the result
-- *binary operation*: an operation that applies on two arguments. When executed,
-it pops two values from the stack, applies the operation, then pushes the result
+- _value_: a raw value of any type. If it is a variable, the variable must also
+  appear in a predicate, so the variable gets a real value for execution. When
+  encountering a _value_ opcode, we push it onto the stack
+- _unary operation_: an operation that applies on one argument. When executed,
+  it pops a value from the stack, applies the operation, then pushes the result
+- _binary operation_: an operation that applies on two arguments. When executed,
+  it pops two values from the stack, applies the operation, then pushes the result
 
 After executing, the stack must contain only one value, of the boolean type.
 
 Here are the currently defined unary operations:
 
-- *negate*: boolean negation
-- *parens*: returns its argument without modification (this is used when printing
-the expression, to avoid precedence errors)
-- *length*: defined on strings, byte arrays and sets
+- _negate_: boolean negation
+- _parens_: returns its argument without modification (this is used when printing
+  the expression, to avoid precedence errors)
+- _length_: defined on strings, byte arrays and sets
 
 Here are the currently defined binary operations:
-- *less than*, defined on integers and dates, returns a boolean
-- *greater than*, defined on integers and dates, returns a boolean
-- *less or equal*, defined on integers and dates, returns a boolean
-- *greater or equal*, defined on integers and dates, returns a boolean
-- *equal*, defined on integers, strings, byte arrays, dates, set, returns a boolean
-- *contains* takes a set and another value as argument, returns a boolean. Between two sets, indicates if the first set is a superset of the second one.
-  between two strings, indicates a substring test. 
-- *prefix*, defined on strings, returns a boolean
-- *suffix*, defined on strings, returns a boolean
-- *regex*, defined on strings, returns a boolean
-- *add*, defined on integers, returns an integer. Defined on strings, concatenates them.
-- *sub*, defined on integers, returns an integer
-- *mul*, defined on integers, returns an integer
-- *div*, defined on integers, returns an integer
-- *and*, defined on booleans, returns a boolean
-- *or*, defined on booleans, returns a boolean
-- *intersection*, defined on sets, return a set that is the intersection of both arguments
-- *union*, defined on sets, return a set that is the union of both arguments
+
+- _less than_, defined on integers and dates, returns a boolean
+- _greater than_, defined on integers and dates, returns a boolean
+- _less or equal_, defined on integers and dates, returns a boolean
+- _greater or equal_, defined on integers and dates, returns a boolean
+- _equal_, defined on integers, strings, byte arrays, dates, set, returns a boolean
+- _contains_ takes a set and another value as argument, returns a boolean. Between two sets, indicates if the first set is a superset of the second one.
+  between two strings, indicates a substring test.
+- _prefix_, defined on strings, returns a boolean
+- _suffix_, defined on strings, returns a boolean
+- _regex_, defined on strings, returns a boolean
+- _add_, defined on integers, returns an integer. Defined on strings, concatenates them.
+- _sub_, defined on integers, returns an integer
+- _mul_, defined on integers, returns an integer
+- _div_, defined on integers, returns an integer
+- _and_, defined on booleans, returns a boolean
+- _or_, defined on booleans, returns a boolean
+- _intersection_, defined on sets, return a set that is the intersection of both arguments
+- _union_, defined on sets, return a set that is the union of both arguments
 
 Integer operations must have overflow checks. If it overflows, the expression
 fails.
@@ -663,11 +660,11 @@ token.
 
 #### Signature (one block)
 
-* `(pk_0, sk_0)` the root public and private Ed25519 keys
-* `data_0` the serialized Datalog
-* `(pk_1, sk_1)` the next key pair, generated at random
-* `alg_1` the little endian representation of the signature algorithm fr `pk1, sk1` (see protobuf schema)
-* `sig_0 = sign(sk_0, data_0 + alg_1 + pk_1)`
+- `(pk_0, sk_0)` the root public and private Ed25519 keys
+- `data_0` the serialized Datalog
+- `(pk_1, sk_1)` the next key pair, generated at random
+- `alg_1` the little endian representation of the signature algorithm fr `pk1, sk1` (see protobuf schema)
+- `sig_0 = sign(sk_0, data_0 + alg_1 + pk_1)`
 
 The token will contain:
 
@@ -691,6 +688,7 @@ Token {
 With a token containing blocks 0 to n:
 
 Block n contains:
+
 - `data_n`
 - `pk_n+1`
 - `sig_n`
@@ -975,6 +973,6 @@ We provide sample tokens and the expected result of their verification at
 
 - "Trust Management Languages" https://www.cs.purdue.edu/homes/ninghui/papers/cdatalog_padl03.pdf
 
-[^ProtoBuf]: ProtoBuf https://developers.google.com/protocol-buffers/
-[^DATALOG]: "Datalog with Constraints: A Foundation for Trust Management Languages" http://crypto.stanford.edu/~ninghui/papers/cdatalog_padl03.pdf
-[^MACAROONS]: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
+[^protobuf]: ProtoBuf https://developers.google.com/protocol-buffers/
+[^datalog]: "Datalog with Constraints: A Foundation for Trust Management Languages" http://crypto.stanford.edu/~ninghui/papers/cdatalog_padl03.pdf
+[^macaroons]: "Macaroons: Cookies with Contextual Caveats for Decentralized Authorization in the Cloud" https://ai.google/research/pubs/pub41892
