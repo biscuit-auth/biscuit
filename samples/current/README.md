@@ -1339,3 +1339,80 @@ World {
 
 result: `Ok(0)`
 
+
+------------------------------
+
+## block rules: test25_check_all.bc
+### token
+
+authority:
+symbols: ["allowed_operations", "A", "B", "op", "allowed"]
+
+public keys: []
+
+```
+allowed_operations(["A", "B"]);
+check all operation($op), allowed_operations($allowed), $allowed.contains($op);
+```
+
+### validation for "A, B"
+
+authorizer code:
+```
+operation("A");
+operation("B");
+
+allow if true;
+```
+
+revocation ids:
+- `b4ee591001e4068a7ee8efb7a0586c3ca3a785558f34d1fa8dbfa21b41ace70de0b670ac49222c7413066d0d83e6d9edee94fb0fda4b27ea11e837304dfb4b0b`
+
+authorizer world:
+```
+World {
+  facts: {
+    "allowed_operations([ \"A\", \"B\"])",
+    "operation(\"A\")",
+    "operation(\"B\")",
+}
+  rules: {}
+  checks: {}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Ok(0)`
+### validation for "A, inalid"
+
+authorizer code:
+```
+operation("A");
+operation("invalid");
+
+allow if true;
+```
+
+revocation ids:
+- `b4ee591001e4068a7ee8efb7a0586c3ca3a785558f34d1fa8dbfa21b41ace70de0b670ac49222c7413066d0d83e6d9edee94fb0fda4b27ea11e837304dfb4b0b`
+
+authorizer world:
+```
+World {
+  facts: {
+    "allowed_operations([ \"A\", \"B\"])",
+    "operation(\"A\")",
+    "operation(\"invalid\")",
+}
+  rules: {}
+  checks: {}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check all operation($op), allowed_operations($allowed), $allowed.contains($op)" })] }))`
+
