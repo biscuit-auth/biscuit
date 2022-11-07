@@ -171,7 +171,7 @@ The logic language is described by the following EBNF grammar:
 
 <fact> ::= <name> "(" <sp>? <fact_term> (<sp>? "," <sp>? <fact_term> )* <sp>? ")"
 <rule> ::= <predicate> <sp>? "<-" <sp>? <rule_body>
-<check> ::= "check" <sp> "if" <sp> <rule_body> (<sp>? " or " <sp>? <rule_body>)* <sp>?
+<check> ::= "check" <sp> ( "if" | "all" ) <sp> <rule_body> (<sp>? " or " <sp>? <rule_body>)* <sp>?
 <policy> ::= ("allow" | "deny") <sp> "if" <sp> <rule_body> (<sp>? " or " <sp>? <rule_body>)* <sp>?
 
 <rule_body> ::= <rule_body_element> <sp>? ("," <sp>? <rule_body_element> <sp>?)* (<sp> <origin_clause>)?
@@ -273,9 +273,13 @@ To validate an operation, all of a token's checks must succeed.
 
 One block can contain one or more checks.
 
-Their text representation is `check if` followed by the body of the query.
+Their text representation is `check if` or `check all` followed by the body of the query.
 There can be multiple queries inside of a check, it will succeed if any of them
 succeeds. They are separated by a `or` token.
+
+- a `check if` query succeeds if it finds one set of facts that matches the body and expressions
+- a `check all` query succeeds if all the sets of facts that match the body also succeed the expression.
+`check all` can only be used starting from block version 4
 
 Here are some examples of writing checks:
 
