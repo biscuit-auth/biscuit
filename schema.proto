@@ -13,6 +13,12 @@ message SignedBlock {
   required bytes block = 1;
   required PublicKey nextKey = 2;
   required bytes signature = 3;
+  optional ExternalSignature externalSignature = 4;
+}
+
+message ExternalSignature {
+  required bytes signature = 1;
+  required PublicKey publicKey = 2;
 }
 
 message PublicKey {
@@ -40,6 +46,20 @@ message Block {
   repeated FactV2 facts_v2 = 4;
   repeated RuleV2 rules_v2 = 5;
   repeated CheckV2 checks_v2 = 6;
+  repeated Scope scope = 7;
+  repeated PublicKey publicKeys = 8;
+}
+
+message Scope {
+  enum ScopeType {
+    Authority = 0;
+    Previous  = 1;
+  }
+
+  oneof Content {
+    ScopeType scopeType = 1;
+    int64 publicKey = 2;
+  }
 }
 
 message FactV2 {
@@ -50,6 +70,7 @@ message RuleV2 {
   required PredicateV2 head = 1;
   repeated PredicateV2 body = 2;
   repeated ExpressionV2 expressions = 3;
+  repeated Scope scope = 4;
 }
 
 message CheckV2 {
@@ -143,4 +164,14 @@ message AuthorizerPolicies {
   repeated RuleV2 rules = 4;
   repeated CheckV2 checks = 5;
   repeated Policy policies = 6;
+}
+
+message ThirdPartyBlockRequest {
+  required PublicKey previousKey = 1;
+  repeated PublicKey publicKeys = 2;
+}
+
+message ThirdPartyBlockContents {
+  required bytes payload = 1;
+  required ExternalSignature externalSignature = 2;
 }
