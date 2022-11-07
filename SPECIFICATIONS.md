@@ -279,7 +279,7 @@ succeeds. They are separated by a `or` token.
 
 - a `check if` query succeeds if it finds one set of facts that matches the body and expressions
 - a `check all` query succeeds if all the sets of facts that match the body also succeed the expression.
-`check all` can only be used starting from block version 3
+`check all` can only be used starting from block version 4
 
 Here are some examples of writing checks:
 
