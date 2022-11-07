@@ -888,6 +888,7 @@ check if 2 >= 1;
 check if 2 >= 2;
 check if 3 == 3;
 check if 1 + 2 * 3 - 4 / 2 == 5;
+check if 1 | 2 ^ 3 == 0;
 check if "hello world".starts_with("hello") && "hello world".ends_with("world");
 check if "aaabde".matches("a*c?.e");
 check if "aaabde".contains("abd");
@@ -916,7 +917,7 @@ allow if true;
 ```
 
 revocation ids:
-- `f1391d7549f4c165dd58878c8433bdc23634533f4910bcd37fc53d5b3b29c542ef1b46a38a42beb2df911d526a52f65774e1d60f910dbe15ca1591735617240b`
+- `d11eaf29a6f7596e53fbf2360638c72432c7fbd09e2e39205b5a6ca922ac053168e952ed0c75a0d2ceb8798aa918560b78185eef880abc7705aa9b611e5d8707`
 
 authorizer world:
 ```
