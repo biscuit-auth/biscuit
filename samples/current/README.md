@@ -1339,6 +1339,7 @@ World {
 
 result: `Ok(0)`
 
+
 ------------------------------
 
 ## block rules: test25_check_all.bc
@@ -1414,3 +1415,4 @@ World {
 ```
 
 result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check all operation($op), allowed_operations($allowed), $allowed.contains($op)" })] }))`
+
