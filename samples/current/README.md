@@ -11,6 +11,8 @@ root public key: acdd6d5b53bfee478bf689f8e012fe7988bf755e3d7c5152947abc149bc2018
 authority:
 symbols: ["file1", "file2"]
 
+public keys: []
+
 ```
 right("file1", "read");
 right("file2", "read");
@@ -18,7 +20,9 @@ right("file1", "write");
 ```
 
 1:
-symbols: ["check1", "0"]
+symbols: ["0"]
+
+public keys: []
 
 ```
 check if resource($0), operation("read"), right($0, "read");
@@ -29,11 +33,13 @@ check if resource($0), operation("read"), right($0, "read");
 authorizer code:
 ```
 resource("file1");
+
+allow if true;
 ```
 
 revocation ids:
 - `3ee1c0f42ba69ec63b1f39a6b3c57d25a4ccec452233ca6d40530ecfe83af4918fa78d9346f8b7c498545b54663960342b9ed298b2c8bbe2085b80c237b56f09`
-- `12ae3232773614db9bbbdb62ebd07c369c822f1a31fd7ddfc60bc0cc0985839d15223d19847a746e737de65b9e2574d873362a7c1b69127cf5b69f0f6f10dc04`
+- `e16ccf0820b02092adb531e36c2e82884c6c6c647b1c85184007f2ace601648afb71faa261b11f9ab352093c96187870f868588b664579c8018864b306bd5007`
 
 authorizer world:
 ```
@@ -63,12 +69,16 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 authority:
 symbols: ["file1"]
 
+public keys: []
+
 ```
 right("file1", "read");
 ```
 
 1:
-symbols: ["check1", "0"]
+symbols: ["0"]
+
+public keys: []
 
 ```
 check if resource($0), operation("read"), right($0, "read");
@@ -87,6 +97,8 @@ result: `Err(Format(Signature(InvalidSignature("signature error: Verification eq
 authority:
 symbols: ["file1", "file2"]
 
+public keys: []
+
 ```
 right("file1", "read");
 right("file2", "read");
@@ -94,7 +106,9 @@ right("file1", "write");
 ```
 
 1:
-symbols: ["check1", "0"]
+symbols: ["0"]
+
+public keys: []
 
 ```
 check if resource($0), operation("read"), right($0, "read");
@@ -113,6 +127,8 @@ result: `Err(Format(InvalidSignatureSize(16)))`
 authority:
 symbols: ["file1", "file2"]
 
+public keys: []
+
 ```
 right("file1", "read");
 right("file2", "read");
@@ -120,7 +136,9 @@ right("file1", "write");
 ```
 
 1:
-symbols: ["check1", "0"]
+symbols: ["0"]
+
+public keys: []
 
 ```
 check if resource($0), operation("read"), right($0, "read");
@@ -139,6 +157,8 @@ result: `Err(Format(Signature(InvalidSignature("signature error: Verification eq
 authority:
 symbols: ["file1", "file2"]
 
+public keys: []
+
 ```
 right("file1", "read");
 right("file2", "read");
@@ -146,7 +166,9 @@ right("file1", "write");
 ```
 
 1:
-symbols: ["check1", "0"]
+symbols: ["0"]
+
+public keys: []
 
 ```
 check if resource($0), operation("read"), right($0, "read");
@@ -165,6 +187,8 @@ result: `Err(Format(Signature(InvalidSignature("signature error: Verification eq
 authority:
 symbols: ["file1", "file2"]
 
+public keys: []
+
 ```
 right("file1", "read");
 right("file2", "read");
@@ -172,14 +196,18 @@ right("file1", "write");
 ```
 
 1:
-symbols: ["check1", "0"]
+symbols: ["0"]
+
+public keys: []
 
 ```
 check if resource($0), operation("read"), right($0, "read");
 ```
 
 2:
-symbols: ["check2"]
+symbols: []
+
+public keys: []
 
 ```
 check if resource("file1");
@@ -198,13 +226,17 @@ result: `Err(Format(Signature(InvalidSignature("signature error: Verification eq
 authority:
 symbols: ["user_id", "alice", "file1"]
 
+public keys: []
+
 ```
 user_id("alice");
 owner("alice", "file1");
 ```
 
 1:
-symbols: ["0", "1", "check1"]
+symbols: ["0", "1"]
+
+public keys: []
 
 ```
 right($0, "read") <- resource($0), user_id($1), owner($1, $0);
@@ -213,6 +245,8 @@ check if resource($0), operation("read"), right($0, "read");
 
 2:
 symbols: ["file2"]
+
+public keys: []
 
 ```
 owner("alice", "file2");
@@ -224,12 +258,14 @@ authorizer code:
 ```
 resource("file2");
 operation("read");
+
+allow if true;
 ```
 
 revocation ids:
 - `02d287b0e5b22780192f8351538583c17f7d0200e064b32a1fcf07899e64ffb10e4de324f5c5ebc72c89a63e424317226cf555eb42dae81b2fd4639cf7591108`
-- `0037d613778198f715d51300ee9a7e997e1608428aa921fa93f6689e2aa96b1843b81a0c1b0966a6e3a8cef3b7c24620364c965bfab7f04b782b195dfa648606`
-- `95a0a288af1a34b28090aa910ff0ac6e3caee45476fabb4748a3fa596d17f5164a360609a3cc8badb3d4b262ae5ac4f05f23dfcdef4c773b7cadb82d274c3408`
+- `22e75ea200cf7b2b62b389298fe0dec973b7f9c7e54e76c3c41811d72ea82c68227bc9079b7d05986de17ef9301cccdc08f5023455386987d1e6ee4391b19f06`
+- `140a3631fecae550b51e50b9b822b947fb485c80070b34482fa116cdea560140164a1d0a959b40fed8a727e2f62c0b57635760c488c8bf0eda80ee591558c409`
 
 authorizer world:
 ```
@@ -241,7 +277,9 @@ World {
     "resource(\"file2\")",
     "user_id(\"alice\")",
 }
-  rules: {}
+  rules: {
+    "right($0, \"read\") <- resource($0), user_id($1), owner($1, $0)",
+}
   checks: {}
   policies: {
     "allow if true",
@@ -260,12 +298,16 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 authority:
 symbols: ["file1"]
 
+public keys: []
+
 ```
 right("file1", "read");
 ```
 
 1:
-symbols: ["check1", "0"]
+symbols: ["0"]
+
+public keys: []
 
 ```
 check if resource($0), operation("read"), right($0, "read");
@@ -273,6 +315,8 @@ check if resource($0), operation("read"), right($0, "read");
 
 2:
 symbols: ["file2"]
+
+public keys: []
 
 ```
 right("file2", "read");
@@ -284,12 +328,14 @@ authorizer code:
 ```
 resource("file2");
 operation("read");
+
+allow if true;
 ```
 
 revocation ids:
 - `567682495bf002eb84c46491e40fad8c55943d918c65e2c110b1b88511bf393072c0305a243e3d632ca5f1e9b0ace3e3582de84838c3a258480657087c267f02`
-- `a6ff5553b573a28717ceba206f9afb6c4052879303e6566183736f66c4f381db219adb630fd61b340e5a843c4bd9e0a66c802a46c2aaeb364c239b396c11040d`
-- `6ddd3bb88b98c0624f5b6b85dd35d0227b2c4085cd8ea67ebb3d2cec92f0c501cae4cdae766aa6d03667ab4553cd9d003f1ddb54cecf183a09aa6bb68c7b8002`
+- `71f0010b1034dbc62c53f67a23947b92ccba46495088567ac7ad5c4d7d65476964bee42053a6a35088110c5918f9c9606057689271fef89d84253cf98e6d4407`
+- `6d00d5f2a5d25dbfaa19152a81b44328b368e8fb8300b25e36754cfe8b2ce1eb2d1452ce9b1502e6f377a23aa87098fb05b5b073541624a8815ba0610f793005`
 
 authorizer world:
 ```
@@ -319,15 +365,19 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 authority:
 symbols: []
 
+public keys: []
+
 ```
 ```
 
 1:
-symbols: ["check1", "file1", "expiration", "date"]
+symbols: ["file1", "expiration"]
+
+public keys: []
 
 ```
 check if resource("file1");
-check if time($date), $date <= 2018-12-20T00:00:00Z;
+check if time($time), $time <= 2018-12-20T00:00:00Z;
 ```
 
 ### validation
@@ -337,11 +387,13 @@ authorizer code:
 resource("file1");
 operation("read");
 time(2020-12-21T09:23:12Z);
+
+allow if true;
 ```
 
 revocation ids:
 - `b2474f3e0a5788cdeff811f2599497a04d1ad71ca48dbafb90f20a950d565dda0b86bd6c9072a727c19b6b20a1ae10d8cb88155186550b77016ffd1dca9a6203`
-- `acbf0c948ba0271866ecc15a04fa3effa9485c543d70e1d5e4ce0a5d70d91c208d7d526151a2ad01a93caf46df2ecfb92fdedab03586ca895a12d869c8ad350e`
+- `0d12152670cbefe2fa504af9a92b513f1a48ae460ae5e66aaac4ed9f7dc3cc1c4c510693312b351465062169a2169fc520ce4e17e548d21982c81a74c66a3c0c`
 
 authorizer world:
 ```
@@ -359,7 +411,7 @@ World {
 }
 ```
 
-result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: "check if time($date), $date <= 2018-12-20T00:00:00Z" })] }))`
+result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 1, check_id: 1, rule: "check if time($time), $time <= 2018-12-20T00:00:00Z" })] }))`
 
 
 ------------------------------
@@ -370,12 +422,16 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 authority:
 symbols: ["file1"]
 
+public keys: []
+
 ```
 right("file1", "read");
 ```
 
 1:
 symbols: ["file2"]
+
+public keys: []
 
 ```
 right("file2", "read");
@@ -389,6 +445,8 @@ resource("file2");
 operation("read");
 
 check if right($0, $1), resource($0), operation($1);
+
+allow if true;
 ```
 
 revocation ids:
@@ -425,6 +483,8 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Authorizer(Fa
 authority:
 symbols: ["file1"]
 
+public keys: []
+
 ```
 right("file1", "read");
 ```
@@ -437,6 +497,8 @@ resource("file2");
 operation("read");
 
 check if right($0, $1), resource($0), operation($1);
+
+allow if true;
 ```
 
 revocation ids:
@@ -469,7 +531,9 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Authorizer(Fa
 ### token
 
 authority:
-symbols: ["check1", "file1"]
+symbols: ["file1"]
+
+public keys: []
 
 ```
 check if resource("file1");
@@ -481,10 +545,12 @@ authorizer code:
 ```
 resource("file1");
 operation("read");
+
+allow if true;
 ```
 
 revocation ids:
-- `548609f44a483e7d41f647bec72056c9d8bba25a52b613a31560f147bf3674224d4814174ee5081c4b21e9020887284a9c316757b4c328447f9d585c249aeb08`
+- `0a1d14a145debbb0a2f4ce0631d3a0a48a2e0eddabefda7fabb0414879ec6be24b9ae7295c434609ada3f8cc47b8845bbd5a0d4fba3d96748ff1b824496e0405`
 
 authorizer world:
 ```
@@ -508,10 +574,12 @@ authorizer code:
 ```
 resource("file2");
 operation("read");
+
+allow if true;
 ```
 
 revocation ids:
-- `548609f44a483e7d41f647bec72056c9d8bba25a52b613a31560f147bf3674224d4814174ee5081c4b21e9020887284a9c316757b4c328447f9d585c249aeb08`
+- `0a1d14a145debbb0a2f4ce0631d3a0a48a2e0eddabefda7fabb0414879ec6be24b9ae7295c434609ada3f8cc47b8845bbd5a0d4fba3d96748ff1b824496e0405`
 
 authorizer world:
 ```
@@ -539,13 +607,17 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 authority:
 symbols: ["file1", "file2"]
 
+public keys: []
+
 ```
 right("file1", "read");
 right("file2", "read");
 ```
 
 1:
-symbols: ["valid_date", "0", "1", "check1"]
+symbols: ["valid_date", "0", "1"]
+
+public keys: []
 
 ```
 valid_date("file1") <- time($0), resource("file1"), $0 <= 2030-12-31T12:59:59Z;
@@ -559,11 +631,13 @@ authorizer code:
 ```
 resource("file1");
 time(2020-12-21T09:23:12Z);
+
+allow if true;
 ```
 
 revocation ids:
 - `d251352efd4e4c72e8a1609fce002f558f1a0bb5e36cd3d8b3a6c6599e3960880f21bea6fe1857f4ecbc2c399dd77829b154e75f1323e9dec413aad70f97650d`
-- `b5c6b0423d971306ba360347b9f0b04d49b8bc07a9e577346df6839ceac418c75197b65fbb648cbc9b9296e15e601ba143b1c59b7329e66a569f0f141b09750e`
+- `9de4f51e6019540598a957515dad52f5403e5c6cd8d2adbca1bff42a4fbc0eb8c6adab499da2fe894a8a9c9c581276bfb0fdc3d35ab2ff9f920a2c4690739903`
 
 authorizer world:
 ```
@@ -575,7 +649,10 @@ World {
     "time(2020-12-21T09:23:12Z)",
     "valid_date(\"file1\")",
 }
-  rules: {}
+  rules: {
+    "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z",
+    "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, ![\"file1\"].contains($1)",
+}
   checks: {}
   policies: {
     "allow if true",
@@ -590,11 +667,13 @@ authorizer code:
 ```
 resource("file2");
 time(2020-12-21T09:23:12Z);
+
+allow if true;
 ```
 
 revocation ids:
 - `d251352efd4e4c72e8a1609fce002f558f1a0bb5e36cd3d8b3a6c6599e3960880f21bea6fe1857f4ecbc2c399dd77829b154e75f1323e9dec413aad70f97650d`
-- `b5c6b0423d971306ba360347b9f0b04d49b8bc07a9e577346df6839ceac418c75197b65fbb648cbc9b9296e15e601ba143b1c59b7329e66a569f0f141b09750e`
+- `9de4f51e6019540598a957515dad52f5403e5c6cd8d2adbca1bff42a4fbc0eb8c6adab499da2fe894a8a9c9c581276bfb0fdc3d35ab2ff9f920a2c4690739903`
 
 authorizer world:
 ```
@@ -605,7 +684,10 @@ World {
     "right(\"file2\", \"read\")",
     "time(2020-12-21T09:23:12Z)",
 }
-  rules: {}
+  rules: {
+    "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z",
+    "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, ![\"file1\"].contains($1)",
+}
   checks: {}
   policies: {
     "allow if true",
@@ -622,7 +704,9 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 ### token
 
 authority:
-symbols: ["resource_match", "0", "file[0-9]+.txt"]
+symbols: ["0", "file[0-9]+.txt"]
+
+public keys: []
 
 ```
 check if resource($0), $0.matches("file[0-9]+.txt");
@@ -633,10 +717,12 @@ check if resource($0), $0.matches("file[0-9]+.txt");
 authorizer code:
 ```
 resource("file1");
+
+allow if true;
 ```
 
 revocation ids:
-- `4bb969d5cf558d831892f3ef52115a217fb059968eb1d109958076cd3521cd88ddd161f864bf3335e5534a504947d6c4f684bd62a37ba2b23fa30260a825bf04`
+- `1c158e1e12c8670d3f4411597276fe1caab17b7728adb7f7e9c44eeec3e3d85676e6ebe2d28c287e285a45912386cfa53e1752997630bd7a4ca6c2cd9f143500`
 
 authorizer world:
 ```
@@ -658,10 +744,12 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 authorizer code:
 ```
 resource("file123.txt");
+
+allow if true;
 ```
 
 revocation ids:
-- `4bb969d5cf558d831892f3ef52115a217fb059968eb1d109958076cd3521cd88ddd161f864bf3335e5534a504947d6c4f684bd62a37ba2b23fa30260a825bf04`
+- `1c158e1e12c8670d3f4411597276fe1caab17b7728adb7f7e9c44eeec3e3d85676e6ebe2d28c287e285a45912386cfa53e1752997630bd7a4ca6c2cd9f143500`
 
 authorizer world:
 ```
@@ -688,6 +776,8 @@ result: `Ok(0)`
 authority:
 symbols: ["must_be_present", "hello"]
 
+public keys: []
+
 ```
 must_be_present("hello");
 ```
@@ -696,8 +786,9 @@ must_be_present("hello");
 
 authorizer code:
 ```
-
 check if must_be_present($0) or must_be_present($0);
+
+allow if true;
 ```
 
 revocation ids:
@@ -728,34 +819,39 @@ result: `Ok(0)`
 ### token
 
 authority:
-symbols: ["check1", "test", "hello"]
+symbols: ["hello"]
+
+public keys: []
 
 ```
 check if resource("hello");
 ```
 
 1:
-symbols: []
+symbols: ["test"]
+
+public keys: []
 
 ```
-check1("test");
+query("test");
 ```
 
 ### validation
 
 authorizer code:
 ```
+allow if true;
 ```
 
 revocation ids:
-- `c88d4b7afeac437596964e403a36ee113da1c20c4fec8a340fa97613ff585f520eb5fc0cbbd80dd6b6fa0127d03a1c773d7c5605197d5382e660dac3c957bb01`
-- `3213d5bbef6e3bcfc09ab54d16e824d69a243a90f748c41f60c7a4a8a81bc47ce16f57a3d252b00143c7a554d926988fbbba5abdb2ef826c933cce8c2122710f`
+- `e79679e019f1d7d3a9f9a309673aceadc7b2b2d67c0df3e7a1dccec25218e9b5935b9c8f8249243446406e3cdd86c1b35601a21cf1b119df48ca5e897cc6cd0d`
+- `2042ea2dca41ba3eb31196f49b211e615dcba46067be126e6035b8549bb57cdfeb24d07f2b44241bc0f70cc8ddc31e30772116d785b82bc91be8440dfdab500f`
 
 authorizer world:
 ```
 World {
   facts: {
-    "check1(\"test\")",
+    "query(\"test\")",
 }
   rules: {}
   checks: {}
@@ -775,6 +871,8 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 
 authority:
 symbols: ["hello world", "hello", "world", "aaabde", "a*c?.e", "abd", "aaa", "b", "de", "abcD12", "abc", "def"]
+
+public keys: []
 
 ```
 check if true;
@@ -814,6 +912,7 @@ check if [hex:12ab, hex:34de].contains(hex:34de);
 
 authorizer code:
 ```
+allow if true;
 ```
 
 revocation ids:
@@ -840,7 +939,9 @@ result: `Ok(0)`
 ### token
 
 authority:
-symbols: ["check1", "test"]
+symbols: []
+
+public keys: []
 
 ```
 check if operation("read");
@@ -849,34 +950,13 @@ check if operation("read");
 1:
 symbols: ["unbound", "any1", "any2"]
 
+public keys: []
+
 ```
 operation($unbound, "read") <- operation($any1, $any2);
 ```
 
 ### validation
-
-authorizer code:
-```
-operation("write");
-```
-
-revocation ids:
-- `bc12e3a0f15ba41b7f14dd9776d359f81d7a8372ec8e46ac5a211bc52f5ad7777c273a1925015a92f88e230a97d3b435ff060b8079bce6f28fc3530416be6f0f`
-- `2385d7b5cbafc2ef556fc8f032fc7945a51ea724904e0ff06900764c86faac3a0cfb0b27f5a4275d59f037a3956090e40fb95e84b3cf71901d12c0994427dc0c`
-
-authorizer world:
-```
-World {
-  facts: {
-    "operation(\"write\")",
-}
-  rules: {}
-  checks: {}
-  policies: {
-    "allow if true",
-}
-}
-```
 
 result: `Err(FailedLogic(InvalidBlockRule(0, "operation($unbound, \"read\") <- operation($any1, $any2)")))`
 
@@ -887,7 +967,9 @@ result: `Err(FailedLogic(InvalidBlockRule(0, "operation($unbound, \"read\") <- o
 ### token
 
 authority:
-symbols: ["check1", "test"]
+symbols: []
+
+public keys: []
 
 ```
 check if operation("read");
@@ -895,6 +977,8 @@ check if operation("read");
 
 1:
 symbols: ["any"]
+
+public keys: []
 
 ```
 operation("read") <- operation($any);
@@ -905,11 +989,13 @@ operation("read") <- operation($any);
 authorizer code:
 ```
 operation("write");
+
+allow if true;
 ```
 
 revocation ids:
-- `467ae49d69ccd51f8c47e371966b4db2bb615f66a19759c86b6f3d09d46430b5f4caac419bd5c9da8d93ffa349310ca8f99ad10f50bbd6c0a4039a65ccb59a0d`
-- `8855d4ea222a90718665534e6437444623bc7edd5695e65b85d90ee229264654c05be45538582070fb88cfceb250fc59666b0e3b674e0839411d6fc5a6d17a0e`
+- `4819e7360fdb840e54e94afcbc110e9b0652894dba2b8bf3b8b8f2254aaf00272bba7eb603c153c7e50cca0e5bb8e20449d70a1b24e7192e902c64f94848a703`
+- `4a4c59354354d2f91b3a2d1e7afa2c5eeaf8be9f7b163c6b9091817551cc8661f0f3e0523b525ef9a5e597c0dd1f32e09e97ace531c150dba335bb3e1d329d00`
 
 authorizer world:
 ```
@@ -918,7 +1004,9 @@ World {
     "operation(\"read\")",
     "operation(\"write\")",
 }
-  rules: {}
+  rules: {
+    "operation(\"read\") <- operation($any)",
+}
   checks: {}
   policies: {
     "allow if true",
@@ -937,6 +1025,8 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 authority:
 symbols: ["file1", "file2"]
 
+public keys: []
+
 ```
 right("file1", "read");
 right("file2", "read");
@@ -944,7 +1034,9 @@ right("file1", "write");
 ```
 
 1:
-symbols: ["check1", "0"]
+symbols: ["0"]
+
+public keys: []
 
 ```
 check if resource($0), operation("read"), right($0, "read");
@@ -956,11 +1048,13 @@ authorizer code:
 ```
 resource("file1");
 operation("read");
+
+allow if true;
 ```
 
 revocation ids:
 - `b279f8c6fee5ea3c3fcb5109d8c6b35ba3fecea64d83a4dc387102b9401633a1558ac6ac50ddd7fd9e9877f936f9f4064abd467faeca2bef3114b9695eb0580e`
-- `b3baf8fe8c41cedbc7b7d0abe3aa20535b1226693df8be2a46827d33f46d77b3a23898fda4ce44e05203cb35de54541225744ac49216d86faffd389188865504`
+- `e1f0aca12704c1a3b9bb6292504ca6070462d9e043756dd209e625084e7d4053078bd4e55b6eebebbeb771d26d7794aa95f6b39ff949431548b32585a7379f0c`
 
 authorizer world:
 ```
@@ -991,6 +1085,8 @@ result: `Ok(0)`
 authority:
 symbols: ["ns::fact_123", "hello é\t😁"]
 
+public keys: []
+
 ```
 ns::fact_123("hello é	😁");
 ```
@@ -999,8 +1095,9 @@ ns::fact_123("hello é	😁");
 
 authorizer code:
 ```
-
 check if ns::fact_123("hello é	😁");
+
+allow if true;
 ```
 
 revocation ids:
@@ -1032,6 +1129,8 @@ result: `Ok(0)`
 
 authority:
 symbols: []
+
+public keys: []
 
 ```
 read(0);
@@ -1068,8 +1167,9 @@ query(27);
 
 authorizer code:
 ```
-
 check if read(0), write(1), resource(2), operation(3), right(4), time(5), role(6), owner(7), tenant(8), namespace(9), user(10), team(11), service(12), admin(13), email(14), group(15), member(16), ip_address(17), client(18), client_ip(19), domain(20), path(21), version(22), cluster(23), node(24), hostname(25), nonce(26), query(27);
+
+allow if true;
 ```
 
 revocation ids:
@@ -1129,6 +1229,8 @@ result: `Ok(0)`
 authority:
 symbols: ["authority_fact"]
 
+public keys: []
+
 ```
 authority_fact(1);
 ```
@@ -1136,12 +1238,16 @@ authority_fact(1);
 1:
 symbols: ["block1_fact"]
 
+public keys: []
+
 ```
 block1_fact(1);
 ```
 
 2:
 symbols: ["var"]
+
+public keys: []
 
 ```
 check if authority_fact($var);
@@ -1152,6 +1258,7 @@ check if block1_fact($var);
 
 authorizer code:
 ```
+allow if true;
 ```
 
 revocation ids:
@@ -1175,4 +1282,60 @@ World {
 ```
 
 result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 2, check_id: 1, rule: "check if block1_fact($var)" })] }))`
+
+
+------------------------------
+
+## third party: test24_third_party.bc
+### token
+
+authority:
+symbols: []
+
+public keys: ["ed25519/a424157b8c00c25214ea39894bf395650d88426147679a9dd43a64d65ae5bc25"]
+
+```
+right("read");
+check if group("admin") trusting ed25519/a424157b8c00c25214ea39894bf395650d88426147679a9dd43a64d65ae5bc25;
+```
+
+1:
+symbols: []
+
+public keys: []
+
+external signature by: "ed25519/a424157b8c00c25214ea39894bf395650d88426147679a9dd43a64d65ae5bc25"
+
+```
+group("admin");
+check if right("read");
+```
+
+### validation
+
+authorizer code:
+```
+allow if true;
+```
+
+revocation ids:
+- `4f61f2f2f9cefdcad03a82803638e459bef70d6fd72dbdf2bdcab78fbd23f33146e4ff9700e23acb547b820b871fa9b9fd3bb6d7a1a755afce47e9907c65600c`
+- `683b23943b73f53f57f473571ba266f79f1fca0633be249bc135054371a11ffb101c57150ab2f1b9a6a160b45d09567a314b7dbc84224edf6188afd5b86d9305`
+
+authorizer world:
+```
+World {
+  facts: {
+    "group(\"admin\")",
+    "right(\"read\")",
+}
+  rules: {}
+  checks: {}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Ok(0)`
 
