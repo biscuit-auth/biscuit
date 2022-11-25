@@ -179,12 +179,12 @@ The logic language is described by the following EBNF grammar:
 
 <predicate> ::= <name> "(" <sp>? <term> (<sp>? "," <sp>? <term> )* <sp>? ")"
 <term> ::= <fact_term> | <variable>
-<fact_term> ::= <boolean> | <string> | <number> | <bytes> | <date> | <set>
+<fact_term> ::= <boolean> | <string> | <number> | ("hex:" <bytes>) | <date> | <set>
 <set_term> ::= <boolean> | <string> | <number> | <bytes> | <date>
 
 
 <number> ::= "-"? [0-9]+
-<bytes> ::= "hex:" ([a-z] | [0-9])+
+<bytes> ::= ([a-z] | [0-9])+
 <boolean> ::= "true" | "false"
 <date> ::= [0-9]* "-" [0-9] [0-9] "-" [0-9] [0-9] "T" [0-9] [0-9] ":" [0-9] [0-9] ":" [0-9] [0-9] ( "Z" | ( ("+" | "-") [0-9] [0-9] ":" [0-9] [0-9] ))
 <set> ::= "[" <sp>? ( <set_term> ( <sp>? "," <sp>? <set_term>)* <sp>? )? "]"
