@@ -214,6 +214,19 @@ The `name`, `variable` and `string` rules are defined as:
   - any printable UTF-8 character except `"` which must be escaped as `\"`
   - last character is `"`
 
+The order of operations in expressions is the following:
+
+- parentheses;
+- methods;
+- `*` `/` (left associative)
+- `+` `-` (left associative)
+- `&` (left associative)
+- `|` (left associative)
+- `^` (left associative)
+- `<=` `>=` `<` `>` `==` (**not** associative: they have to be combined with parentheses)
+- `&&` (left associative)
+- `||` (left associative)
+
 ### Scopes
 
 Since the first block defines the token's rights through facts and rules, and
