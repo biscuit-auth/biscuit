@@ -4,7 +4,7 @@
   "testcases": [
     {
       "title": "basic token",
-      "filename": "test1_basic.bc",
+      "filename": "test001_basic.bc",
       "token": [
         {
           "symbols": [
@@ -34,7 +34,9 @@
               "right(\"file2\", \"read\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if resource($0), operation(\"read\"), right($0, \"read\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -69,7 +71,7 @@
     },
     {
       "title": "different root key",
-      "filename": "test2_different_root_key.bc",
+      "filename": "test002_different_root_key.bc",
       "token": [
         {
           "symbols": [
@@ -107,7 +109,7 @@
     },
     {
       "title": "invalid signature format",
-      "filename": "test3_invalid_signature_format.bc",
+      "filename": "test003_invalid_signature_format.bc",
       "token": [
         {
           "symbols": [
@@ -144,7 +146,7 @@
     },
     {
       "title": "random block",
-      "filename": "test4_random_block.bc",
+      "filename": "test004_random_block.bc",
       "token": [
         {
           "symbols": [
@@ -183,7 +185,7 @@
     },
     {
       "title": "invalid signature",
-      "filename": "test5_invalid_signature.bc",
+      "filename": "test005_invalid_signature.bc",
       "token": [
         {
           "symbols": [
@@ -222,7 +224,7 @@
     },
     {
       "title": "reordered blocks",
-      "filename": "test6_reordered_blocks.bc",
+      "filename": "test006_reordered_blocks.bc",
       "token": [
         {
           "symbols": [
@@ -267,7 +269,7 @@
     },
     {
       "title": "scoped rules",
-      "filename": "test7_scoped_rules.bc",
+      "filename": "test007_scoped_rules.bc",
       "token": [
         {
           "symbols": [
@@ -310,7 +312,9 @@
             "rules": [
               "right($0, \"read\") <- resource($0), user_id($1), owner($1, $0)"
             ],
-            "checks": [],
+            "checks": [
+              "check if resource($0), operation(\"read\"), right($0, \"read\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -346,7 +350,7 @@
     },
     {
       "title": "scoped checks",
-      "filename": "test8_scoped_checks.bc",
+      "filename": "test008_scoped_checks.bc",
       "token": [
         {
           "symbols": [
@@ -383,7 +387,9 @@
               "right(\"file2\", \"read\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if resource($0), operation(\"read\"), right($0, \"read\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -419,7 +425,7 @@
     },
     {
       "title": "expired token",
-      "filename": "test9_expired_token.bc",
+      "filename": "test009_expired_token.bc",
       "token": [
         {
           "symbols": [],
@@ -446,7 +452,10 @@
               "time(2020-12-21T09:23:12Z)"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if resource(\"file1\")",
+              "check if time($time), $time <= 2018-12-20T00:00:00Z"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -481,7 +490,7 @@
     },
     {
       "title": "authorizer scope",
-      "filename": "test10_authorizer_scope.bc",
+      "filename": "test010_authorizer_scope.bc",
       "token": [
         {
           "symbols": [
@@ -546,7 +555,7 @@
     },
     {
       "title": "authorizer authority checks",
-      "filename": "test11_authorizer_authority_caveats.bc",
+      "filename": "test011_authorizer_authority_caveats.bc",
       "token": [
         {
           "symbols": [
@@ -601,7 +610,7 @@
     },
     {
       "title": "authority checks",
-      "filename": "test12_authority_caveats.bc",
+      "filename": "test012_authority_caveats.bc",
       "token": [
         {
           "symbols": [
@@ -620,7 +629,9 @@
               "resource(\"file1\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if resource(\"file1\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -640,7 +651,9 @@
               "resource(\"file2\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if resource(\"file1\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -674,7 +687,7 @@
     },
     {
       "title": "block rules",
-      "filename": "test13_block_rules.bc",
+      "filename": "test013_block_rules.bc",
       "token": [
         {
           "symbols": [
@@ -710,7 +723,9 @@
               "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z",
               "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, ![\"file1\"].contains($1)"
             ],
-            "checks": [],
+            "checks": [
+              "check if valid_date($0), resource($0)"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -736,7 +751,9 @@
               "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z",
               "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, ![\"file1\"].contains($1)"
             ],
-            "checks": [],
+            "checks": [
+              "check if valid_date($0), resource($0)"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -771,7 +788,7 @@
     },
     {
       "title": "regex_constraint",
-      "filename": "test14_regex_constraint.bc",
+      "filename": "test014_regex_constraint.bc",
       "token": [
         {
           "symbols": [
@@ -790,7 +807,9 @@
               "resource(\"file1\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if resource($0), $0.matches(\"file[0-9]+.txt\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -826,7 +845,9 @@
               "resource(\"file123.txt\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if resource($0), $0.matches(\"file[0-9]+.txt\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -843,7 +864,7 @@
     },
     {
       "title": "multi queries checks",
-      "filename": "test15_multi_queries_caveats.bc",
+      "filename": "test015_multi_queries_caveats.bc",
       "token": [
         {
           "symbols": [
@@ -881,7 +902,7 @@
     },
     {
       "title": "check head name should be independent from fact names",
-      "filename": "test16_caveat_head_name.bc",
+      "filename": "test016_caveat_head_name.bc",
       "token": [
         {
           "symbols": [
@@ -907,7 +928,9 @@
               "query(\"test\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if resource(\"hello\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -942,7 +965,7 @@
     },
     {
       "title": "test expression syntax and all available operations",
-      "filename": "test17_expressions.bc",
+      "filename": "test017_expressions.bc",
       "token": [
         {
           "symbols": [
@@ -969,7 +992,39 @@
           "world": {
             "facts": [],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if !false",
+              "check if !false && true",
+              "check if \"aaabde\" == \"aaa\" + \"b\" + \"de\"",
+              "check if \"aaabde\".contains(\"abd\")",
+              "check if \"aaabde\".matches(\"a*c?.e\")",
+              "check if \"abcD12\" == \"abcD12\"",
+              "check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\")",
+              "check if (true || false) && true",
+              "check if 1 + 2 * 3 - 4 / 2 == 5",
+              "check if 1 < 2",
+              "check if 1 <= 1",
+              "check if 1 <= 2",
+              "check if 1 | 2 ^ 3 == 0",
+              "check if 2 > 1",
+              "check if 2 >= 1",
+              "check if 2 >= 2",
+              "check if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z",
+              "check if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z",
+              "check if 2020-12-04T09:46:41Z == 2020-12-04T09:46:41Z",
+              "check if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z",
+              "check if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z",
+              "check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z",
+              "check if 3 == 3",
+              "check if [\"abc\", \"def\"].contains(\"abc\")",
+              "check if [1, 2].contains(2)",
+              "check if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z)",
+              "check if [false, true].contains(true)",
+              "check if [hex:12ab, hex:34de].contains(hex:34de)",
+              "check if false or true",
+              "check if hex:12ab == hex:12ab",
+              "check if true"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -979,14 +1034,14 @@
           },
           "authorizer_code": "allow if true;\n",
           "revocation_ids": [
-            "d11eaf29a6f7596e53fbf2360638c72432c7fbd09e2e39205b5a6ca922ac053168e952ed0c75a0d2ceb8798aa918560b78185eef880abc7705aa9b611e5d8707"
+            "1472c34b2854a24f5023f5c9a2ecead444b1ddb9c94ffc42f3ed1f062745d3983e8392cd0a94ec3b00e355f00fa5980e187bb86a625e289e2e723f373e3bcd05"
           ]
         }
       }
     },
     {
       "title": "invalid block rule with unbound_variables",
-      "filename": "test18_unbound_variables_in_rule.bc",
+      "filename": "test018_unbound_variables_in_rule.bc",
       "token": [
         {
           "symbols": [],
@@ -1028,7 +1083,7 @@
     },
     {
       "title": "invalid block rule generating an #authority or #ambient symbol with a variable",
-      "filename": "test19_generating_ambient_from_variables.bc",
+      "filename": "test019_generating_ambient_from_variables.bc",
       "token": [
         {
           "symbols": [],
@@ -1055,7 +1110,9 @@
             "rules": [
               "operation(\"read\") <- operation($any)"
             ],
-            "checks": [],
+            "checks": [
+              "check if operation(\"read\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -1090,7 +1147,7 @@
     },
     {
       "title": "sealed token",
-      "filename": "test20_sealed.bc",
+      "filename": "test020_sealed.bc",
       "token": [
         {
           "symbols": [
@@ -1121,7 +1178,9 @@
               "right(\"file2\", \"read\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if resource($0), operation(\"read\"), right($0, \"read\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -1139,7 +1198,7 @@
     },
     {
       "title": "parsing",
-      "filename": "test21_parsing.bc",
+      "filename": "test021_parsing.bc",
       "token": [
         {
           "symbols": [
@@ -1177,7 +1236,7 @@
     },
     {
       "title": "default_symbols",
-      "filename": "test22_default_symbols.bc",
+      "filename": "test022_default_symbols.bc",
       "token": [
         {
           "symbols": [],
@@ -1239,7 +1298,7 @@
     },
     {
       "title": "execution scope",
-      "filename": "test23_execution_scope.bc",
+      "filename": "test023_execution_scope.bc",
       "token": [
         {
           "symbols": [
@@ -1274,7 +1333,10 @@
               "block1_fact(1)"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if authority_fact($var)",
+              "check if block1_fact($var)"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -1310,7 +1372,7 @@
     },
     {
       "title": "third party",
-      "filename": "test24_third_party.bc",
+      "filename": "test024_third_party.bc",
       "token": [
         {
           "symbols": [],
@@ -1335,7 +1397,10 @@
               "right(\"read\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check if group(\"admin\") trusting ed25519/a424157b8c00c25214ea39894bf395650d88426147679a9dd43a64d65ae5bc25",
+              "check if right(\"read\")"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -1353,7 +1418,7 @@
     },
     {
       "title": "block rules",
-      "filename": "test25_check_all.bc",
+      "filename": "test025_check_all.bc",
       "token": [
         {
           "symbols": [
@@ -1377,7 +1442,9 @@
               "operation(\"B\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check all operation($op), allowed_operations($allowed), $allowed.contains($op)"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -1390,7 +1457,7 @@
             "b4ee591001e4068a7ee8efb7a0586c3ca3a785558f34d1fa8dbfa21b41ace70de0b670ac49222c7413066d0d83e6d9edee94fb0fda4b27ea11e837304dfb4b0b"
           ]
         },
-        "A, inalid": {
+        "A, invalid": {
           "world": {
             "facts": [
               "allowed_operations([ \"A\", \"B\"])",
@@ -1398,7 +1465,9 @@
               "operation(\"invalid\")"
             ],
             "rules": [],
-            "checks": [],
+            "checks": [
+              "check all operation($op), allowed_operations($allowed), $allowed.contains($op)"
+            ],
             "policies": [
               "allow if true"
             ]
@@ -1426,6 +1495,90 @@
           "authorizer_code": "operation(\"A\");\noperation(\"invalid\");\n\nallow if true;\n",
           "revocation_ids": [
             "b4ee591001e4068a7ee8efb7a0586c3ca3a785558f34d1fa8dbfa21b41ace70de0b670ac49222c7413066d0d83e6d9edee94fb0fda4b27ea11e837304dfb4b0b"
+          ]
+        }
+      }
+    },
+    {
+      "title": "public keys interning",
+      "filename": "test026_public_keys_interning.bc",
+      "token": [
+        {
+          "symbols": [],
+          "public_keys": [
+            "ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59"
+          ],
+          "external_key": null,
+          "code": "query(0);\ncheck if true trusting previous, ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59;\n"
+        },
+        {
+          "symbols": [],
+          "public_keys": [
+            "ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee"
+          ],
+          "external_key": "ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59",
+          "code": "query(1);\nquery(1, 2) <- query(1), query(2) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee;\ncheck if query(2), query(3) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee;\ncheck if query(1) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59;\n"
+        },
+        {
+          "symbols": [],
+          "public_keys": [],
+          "external_key": "ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee",
+          "code": "query(2);\ncheck if query(2), query(3) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee;\ncheck if query(1) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59;\n"
+        },
+        {
+          "symbols": [],
+          "public_keys": [],
+          "external_key": "ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee",
+          "code": "query(3);\ncheck if query(2), query(3) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee;\ncheck if query(1) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59;\n"
+        },
+        {
+          "symbols": [],
+          "public_keys": [
+            "ed25519/2e0118e63beb7731dab5119280ddb117234d0cdc41b7dd5dc4241bcbbb585d14"
+          ],
+          "external_key": null,
+          "code": "query(4);\ncheck if query(2) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee;\ncheck if query(4) trusting ed25519/2e0118e63beb7731dab5119280ddb117234d0cdc41b7dd5dc4241bcbbb585d14;\n"
+        }
+      ],
+      "validations": {
+        "": {
+          "world": {
+            "facts": [
+              "query(0)",
+              "query(1)",
+              "query(1, 2)",
+              "query(2)",
+              "query(3)",
+              "query(4)"
+            ],
+            "rules": [
+              "query(1, 2) <- query(1), query(2) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee"
+            ],
+            "checks": [
+              "check if query(1) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59",
+              "check if query(1, 2) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59, ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee",
+              "check if query(2) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee",
+              "check if query(2), query(3) trusting ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee",
+              "check if query(4) trusting ed25519/2e0118e63beb7731dab5119280ddb117234d0cdc41b7dd5dc4241bcbbb585d14",
+              "check if true trusting previous, ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59"
+            ],
+            "policies": [
+              "allow if true",
+              "deny if query(0) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59",
+              "deny if query(1, 2)",
+              "deny if query(3)"
+            ]
+          },
+          "result": {
+            "Ok": 3
+          },
+          "authorizer_code": "check if query(1, 2) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59, ed25519/ecfb8ed11fd9e6be133ca4dd8d229d39c7dcb2d659704c39e82fd7acf0d12dee;\n\ndeny if query(3);\ndeny if query(1, 2);\ndeny if query(0) trusting ed25519/3c8aeced6363b8a862552fb2b0b4b8b0f8244e8cef3c11c3e55fd553f3a90f59;\nallow if true;\n",
+          "revocation_ids": [
+            "bc144fef824b7ba4b266eac53e9b4f3f2d3cd443c6963833f2f8d4073bef9553f92034c2350fdd50966a9f0c09db35b142d61e0476b0133429885c787052060b",
+            "aba1631f8d0bea1c81447e73269f560973d03287c2b44325d1b42d10a496156dc8e78648b946bc7db7a3111d787a10c1a9da8d53fc066b1f207de7415a2e9b0b",
+            "539cff0f5c311dcac843a9e6c8bb445aff0d6510bfa9b17d5350747be92dc365217e89e1d733f3ead1ecc05f287f312c41831338708e788503b55517af3ad000",
+            "5b10f7a7b4487f4421cf7f7f6d00b24a7a71939037b65b2e44241909564082a3e1e70cf7d866eb96f0a5119b9ea395adb772faaa33252fa62a579eb15a108a0b",
+            "3905351588cdfc4433b510cc1ed9c11ca5c1a7bd7d9cef338bcd3f6d374c711f34edd83dd0d53c25b63bf05b49fc78addceb47905d5495580c2fd36c11bc1e0a"
           ]
         }
       }
