@@ -78,7 +78,7 @@ message CheckV2 {
   optional Kind kind = 2;
 
   enum Kind {
-    None = 0;
+    One = 0;
     All = 1;
   }
 }
