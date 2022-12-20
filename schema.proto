@@ -75,7 +75,7 @@ message RuleV2 {
 
 message CheckV2 {
   repeated RuleV2 queries = 1;
-  option Kind kind = 2;
+  optional Kind kind = 2;
 
   enum Kind {
     None = 0;
