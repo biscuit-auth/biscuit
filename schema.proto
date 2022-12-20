@@ -75,6 +75,12 @@ message RuleV2 {
 
 message CheckV2 {
   repeated RuleV2 queries = 1;
+  option Kind kind = 2;
+
+  enum Kind {
+    None = 0;
+    All = 1;
+  }
 }
 
 message PredicateV2 {
