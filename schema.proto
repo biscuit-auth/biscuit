@@ -175,3 +175,32 @@ message ThirdPartyBlockContents {
   required bytes payload = 1;
   required ExternalSignature externalSignature = 2;
 }
+
+message AuthorizerSnapshot {
+  repeated string symbols = 1;
+  optional uint32 version = 2;
+  repeated SnapshotFacts facts = 3;
+  repeated SnapshotRules rules = 4;
+  repeated SnapshotChecks checks = 5;
+  repeated Policy policies = 6;
+}
+
+message Origin {
+  optional bool authorizer = 1;
+  optional uint32 origin = 2;
+}
+
+message SnapshotFacts {
+  repeated Origin origins = 1;
+  repeated FactV2 facts = 2;
+}
+
+message SnapshotRules {
+  required Origin origin = 1;
+  repeated RuleV2 rules = 2;
+}
+
+message SnapshotChecks {
+  required Origin origin = 1;
+  repeated CheckV2 checks = 2;
+}
