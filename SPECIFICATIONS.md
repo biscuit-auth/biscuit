@@ -135,23 +135,28 @@ rules application does not generate any new facts, we can stop.
 
 #### Data types
 
-An _integer_ is a signed 64 bits integer. It supports the following
-operations: lower than, greater than, lower than or equal, greater than or equal, equal, set
-inclusion, addition, subtraction, mutiplication, division, bitwise and (v4 only), bitwise or (v4 only), bitwise xor (v4 only).
+An _integer_ is a signed 64 bits integer. It supports the following operations:
+lower than, greater than, lower than or equal, greater than or equal, equal,
+not equal, set inclusion, addition, subtraction, mutiplication, division,
+bitwise and, bitwise or, bitwise xor.
 
 A _string_ is a suite of UTF-8 characters. It supports the following
-operations: prefix, suffix, equal, set inclusion, regular expression, concatenation (with `+`), substring test (with `.contains()`).
+operations: prefix, suffix, equal, not equal, set inclusion, regular
+expression, concatenation (with `+`), substring test (with `.contains()`).
 
 A _byte array_ is a suite of bytes. It supports the following
-operations: equal, set inclusion.
+operations: equal, not equal, set inclusion.
 
-A _date_ is a 64 bit unsigned integer representing a TAI64. It supports the
-following operations: `<`, `<=` (before), `>`, `>=` (after), equality, set inclusion.
+A _date_ is a 64 bit unsigned integer representing a TAI64. It supports
+the following operations: `<`, `<=` (before), `>`, `>=` (after), equal,
+not equal, set inclusion.
 
-A _boolean_ is `true` or `false`. It supports the following operations: `==`, `||`, `&&`, set inclusion.
+A _boolean_ is `true` or `false`. It supports the following operations:
+`==`, `!=`, `||`, `&&`, set inclusion.
 
 A _set_ is a deduplicated list of terms of the same type. It cannot contain
-variables or other sets. It supports equality, intersection, union, set inclusion.
+variables or other sets. It supports equal, not equal, , intersection, union,
+set inclusion.
 
 #### Grammar
 
@@ -196,7 +201,7 @@ The logic language is described by the following EBNF grammar:
 <method_name> ::= ([a-z] | [A-Z] ) ([a-z] | [A-Z] | [0-9] | "_" )*
 
 <expression_term> ::= <term> | ("(" <sp>? <expression> <sp>? ")")
-<operator> ::= "<" | ">" | "<=" | ">=" | "==" | "&&" | "||" | "+" | "-" | "*" | "/" | "&" | "|" | "^"
+<operator> ::= "<" | ">" | "<=" | ">=" | "==" | "!=" | "&&" | "||" | "+" | "-" | "*" | "/" | "&" | "|" | "^"
 
 <sp> ::= (" " | "\t" | "\n")+
 ```
@@ -437,6 +442,7 @@ Here are the currently defined binary operations:
 - _less or equal_, defined on integers and dates, returns a boolean
 - _greater or equal_, defined on integers and dates, returns a boolean
 - _equal_, defined on integers, strings, byte arrays, dates, set, returns a boolean
+- _not equal_, defined on integers, strings, byte arrays, dates, set, returns a boolean (v4 only)
 - _contains_ takes a set and another value as argument, returns a boolean. Between two sets, indicates if the first set is a superset of the second one.
   between two strings, indicates a substring test.
 - _prefix_, defined on strings, returns a boolean
@@ -450,9 +456,9 @@ Here are the currently defined binary operations:
 - _or_, defined on booleans, returns a boolean
 - _intersection_, defined on sets, return a set that is the intersection of both arguments
 - _union_, defined on sets, return a set that is the union of both arguments
-- _bitwiseAnd_, defined on integers, returns an integer
-- _bitwiseOr_, defined on integers, returns an integer
-- _bitwiseXor_, defined on integers, returns an integer
+- _bitwiseAnd_, defined on integers, returns an integer (v4 only)
+- _bitwiseOr_, defined on integers, returns an integer (v4 only)
+- _bitwiseXor_, defined on integers, returns an integer (v4 only)
 
 Integer operations must have overflow checks. If it overflows, the expression
 fails.
