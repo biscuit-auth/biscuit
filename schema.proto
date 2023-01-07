@@ -184,30 +184,48 @@ message ThirdPartyBlockContents {
 }
 
 message AuthorizerSnapshot {
-  repeated string symbols = 1;
-  optional uint32 version = 2;
-  repeated SnapshotFacts facts = 3;
-  repeated SnapshotRules rules = 4;
-  repeated SnapshotChecks checks = 5;
-  repeated Policy policies = 6;
+  required RunLimits limits = 1;
+  required uint64 executionTime = 2;
+  required AuthorizerWorld world = 3;
+}
+
+message RunLimits {
+  required uint64 maxFacts = 1;
+  required uint64 maxIterations = 2;
+  required uint64 maxTime = 3;
+}
+
+message AuthorizerWorld {
+  optional uint32 version = 1;
+  repeated string symbols = 2;
+  repeated PublicKey publicKeys = 3;
+  repeated SnapshotBlock blocks = 4;
+  required SnapshotBlock authorizerBlock = 5;
+  repeated Policy authorizerPolicies = 6;
+  repeated GeneratedFacts generatedFacts = 7;
+  required uint64 iterations = 8;
 }
 
 message Origin {
-  optional bool authorizer = 1;
-  optional uint32 origin = 2;
+  oneof Content {
+    Empty authorizer = 1;
+    uint32 origin = 2;
+  }
 }
 
-message SnapshotFacts {
+message Empty {}
+
+message GeneratedFacts {
   repeated Origin origins = 1;
   repeated FactV2 facts = 2;
 }
 
-message SnapshotRules {
-  required Origin origin = 1;
-  repeated RuleV2 rules = 2;
-}
-
-message SnapshotChecks {
-  required Origin origin = 1;
-  repeated CheckV2 checks = 2;
+message SnapshotBlock {
+  optional string context = 1;
+  optional uint32 version = 2;
+  repeated FactV2 facts_v2 = 3;
+  repeated RuleV2 rules_v2 = 4;
+  repeated CheckV2 checks_v2 = 5;
+  repeated Scope scope = 6;
+  optional PublicKey externalKey = 7;
 }
