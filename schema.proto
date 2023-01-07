@@ -75,6 +75,12 @@ message RuleV2 {
 
 message CheckV2 {
   repeated RuleV2 queries = 1;
+  optional Kind kind = 2;
+
+  enum Kind {
+    One = 0;
+    All = 1;
+  }
 }
 
 message PredicateV2 {
@@ -142,6 +148,7 @@ message OpBinary {
     BitwiseAnd = 17;
     BitwiseOr = 18;
     BitwiseXor = 19;
+    NotEqual = 20;
   }
 
   required Kind kind = 1;
