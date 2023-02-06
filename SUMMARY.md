@@ -280,7 +280,7 @@ The verifier would also be able to load authorization data from its database,
 like ownership information: `owner("user_1234", "bucket_1234")`,
 `owner("user_1234", "bucket_5678")` `owner("user_ABCD", "bucket_ABCD")`.
 In practice, this data could be filtered by limiting it to facts related to
-the current ressource, or extracting the user id from the token with a query.
+the current resource, or extracting the user id from the token with a query.
 
 The verifier can also load its own rules, like creating one specifying rights
 if we own a specific folder:
