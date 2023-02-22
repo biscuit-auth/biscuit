@@ -1589,6 +1589,43 @@
           ]
         }
       }
+    },
+    {
+      "title": "integer wraparound",
+      "filename": "test027_integer_wraparound.bc",
+      "token": [
+        {
+          "symbols": [],
+          "public_keys": [],
+          "external_key": null,
+          "code": "check if true || 10000000000 * 10000000000 != 0;\ncheck if true || 9223372036854775807 + 1 != 0;\ncheck if true || -9223372036854775808 - 1 != 0;\n"
+        }
+      ],
+      "validations": {
+        "": {
+          "world": {
+            "facts": [],
+            "rules": [],
+            "checks": [
+              "check if true || -9223372036854775808 - 1 != 0",
+              "check if true || 10000000000 * 10000000000 != 0",
+              "check if true || 9223372036854775807 + 1 != 0"
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          "result": {
+            "Err": {
+              "Execution": "Overflow"
+            }
+          },
+          "authorizer_code": "allow if true;\n",
+          "revocation_ids": [
+            "70d8941198ab5daa445a11357994d93278876ee95b6500f4c4a265ad668a0111440942b762e02513e471d40265d586ea76209921068524f588dc46eb4260db07"
+          ]
+        }
+      }
     }
   ]
 }
