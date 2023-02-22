@@ -1617,3 +1617,48 @@ World {
 
 result: `Ok(3)`
 
+
+------------------------------
+
+## integer wraparound: test027_integer_wraparound.bc
+### token
+
+authority:
+symbols: []
+
+public keys: []
+
+```
+check if true || 10000000000 * 10000000000 != 0;
+check if true || 9223372036854775807 + 1 != 0;
+check if true || -9223372036854775808 - 1 != 0;
+```
+
+### validation
+
+authorizer code:
+```
+allow if true;
+```
+
+revocation ids:
+- `70d8941198ab5daa445a11357994d93278876ee95b6500f4c4a265ad668a0111440942b762e02513e471d40265d586ea76209921068524f588dc46eb4260db07`
+
+authorizer world:
+```
+World {
+  facts: {}
+  rules: {}
+  checks: {
+    "check if true || -9223372036854775808 - 1 != 0",
+    "check if true || 10000000000 * 10000000000 != 0",
+    "check if true || 9223372036854775807 + 1 != 0",
+}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Err(Execution(Overflow))`
+
