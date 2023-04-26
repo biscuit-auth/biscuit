@@ -147,7 +147,7 @@ expression, concatenation (with `+`), substring test (with `.contains()`).
 A _byte array_ is a suite of bytes. It supports the following
 operations: equal, not equal, set inclusion.
 
-A _date_ is a 64 bit unsigned integer representing a TAI64. It supports
+A _date_ is a 64 bit unsigned integer representing a UTC unix timestamp (number of seconds since 1970-01-01T00:00:00Z). It supports
 the following operations: `<`, `<=` (before), `>`, `>=` (after), equal,
 not equal, set inclusion.
 
