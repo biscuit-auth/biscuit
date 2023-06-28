@@ -40,16 +40,18 @@ The response body must conform to the following schema:
       "key_id": {
         "type": "integer"
       },
+      "issuer": {
+        "type": "string"
+      },
       "expires_at": {
         "type": "string",
         "format": "date-time"
       }
     },
-    "issuer": { "type": "string" },
     "required": [
       "algorithm",
-      "keyBytes",
-      "keyId"
+      "key_bytes",
+      "key_id"
     ]
   }
 }
