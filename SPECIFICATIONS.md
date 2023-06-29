@@ -163,7 +163,7 @@ set inclusion.
 The logic language is described by the following EBNF grammar:
 
 ```
-<origin_clause> ::= <sp>? "trusting " <origin_element> <sp>? ("," <sp>? <orgin_element> <sp>?)*
+<origin_clause> ::= <sp>? "trusting " <origin_element> <sp>? ("," <sp>? <origin_element> <sp>?)*
 <origin_element> ::= "authority" | "previous" | <signature_alg>  "/" <bytes>
 <signature_alg> ::= "ed25519"
 
