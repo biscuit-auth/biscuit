@@ -6,6 +6,10 @@
 
 <https://www.biscuitsec.org>
 
+## Version
+
+The stable version of the specification is at [SPECIFICATIONS.md](https://github.com/biscuit-auth/biscuit/blob/main/SPECIFICATIONS.md). The currently in development version is on the [dev branch](https://github.com/biscuit-auth/biscuit/blob/dev/SPECIFICATIONS.md).
+
 ## Goals
 
 Biscuit is an authentication and authorization token for microservices
