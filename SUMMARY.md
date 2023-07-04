@@ -12,7 +12,7 @@ signature, without contacting the server that created the token. Each attenuatio
 is done by adding a new "block" of logic data and rules. It is not possible to
 remove or replace a block while keeping a valid signature.
 
-Biscuit uses a logic language called [Datalog](https://en.wikipedia.org/wiki/Datalog),
+Biscuit uses a logic language based on [Datalog](https://en.wikipedia.org/wiki/Datalog),
 to represent its authorization rules. It can model and combine authorization policies
 like role-based access control or capabilities in a few lines, and even
 have fine grained rules carried by the token.
