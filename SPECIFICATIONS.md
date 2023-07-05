@@ -4,7 +4,7 @@
 
 Biscuit is a bearer token that supports offline attenuation, can be verified
 by any system that knows the root public key, and provides a flexible
-caveat language based on logic programming. It is serialized as
+authorization language based on logic programming. It is serialized as
 Protocol Buffers [^protobuf], and designed to be small enough for storage in
 HTTP cookies.
 
