@@ -10,32 +10,13 @@
 
 The stable version of the specification is at [SPECIFICATIONS.md](https://github.com/biscuit-auth/biscuit/blob/main/SPECIFICATIONS.md). The currently in development version is on the [dev branch](https://github.com/biscuit-auth/biscuit/blob/dev/SPECIFICATIONS.md).
 
-## Goals
+## Motivation, goals, non-goals
 
-Biscuit is an authentication and authorization token for microservices
-architectures with the following properties:
+See <https://www.biscuitsec.org/docs/why-biscuit/>. 
 
-- **distributed authentication**: any node could validate the token only with public
-  information;
-- **offline delegation**: a new, valid token can be created from another one by
-  attenuating its rights, by its holder, without communicating with anyone;
-- **capabilities based**: authorization in microservices should be tied to rights
-  related to the request, instead of relying on an identity that might not make
-  sense to the verifier;
-- **flexible rights managements**: the token uses a logic language to specify attenuation
-  and add bounds on ambient data, what it can model ranges from small rules like expiration dates,
-  to more flexible architectures like hierarchical roles and user delegation;
-- **small** enough to fit anywhere (cookies, etc).
+## Try it out
 
-## Non goals
-
-- This is not a new authentication protocol. Biscuit tokens can be used as
-  opaque tokens delivered by other systems such as OAuth.
-- Revocation: Biscuit generates unique revocation identifiers for each token,
-and can provide expiration dates as well, but revocation requires external
-state management (revocation lists, databases, etc) that is outside of this
-specification. See the [revocation guide](https://www.biscuitsec.org/docs/guides/revocation/)
-for more information.
+Biscuit tokens can be created, attenuated, inspected and authorized from your browser: <https://www.biscuitsec.org/docs/tooling/>
 
 ## Roadmap
 
@@ -64,7 +45,6 @@ Current status:
 
 ## Project organisation
 
-- `SUMMARY.md`: introduction to Biscuit from a user's perspective
 - `SPECIFICATIONS.md` is the description of Biscuit, its format and behaviour
 - `biscuit-web-key/` is a specification for publishing biscuit public keys
 - `DESIGN.md` holds the initial ideas about what Biscuit should be
