@@ -152,7 +152,7 @@ the following operations: `<`, `<=` (before), `>`, `>=` (after), equal,
 not equal, set inclusion.
 
 A _boolean_ is `true` or `false`. It supports the following operations:
-`==`, `!=`, `||`, `&&`, set inclusion.
+`==`, `!=`, `||` (strict and non-strict), `&&` (strict and non-strict), set inclusion.
 
 A _set_ is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets. It supports equal, not equal, , intersection, union,
@@ -434,6 +434,8 @@ virtual machine. There are three kinds of opcodes:
 - _binary operation_: an operation that applies on two arguments. When executed,
   it pops two values from the stack, applies the operation, then pushes the result
 
+Evaluating an expression might fail, but non-strict boolean operators might recover from it (for instance, `false && 1 >= true` will evaluate to `false`, discarding the error caused by `1 >= true`). When an expression evaluation fails, an error is pushed to the stack and evaluation continues.
+
 After executing, the stack must contain only one value, of the boolean type.
 
 Here are the currently defined unary operations:
@@ -450,7 +452,7 @@ Here are the currently defined binary operations:
 - _less or equal_, defined on integers and dates, returns a boolean
 - _greater or equal_, defined on integers and dates, returns a boolean
 - _equal_, defined on integers, strings, byte arrays, dates, set, returns a boolean
-- _not equal_, defined on integers, strings, byte arrays, dates, set, returns a boolean (v4 only)
+- _not equal_, defined on integers, strings, byte arrays, dates, set, returns a boolean (v4+ only)
 - _contains_ takes a set and another value as argument, returns a boolean. Between two sets, indicates if the first set is a superset of the second one.
   between two strings, indicates a substring test.
 - _prefix_, defined on strings, returns a boolean
@@ -462,16 +464,22 @@ Here are the currently defined binary operations:
 - _div_, defined on integers, returns an integer
 - _and_, defined on booleans, returns a boolean
 - _or_, defined on booleans, returns a boolean
+- _nonStrictAnd_, defined on booleans, returns a boolean, non-strict in the right branch (v5+ only)
+- _nonStrictOr_, defined on booleans, returns a boolean, non-strict in the right branch (v5+ only)
 - _intersection_, defined on sets, return a set that is the intersection of both arguments
 - _union_, defined on sets, return a set that is the union of both arguments
-- _bitwiseAnd_, defined on integers, returns an integer (v4 only)
-- _bitwiseOr_, defined on integers, returns an integer (v4 only)
-- _bitwiseXor_, defined on integers, returns an integer (v4 only)
+- _bitwiseAnd_, defined on integers, returns an integer (v4+ only)
+- _bitwiseOr_, defined on integers, returns an integer (v4+ only)
+- _bitwiseXor_, defined on integers, returns an integer (v4+ only)
 
-Integer operations must have overflow checks. If it overflows, the expression
+Integer operations must have overflow checks. If it overflows, the operation
 fails.
 
-#### Example
+The operators `&&` and `||` are non-strict in their right argument, which means that `true || <x>` will always evaluate to `true` (resp. `false && <x>` will always evaluate to `false`), even if evaluating `<x>` results in an error. This is consistent with how short-circuiting boolean operators are evaluated in other languages.
+
+#### Examples
+
+##### Successful evaluation
 
 The expression `1 + 2 < 4` will translate to the following opcodes: 1, 2, +, 4, <
 
@@ -480,14 +488,52 @@ Here is how it would be executed:
 ```
 Op | stack
    | [ ]
-1  | [ 1 ]
-2  | [ 2, 1 ]
-+  | [ 3 ]
-4  | [ 4, 3 ]
-<  | [ true ]
+1  | [ Ok(1) ]
+2  | [ Ok(2), Ok(1) ]
++  | [ Ok(3) ]
+4  | [ Ok(4), Ok(3) ]
+<  | [ Ok(true) ]
 ```
 
-The stack contains only one value, and it is `true`: the expression succeeds.
+The stack contains only one value, and it is `Ok(true)`: the expression succeeds.
+
+##### Evaluation error
+
+The expression `1 + true < 4` will translate to the following opcodes: 1, true, +, 4, <.
+
+Here is how it would be executed
+
+```
+Op   | stack
+     | [ ]
+1    | [ Ok(1) ]
+true | [ Ok(true), Ok(1) ]
++    | [ Err(TypeError) ]
+4    | [ Ok(4), Err(TypeError) ]
+<    | [ Err(TypeError) ]
+```
+
+The stack contains one value, and it is `Err(TypeError)`: the datalog evaluation fails.
+
+##### Recovered evaluation error
+
+The expression `true || 1 + true < 4` will translate to the following opcodes: false, 1, true, +, 4, <, &&.
+
+Here is how it would be executed
+
+```
+Op   | stack
+     | [ ]
+true | [ Ok(true) ]
+1    | [ Ok(1), Ok(true) ]
+true | [ Ok(true), Ok(1), Ok(true) ]
++    | [ Err(TypeError), Ok(true) ]
+4    | [ Ok(4), Err(TypeError), Ok(true) ]
+<    | [ Err(TypeError), Ok(true) ]
+||   | [ Ok(true) ]
+```
+
+The stack contains one value, and it is `Ok(true)`: the expression succeeds.
 
 ### Datalog fact generation
 
