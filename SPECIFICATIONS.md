@@ -568,13 +568,11 @@ Returning the result:
 The verifier can also run queries over the loaded data. A query is a datalog rule,
 and the query's result is the produced facts.
 
-TODO: describe error codes
-
 ### Appending
 
-#### deserializing
+#### Deserializing
 
-TODO: same as the verifier, but we do not need to know the root key
+Appending a new block to an existing biscuit token requires deserializing blocks to extract symbol tables. Signature verification is not required at this step.
 
 ## Format
 
