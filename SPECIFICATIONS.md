@@ -433,7 +433,7 @@ Here are the currently defined unary operations:
 - _negate_: boolean negation
 - _parens_: returns its argument without modification (this is used when printing
   the expression, to avoid precedence errors)
-- _length_: defined on strings, byte arrays and sets
+- _length_: defined on strings, byte arrays and sets (for strings, _length_ is defined as the number of bytes in the UTF-8 encoded string; the alternative of counting grapheme clusters would be inconsistent between languages)
 
 Here are the currently defined binary operations:
 
