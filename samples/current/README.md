@@ -1214,7 +1214,7 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 ### token
 
 authority:
-symbols: ["hello world", "hello", "world", "aaabde", "a*c?.e", "abd", "aaa", "b", "de", "abcD12", "abc", "def"]
+symbols: ["hello world", "hello", "world", "aaabde", "a*c?.e", "abd", "aaa", "b", "de", "abcD12", "é", "abc", "def"]
 
 public keys: []
 
@@ -1239,6 +1239,8 @@ check if "aaabde".matches("a*c?.e");
 check if "aaabde".contains("abd");
 check if "aaabde" == "aaa" + "b" + "de";
 check if "abcD12" == "abcD12";
+check if "abcD12".length() == 6;
+check if "é".length() == 2;
 check if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;
 check if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;
 check if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z;
@@ -1268,7 +1270,7 @@ allow if true;
 ```
 
 revocation ids:
-- `f61b4cb4fc58777fec6c8d39fe62259dc3c78511868236c391e9f67ffd03a3a8b8e3042d4bacce0d5756d053f5afccd4c5e4df0597af44b36bdfab492e5fe50e`
+- `3d5b23b502b3dd920bfb68b9039164d1563bb8927210166fa5c17f41b76b31bb957bc2ed3318452958f658baa2d398fe4cf25c58a27e6c8bc42c9702c8aa1b0c`
 
 authorizer world:
 ```
@@ -1287,7 +1289,9 @@ World {
             "check if \"aaabde\".contains(\"abd\")",
             "check if \"aaabde\".matches(\"a*c?.e\")",
             "check if \"abcD12\" == \"abcD12\"",
+            "check if \"abcD12\".length() == 6",
             "check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\")",
+            "check if \"é\".length() == 2",
             "check if (true || false) && true",
             "check if 1 + 2 * 3 - 4 / 2 == 5",
             "check if 1 < 2",
@@ -2356,4 +2360,88 @@ World {
 ```
 
 result: `Ok(0)`
+
+
+------------------------------
+
+## test reject if: test029_reject_if.bc
+### token
+
+authority:
+symbols: ["test"]
+
+public keys: []
+
+```
+reject if test($test), $test;
+```
+
+### validation
+
+authorizer code:
+```
+test(false);
+
+allow if true;
+```
+
+revocation ids:
+- `2060031eb9968b492123440fa9cbc781f18be812961e765a34a8702d3eee0ed54910710efbb41b3141f60748a815012fe0e703a5b5604f4262d1ac7e79766b07`
+
+authorizer world:
+```
+World {
+  facts: {
+    (
+        "test(false)",
+        {
+            None,
+        },
+    ),
+}
+  rules: {}
+  checks: {
+    "reject if test($test), $test",
+}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Ok(0)`
+### validation for "rejection"
+
+authorizer code:
+```
+test(true);
+
+allow if true;
+```
+
+revocation ids:
+- `2060031eb9968b492123440fa9cbc781f18be812961e765a34a8702d3eee0ed54910710efbb41b3141f60748a815012fe0e703a5b5604f4262d1ac7e79766b07`
+
+authorizer world:
+```
+World {
+  facts: {
+    (
+        "test(true)",
+        {
+            None,
+        },
+    ),
+}
+  rules: {}
+  checks: {
+    "reject if test($test), $test",
+}
+  policies: {
+    "allow if true",
+}
+}
+```
+
+result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "reject if test($test), $test" })] }))`
 
