@@ -33,6 +33,7 @@ Current status:
 - we have implementations for biscuits v1 in
   - [Java](https://github.com/clevercloud/biscuit-java) (migration to v2 is in progress)
   - [Go](https://github.com/biscuit-auth/biscuit-go)
+  - [.Net](https://github.com/dmunch/biscuit-net)
 - a website with documentation and an interactive playground is live at <https://biscuitsec.org>
 - Currently deploying to real world use cases such as [Apache Pulsar](https://github.com/clevercloud/biscuit-pulsar) at [Clever Cloud](https://www.clever-cloud.com/)
 - looking for an audit of the token's design, cryptographic primitives and implementations
