@@ -46,16 +46,15 @@ The different implementations are following the specification closely, but parts
 * 🚧 partial support
 * ❌ not supported yet
 
-|                    | Rust | Haskell | Java | Go | Python | C# | Zig |
-|--------------------|------|---------|------|----|--------|----|-----|
-|**v2**              |  ✅  |    ✅   |  ✅  | ✅ |   ✅   | ✅ |   ? |
-|--------------------|------|---------|------|----|--------|----|-----|
-|**v3**              |  ✅  |    ✅   |  🚧  | ❌ |   ✅   | ✅ | ?   |
-| scopes             |  ✅  |    ✅   |  ✅  |    |   ✅   | ✅ |     |
-| check all          |  ✅  |    ✅   |  ✅  |    |   ✅   | ✅ |     |
-| bitwise operations |  ✅  |    ✅   |  ✅  |    |   ✅   | ✅ |     |
-| third party blocks |  ✅  |    ✅   |  🚧  |    |   🚧   | ✅ |     |
-| snapshots          |  ✅  |    ❌   |  🚧  |    |   ✅   |    |     |
+|                    | Rust | Haskell | Java | Go | Python | C# |
+|--------------------|------|---------|------|----|--------|----|
+|**v2**              |  ✅  |    ✅   |  ✅  | ✅ |   ✅   | ✅ |
+|**v3**              |  ✅  |    ✅   |  🚧  | ❌ |   ✅   | ✅ |
+| scopes             |  ✅  |    ✅   |  ✅  | ❌ |   ✅   | ✅ |
+| check all          |  ✅  |    ✅   |  ✅  | ❌ |   ✅   | ✅ |
+| bitwise operations |  ✅  |    ✅   |  ✅  | ❌ |   ✅   | ✅ |
+| third party blocks |  ✅  |    ✅   |  🚧  | ❌ |   🚧   | ✅ |
+| snapshots          |  ✅  |    ❌   |  🚧  | ❌ |   ✅   |    |
 
 
 ## How to help us?
