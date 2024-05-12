@@ -4,7 +4,7 @@
 
 Biscuit is a bearer token that supports offline attenuation, can be verified
 by any system that knows the root public key, and provides a flexible
-caveat language based on logic programming. It is serialized as
+authorization language based on logic programming. It is serialized as
 Protocol Buffers [^protobuf], and designed to be small enough for storage in
 HTTP cookies.
 
@@ -441,7 +441,7 @@ Here are the currently defined unary operations:
 - _negate_: boolean negation
 - _parens_: returns its argument without modification (this is used when printing
   the expression, to avoid precedence errors)
-- _length_: defined on strings, byte arrays and sets
+- _length_: defined on strings, byte arrays and sets (for strings, _length_ is defined as the number of bytes in the UTF-8 encoded string; the alternative of counting grapheme clusters would be inconsistent between languages)
 
 Here are the currently defined binary operations:
 
@@ -576,13 +576,11 @@ Returning the result:
 The verifier can also run queries over the loaded data. A query is a datalog rule,
 and the query's result is the produced facts.
 
-TODO: describe error codes
-
 ### Appending
 
-#### deserializing
+#### Deserializing
 
-TODO: same as the verifier, but we do not need to know the root key
+Appending a new block to an existing biscuit token requires deserializing blocks to extract symbol tables. Signature verification is not required at this step.
 
 ## Format
 

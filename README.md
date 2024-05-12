@@ -10,58 +10,43 @@
 
 The stable version of the specification is at [SPECIFICATIONS.md](https://github.com/biscuit-auth/biscuit/blob/main/SPECIFICATIONS.md). The currently in development version is on the [dev branch](https://github.com/biscuit-auth/biscuit/blob/dev/SPECIFICATIONS.md).
 
-## Goals
+## Motivation, goals, non-goals
 
-Biscuit is an authentication and authorization token for microservices
-architectures with the following properties:
+See <https://www.biscuitsec.org/docs/why-biscuit/>. 
 
-- **distributed authentication**: any node could validate the token only with public
-  information;
-- **offline delegation**: a new, valid token can be created from another one by
-  attenuating its rights, by its holder, without communicating with anyone;
-- **capabilities based**: authorization in microservices should be tied to rights
-  related to the request, instead of relying to an identity that might not make
-  sense to the verifier;
-- **flexible rights managements**: the token uses a logic language to specify attenuation
-  and add bounds on ambient data, it can model from small rules like expiration dates,
-  to more flexible architectures like hierarchical roles and user delegation;
-- **small** enough to fit anywhere (cookies, etc).
+## Try it out
 
-## Non goals
-- This is not a new authentication protocol. Biscuit tokens can be used as
-  opaque tokens delivered by other systems such as OAuth.
-- Revocation: Biscuit generates unique revocation identifiers for each token,
-and can provide expiration dates as well, but revocation requires external
-state management (revocation lists, databases, etc) that is outside of this
-specification.
+Biscuit tokens can be created, attenuated, inspected and authorized from your browser: <https://www.biscuitsec.org/docs/tooling/>
 
 ## Roadmap
 
 You can follow the next steps on the [roadmap](https://github.com/biscuit-auth/biscuit/issues/12).
 
 Current status:
+
 - the credentials language, cryptographic primitives and serialization format are done
 - we have implementations for biscuits v2 in
   - [Rust](https://github.com/biscuit-auth/biscuit-rust)
   - [Web Assembly](https://github.com/biscuit-auth/biscuit-wasm) (based on the Rust version)
-  - [Haskell](https://github.com/divarvel/biscuit-haskell)
+  - [Python](https://github.com/biscuit-auth/biscuit-python) (based on the Rust version)
+  - [Haskell](https://github.com/biscuit-auth/biscuit-haskell)
 - we have implementations for biscuits v1 in
   - [Java](https://github.com/clevercloud/biscuit-java) (migration to v2 is in progress)
-  - [Go](https://github.com/flynn/biscuit-go)
+  - [Go](https://github.com/biscuit-auth/biscuit-go)
 - a website with documentation and an interactive playground is live at <https://biscuitsec.org>
 - Currently deploying to real world use cases such as [Apache Pulsar](https://github.com/clevercloud/biscuit-pulsar) at [Clever Cloud](https://www.clever-cloud.com/)
 - looking for an audit of the token's design, cryptographic primitives and implementations
 
 ## How to help us?
 
-- provide use cases that we can test the token on (some specific kind of caveats, auth delegation, etc)
+- provide use cases that we can test the token on (some specific kind of checks, auth delegation, etc)
 - cryptographic design audit: we need reviews of algorithms, their usage and implementation in various languages
 - add support for biscuit v2 to java and go implementations
 
 ## Project organisation
 
-- `SUMMARY.md`: introduction to Biscuit from a user's perspective
 - `SPECIFICATIONS.md` is the description of Biscuit, its format and behaviour
+- `biscuit-web-key/` is a specification for publishing biscuit public keys
 - `DESIGN.md` holds the initial ideas about what Biscuit should be
 - `experimentations/` holds initial code examples for the crypographic schemes and caveat language. `code/biscuit-poc/` contains an experimental version of Biscuit, built to explore API issues
 
