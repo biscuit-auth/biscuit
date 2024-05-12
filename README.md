@@ -54,7 +54,7 @@ The different implementations are following the specification closely, but parts
 | check all          |  ✅  |    ✅   |  ✅  | ❌ |   ✅   | ✅ |
 | bitwise operations |  ✅  |    ✅   |  ✅  | ❌ |   ✅   | ✅ |
 | third party blocks |  ✅  |    ✅   |  🚧  | ❌ |   🚧   | ✅ |
-| snapshots          |  ✅  |    ❌   |  🚧  | ❌ |   ✅   |    |
+| snapshots          |  ✅  |    ❌   |  🚧  | ❌ |   ✅   | ❌ |
 
 
 ## How to help us?
