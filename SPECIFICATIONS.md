@@ -291,23 +291,27 @@ To validate an operation, all of a token's checks must succeed.
 
 One block can contain one or more checks.
 
-Their text representation is `check if` or `check all` followed by the body of the query.
+Their text representation is `check if`, `check all` or `reject if` followed by the body of the query.
 There can be multiple queries inside of a check, it will succeed if any of them
-succeeds. They are separated by a `or` token.
+succeeds (in the case of `reject if`, the check will fail if any query matches). They are separated by a `or` token.
 
 - a `check if` query succeeds if it finds one set of facts that matches the body and expressions
 - a `check all` query succeeds if all the sets of facts that match the body also succeed the expression.
-`check all` can only be used starting from block version 4
+- a `reject if` query succeeds if no set of facts matches the body and expressions
+
+`check all` can only be used starting from block version 4.  
+`reject if` can only be used starting from block version 5.
 
 Here are some examples of writing checks:
 
 #### Basic token
 
 This first token defines a list of authority facts giving `read` and `write`
-rights on `file1`, `read` on `file2`. The first caveat checks that the operation
+rights on `file1`, `read` on `file2`. The first check ensures that the operation
 is `read` (and will not allow any other `operation` fact), and then that we have
-the `read` right over the resource.
-The second caveat checks that the resource is `file1`.
+the `read` right over the resource.  
+The second check ensures that the resource is either `file1` or `file2`.  
+The third check ensures that the resource is not `file1`.
 
 ```
 authority:
@@ -323,20 +327,24 @@ check if
 ----------
 Block 2:
 check if
-  resource("file1")  // restrict to file1 resource
+  resource("file1")  
+  or resource("file2") // restrict to file1 or file2
+----------
+Block 3:
+reject if
+  resource("file1")  // forbid using the token on file1
 ```
 
 The verifier side provides the `resource` and `operation` facts with information
 from the request.
 
-If the verifier provided the facts `resource("file2")` and
-`operation("read")`, the rule application of the first check would see
-`resource("file2"), operation("read"), right("file2", "read")`
-with `X = "file2"`, so it would succeed, but the second check would fail
-because it expects `resource("file1")`.
-
 If the verifier provided the facts `resource("file1")` and
-`operation("read")`, both checks would succeed.
+`operation("read")`, the rule application of the first check would see
+`resource("file1"), operation("read"), right("file1", "read")`
+with `X = "file1"`, so it would succeed, the second check would also succeed because it expects `resource("file1")` or `resource("file2")`. The third check would then fail because it would match on `resource("file1")`.
+
+If the verifier provided the facts `resource("file2")` and
+`operation("read")`, all checks would succeed.
 
 #### Broad authority rules
 
@@ -659,7 +667,7 @@ each block must carry its own version.
   when possible, especially for biscuit versions that are only additive in terms of features.
 
 - The lowest supported biscuit version is `3`;
-- The highest supported biscuit version is `4`;
+- The highest supported biscuit version is `5`;
 
 # Version 2
 
