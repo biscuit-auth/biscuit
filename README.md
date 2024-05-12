@@ -37,6 +37,25 @@ Current status:
 - Currently deploying to real world use cases such as [Apache Pulsar](https://github.com/clevercloud/biscuit-pulsar) at [Clever Cloud](https://www.clever-cloud.com/)
 - looking for an audit of the token's design, cryptographic primitives and implementations
 
+## Feature support
+
+The different implementations are following the specification closely, but parts of it may take some time to be fully implemented, so here is the current list of supported features per version:
+
+* ✅ full support
+* 🚧 partial support
+* ❌ not supported yet
+
+|                    | Rust | Haskell | Java | Go | Python | C# | Zig |
+|--------------------|------|---------|------|----|--------|----|-----|
+|**v2**              |  ✅  |    ✅   |  ✅  | ✅ |   ✅   |  ? |   ? |
+|--------------------|------|---------|------|----|--------|----|-----|
+|**v3**              | ✅   | ✅      |  🚧  | ❌ |   ❌   | ?  | ?   |
+| scopes             | ✅   | ✅      |  ✅  |    |        |    |     |
+| check all          | ✅   | ✅      |  ✅  |    |        |    |     |
+| bitwise operations | ✅   | ✅      |  ✅  |    |        |    |     |
+| third party blocks | ✅   | ✅      |  🚧  |    |        |    |     |
+
+
 ## How to help us?
 
 - provide use cases that we can test the token on (some specific kind of checks, auth delegation, etc)
