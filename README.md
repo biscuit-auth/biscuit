@@ -2,7 +2,7 @@
 
 [Join the Matrix chat](https://matrix.to/#/#biscuit-auth:matrix.org)
 
-<img src="https://raw.githubusercontent.com/biscuit-auth/biscuit/master/assets/brown.png" width="200">
+<img src="https://raw.githubusercontent.com/biscuit-auth/biscuit/main/assets/logo-black-white-bg.png" width="200">
 
 <https://www.biscuitsec.org>
 
@@ -74,7 +74,7 @@ The different implementations are following the specification closely, but parts
 
 Licensed under Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
 
-logo by [Mathias Adam](http://www.madgraphism.com/)
+logo by Julien Richard
 
 originally created at [Clever Cloud](https://www.clever-cloud.com/)
 
