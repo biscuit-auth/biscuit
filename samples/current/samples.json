@@ -2195,16 +2195,23 @@
         "": {
           "world": {
             "facts": [
-              [
-                "test(false)",
-                [
+              {
+                "origin": [
                   null
+                ],
+                "facts": [
+                  "test(false)"
                 ]
-              ]
+              }
             ],
             "rules": [],
             "checks": [
-              "reject if test($test), $test"
+              {
+                "origin": 0,
+                "checks": [
+                  "reject if test($test), $test"
+                ]
+              }
             ],
             "policies": [
               "allow if true"
@@ -2221,16 +2228,23 @@
         "rejection": {
           "world": {
             "facts": [
-              [
-                "test(true)",
-                [
+              {
+                "origin": [
                   null
+                ],
+                "facts": [
+                  "test(true)"
                 ]
-              ]
+              }
             ],
             "rules": [],
             "checks": [
-              "reject if test($test), $test"
+              {
+                "origin": 0,
+                "checks": [
+                  "reject if test($test), $test"
+                ]
+              }
             ],
             "policies": [
               "allow if true"
@@ -2259,6 +2273,231 @@
           "authorizer_code": "test(true);\n\nallow if true;\n",
           "revocation_ids": [
             "2060031eb9968b492123440fa9cbc781f18be812961e765a34a8702d3eee0ed54910710efbb41b3141f60748a815012fe0e703a5b5604f4262d1ac7e79766b07"
+          ]
+        }
+      }
+    },
+    {
+      "title": "test null",
+      "filename": "test31_null.bc",
+      "token": [
+        {
+          "symbols": [
+            "fact",
+            "value"
+          ],
+          "public_keys": [],
+          "external_key": null,
+          "code": "check if fact(null, $value), $value == null;\nreject if fact(null, $value), $value != null;\n"
+        }
+      ],
+      "validations": {
+        "": {
+          "world": {
+            "facts": [
+              {
+                "origin": [
+                  null
+                ],
+                "facts": [
+                  "fact(null, null)"
+                ]
+              }
+            ],
+            "rules": [],
+            "checks": [
+              {
+                "origin": 0,
+                "checks": [
+                  "check if fact(null, $value), $value == null",
+                  "reject if fact(null, $value), $value != null"
+                ]
+              }
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          "result": {
+            "Ok": 0
+          },
+          "authorizer_code": "fact(null, null);\n\nallow if true;\n",
+          "revocation_ids": [
+            "bbf3ad51a70e935126b334f37be2bf66e90162353c19c524c0d3579ee71034996872b8433b132e6e0b519d371b0ab20481d58c4619183e8997c3744786e8e003"
+          ]
+        },
+        "rejection1": {
+          "world": {
+            "facts": [
+              {
+                "origin": [
+                  null
+                ],
+                "facts": [
+                  "fact(null, 1)"
+                ]
+              }
+            ],
+            "rules": [],
+            "checks": [
+              {
+                "origin": 0,
+                "checks": [
+                  "check if fact(null, $value), $value == null",
+                  "reject if fact(null, $value), $value != null"
+                ]
+              }
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          "result": {
+            "Err": {
+              "FailedLogic": {
+                "Unauthorized": {
+                  "policy": {
+                    "Allow": 0
+                  },
+                  "checks": [
+                    {
+                      "Block": {
+                        "block_id": 0,
+                        "check_id": 0,
+                        "rule": "check if fact(null, $value), $value == null"
+                      }
+                    },
+                    {
+                      "Block": {
+                        "block_id": 0,
+                        "check_id": 1,
+                        "rule": "reject if fact(null, $value), $value != null"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "authorizer_code": "fact(null, 1);\n\nallow if true;\n",
+          "revocation_ids": [
+            "bbf3ad51a70e935126b334f37be2bf66e90162353c19c524c0d3579ee71034996872b8433b132e6e0b519d371b0ab20481d58c4619183e8997c3744786e8e003"
+          ]
+        },
+        "rejection2": {
+          "world": {
+            "facts": [
+              {
+                "origin": [
+                  null
+                ],
+                "facts": [
+                  "fact(null, true)"
+                ]
+              }
+            ],
+            "rules": [],
+            "checks": [
+              {
+                "origin": 0,
+                "checks": [
+                  "check if fact(null, $value), $value == null",
+                  "reject if fact(null, $value), $value != null"
+                ]
+              }
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          "result": {
+            "Err": {
+              "FailedLogic": {
+                "Unauthorized": {
+                  "policy": {
+                    "Allow": 0
+                  },
+                  "checks": [
+                    {
+                      "Block": {
+                        "block_id": 0,
+                        "check_id": 0,
+                        "rule": "check if fact(null, $value), $value == null"
+                      }
+                    },
+                    {
+                      "Block": {
+                        "block_id": 0,
+                        "check_id": 1,
+                        "rule": "reject if fact(null, $value), $value != null"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "authorizer_code": "fact(null, true);\n\nallow if true;\n",
+          "revocation_ids": [
+            "bbf3ad51a70e935126b334f37be2bf66e90162353c19c524c0d3579ee71034996872b8433b132e6e0b519d371b0ab20481d58c4619183e8997c3744786e8e003"
+          ]
+        },
+        "rejection3": {
+          "world": {
+            "facts": [
+              {
+                "origin": [
+                  null
+                ],
+                "facts": [
+                  "fact(null, \"abcd\")"
+                ]
+              }
+            ],
+            "rules": [],
+            "checks": [
+              {
+                "origin": 0,
+                "checks": [
+                  "check if fact(null, $value), $value == null",
+                  "reject if fact(null, $value), $value != null"
+                ]
+              }
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          "result": {
+            "Err": {
+              "FailedLogic": {
+                "Unauthorized": {
+                  "policy": {
+                    "Allow": 0
+                  },
+                  "checks": [
+                    {
+                      "Block": {
+                        "block_id": 0,
+                        "check_id": 0,
+                        "rule": "check if fact(null, $value), $value == null"
+                      }
+                    },
+                    {
+                      "Block": {
+                        "block_id": 0,
+                        "check_id": 1,
+                        "rule": "reject if fact(null, $value), $value != null"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "authorizer_code": "fact(null, \"abcd\");\n\nallow if true;\n",
+          "revocation_ids": [
+            "bbf3ad51a70e935126b334f37be2bf66e90162353c19c524c0d3579ee71034996872b8433b132e6e0b519d371b0ab20481d58c4619183e8997c3744786e8e003"
           ]
         }
       }
