@@ -722,7 +722,7 @@ version like the one defined in [RFC 6979](https://datatracker.ietf.org/doc/html
 
 
 The protobuf encoding is defined as follows:
-- `key` field of the `Publickey` message: [SEC1 format, defined in section 2.3.3](https://www.secg.org/sec1-v2.pdf). Allowed prefixes: `02`, `03`, `04`
+- `key` field of the `Publickey` message: [compressed SEC1 format, defined in section 2.3.3](https://www.secg.org/sec1-v2.pdf). Allowed prefixes: `02`, `03`
 - `nextSecret` in the `Proof` message: big endian representation of the secret scalar
 - `signature` field in `Signature` and `ExternalSignature` messages: [SEC1 ASN.1 format, defined in section C5](https://www.secg.org/sec1-v2.pdf), only using the `r` and `s` parameters
 
