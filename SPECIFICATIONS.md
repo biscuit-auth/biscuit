@@ -698,7 +698,7 @@ token.
 
 #### Algorithms
 
-Biscuit supports multiple signature algorithms for it blocks, that can change
+Biscuit supports multiple signature algorithms for its blocks, that can change
 between blocks in one token. The algorithm kind is defined in the `Algorithm`
 enum of the protobuf serialization of the public key. The `nextSecret` field
 in the proof section of the token uses the same algorithm as the `nextKey`
