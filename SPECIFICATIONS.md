@@ -117,8 +117,8 @@ We will represent the various types as follows:
 - string: `"hello"` (strings are converted to integer ids through the symbol table)
 - byte array: `hex:01A2`
 - date in RFC 3339 format: `1985-04-12T23:20:50.52Z`
-- boolean: `true` or `false`, supported since block version 5
-- null: `null`
+- boolean: `true` or `false`
+- null: `null`, supported since block version 5
 - set: `[ "a", "b", "c"]`
 
 As an example, assuming we have the following facts: `parent("a", "b")`,
@@ -156,7 +156,7 @@ not equal, set inclusion.
 A _boolean_ is `true` or `false`. It supports the following operations:
 `==`, `!=`, `||`, `&&`, set inclusion.
 
-A _null_ is a default type indicating the absence of value. It supports the operations `==` and `!=` with any other type.
+A _null_ is a default type indicating the absence of value. It supports the operations `==` and `!=` with any other type. _null_ is always equal to itself, and not equal to any other type
 
 A _set_ is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets. It supports equal, not equal, , intersection, union,
