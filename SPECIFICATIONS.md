@@ -156,7 +156,7 @@ not equal, set inclusion.
 A _boolean_ is `true` or `false`. It supports the following operations:
 `==`, `!=`, `||`, `&&`, set inclusion.
 
-A _null_ is a default type indicating the absence of valu. It supports the operations `==` and `!=` with any other type.
+A _null_ is a default type indicating the absence of value. It supports the operations `==` and `!=` with any other type.
 
 A _set_ is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets. It supports equal, not equal, , intersection, union,
