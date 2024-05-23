@@ -2463,7 +2463,6 @@ World {
 
 result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "reject if test($test), $test" })] }))`
 
-
 ------------------------------
 
 ## test null: test030_null.bc
@@ -2740,4 +2739,3 @@ World {
 ```
 
 result: `Ok(0)`
-

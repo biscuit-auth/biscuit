@@ -75,6 +75,7 @@ _predicates_ over the following types:
 - _byte array_
 - _date_
 - _boolean_
+- _null_
 - _set_ a deduplicated list of values of any type, except _variable_ or _set_
 
 While a Biscuit token does not use a textual representation for storage, we
@@ -117,6 +118,7 @@ We will represent the various types as follows:
 - byte array: `hex:01A2`
 - date in RFC 3339 format: `1985-04-12T23:20:50.52Z`
 - boolean: `true` or `false`
+- null: `null`, supported since block version 5
 - set: `[ "a", "b", "c"]`
 
 As an example, assuming we have the following facts: `parent("a", "b")`,
@@ -154,6 +156,8 @@ not equal, set inclusion.
 A _boolean_ is `true` or `false`. It supports the following operations:
 `==`, `!=`, `||`, `&&`, set inclusion.
 
+A _null_ is a default type indicating the absence of value. It supports the operations `==` and `!=` with any other type. _null_ is always equal to itself, and not equal to any other type
+
 A _set_ is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets. It supports equal, not equal, , intersection, union,
 set inclusion.
@@ -184,13 +188,14 @@ The logic language is described by the following EBNF grammar:
 
 <predicate> ::= <name> "(" <sp>? <term> (<sp>? "," <sp>? <term> )* <sp>? ")"
 <term> ::= <fact_term> | <variable>
-<fact_term> ::= <boolean> | <string> | <number> | ("hex:" <bytes>) | <date> | <set>
-<set_term> ::= <boolean> | <string> | <number> | <bytes> | <date>
+<fact_term> ::= <boolean> | <string> | <number> | ("hex:" <bytes>) | <date> | <null> | <set>
+<set_term> ::= <boolean> | <string> | <number> | <bytes> | <date> | <null>
 
 
 <number> ::= "-"? [0-9]+
 <bytes> ::= ([a-z] | [0-9])+
 <boolean> ::= "true" | "false"
+<null> ::= "null"
 <date> ::= [0-9]* "-" [0-9] [0-9] "-" [0-9] [0-9] "T" [0-9] [0-9] ":" [0-9] [0-9] ":" [0-9] [0-9] ( "Z" | ( ("+" | "-") [0-9] [0-9] ":" [0-9] [0-9] ))
 <set> ::= "[" <sp>? ( <set_term> ( <sp>? "," <sp>? <set_term>)* <sp>? )? "]"
 
