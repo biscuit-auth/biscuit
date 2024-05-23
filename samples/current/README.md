@@ -2466,7 +2466,7 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 
 ------------------------------
 
-## test null: test31_null.bc
+## test null: test30_null.bc
 ### token
 
 authority:
