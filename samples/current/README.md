@@ -2466,6 +2466,199 @@ result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedB
 
 ------------------------------
 
+## test null: test030_null.bc
+### token
+
+authority:
+symbols: ["fact", "value"]
+
+public keys: []
+
+```
+check if fact(null, $value), $value == null;
+reject if fact(null, $value), $value != null;
+```
+
+### validation
+
+authorizer code:
+```
+fact(null, null);
+
+allow if true;
+```
+
+revocation ids:
+- `bbf3ad51a70e935126b334f37be2bf66e90162353c19c524c0d3579ee71034996872b8433b132e6e0b519d371b0ab20481d58c4619183e8997c3744786e8e003`
+
+authorizer world:
+```
+World {
+  facts: [
+    Facts {
+        origin: {
+            None,
+        },
+        facts: [
+            "fact(null, null)",
+        ],
+    },
+]
+  rules: []
+  checks: [
+    Checks {
+        origin: Some(
+            0,
+        ),
+        checks: [
+            "check if fact(null, $value), $value == null",
+            "reject if fact(null, $value), $value != null",
+        ],
+    },
+]
+  policies: [
+    "allow if true",
+]
+}
+```
+
+result: `Ok(0)`
+### validation for "rejection1"
+
+authorizer code:
+```
+fact(null, 1);
+
+allow if true;
+```
+
+revocation ids:
+- `bbf3ad51a70e935126b334f37be2bf66e90162353c19c524c0d3579ee71034996872b8433b132e6e0b519d371b0ab20481d58c4619183e8997c3744786e8e003`
+
+authorizer world:
+```
+World {
+  facts: [
+    Facts {
+        origin: {
+            None,
+        },
+        facts: [
+            "fact(null, 1)",
+        ],
+    },
+]
+  rules: []
+  checks: [
+    Checks {
+        origin: Some(
+            0,
+        ),
+        checks: [
+            "check if fact(null, $value), $value == null",
+            "reject if fact(null, $value), $value != null",
+        ],
+    },
+]
+  policies: [
+    "allow if true",
+]
+}
+```
+
+result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if fact(null, $value), $value == null" }), Block(FailedBlockCheck { block_id: 0, check_id: 1, rule: "reject if fact(null, $value), $value != null" })] }))`
+### validation for "rejection2"
+
+authorizer code:
+```
+fact(null, true);
+
+allow if true;
+```
+
+revocation ids:
+- `bbf3ad51a70e935126b334f37be2bf66e90162353c19c524c0d3579ee71034996872b8433b132e6e0b519d371b0ab20481d58c4619183e8997c3744786e8e003`
+
+authorizer world:
+```
+World {
+  facts: [
+    Facts {
+        origin: {
+            None,
+        },
+        facts: [
+            "fact(null, true)",
+        ],
+    },
+]
+  rules: []
+  checks: [
+    Checks {
+        origin: Some(
+            0,
+        ),
+        checks: [
+            "check if fact(null, $value), $value == null",
+            "reject if fact(null, $value), $value != null",
+        ],
+    },
+]
+  policies: [
+    "allow if true",
+]
+}
+```
+
+result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if fact(null, $value), $value == null" }), Block(FailedBlockCheck { block_id: 0, check_id: 1, rule: "reject if fact(null, $value), $value != null" })] }))`
+### validation for "rejection3"
+
+authorizer code:
+```
+fact(null, "abcd");
+
+allow if true;
+```
+
+revocation ids:
+- `bbf3ad51a70e935126b334f37be2bf66e90162353c19c524c0d3579ee71034996872b8433b132e6e0b519d371b0ab20481d58c4619183e8997c3744786e8e003`
+
+authorizer world:
+```
+World {
+  facts: [
+    Facts {
+        origin: {
+            None,
+        },
+        facts: [
+            "fact(null, \"abcd\")",
+        ],
+    },
+]
+  rules: []
+  checks: [
+    Checks {
+        origin: Some(
+            0,
+        ),
+        checks: [
+            "check if fact(null, $value), $value == null",
+            "reject if fact(null, $value), $value != null",
+        ],
+    },
+]
+  policies: [
+    "allow if true",
+]
+}
+```
+
+result: `Err(FailedLogic(Unauthorized { policy: Allow(0), checks: [Block(FailedBlockCheck { block_id: 0, check_id: 0, rule: "check if fact(null, $value), $value == null" }), Block(FailedBlockCheck { block_id: 0, check_id: 1, rule: "reject if fact(null, $value), $value != null" })] }))`
+
+
+------------------------------
+
 ## ECDSA secp256r1 signatures: test031_secp256r1.bc
 ### token
 
