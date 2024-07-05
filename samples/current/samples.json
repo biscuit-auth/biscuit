@@ -1239,12 +1239,13 @@
             "b",
             "de",
             "abcD12",
+            "é",
             "abc",
             "def"
           ],
           "public_keys": [],
           "external_key": null,
-          "code": "check if true;\ncheck if !false;\ncheck if !false && true;\ncheck if false || true;\ncheck if (true || false) && true;\ncheck if true == true;\ncheck if false == false;\ncheck if 1 < 2;\ncheck if 2 > 1;\ncheck if 1 <= 2;\ncheck if 1 <= 1;\ncheck if 2 >= 1;\ncheck if 2 >= 2;\ncheck if 3 == 3;\ncheck if 1 + 2 * 3 - 4 / 2 == 5;\ncheck if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\");\ncheck if \"aaabde\".matches(\"a*c?.e\");\ncheck if \"aaabde\".contains(\"abd\");\ncheck if \"aaabde\" == \"aaa\" + \"b\" + \"de\";\ncheck if \"abcD12\" == \"abcD12\";\ncheck if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;\ncheck if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z == 2020-12-04T09:46:41Z;\ncheck if hex:12ab == hex:12ab;\ncheck if [1, 2].contains(2);\ncheck if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z);\ncheck if [false, true].contains(true);\ncheck if [\"abc\", \"def\"].contains(\"abc\");\ncheck if [hex:12ab, hex:34de].contains(hex:34de);\ncheck if [1, 2].contains([2]);\ncheck if [1, 2] == [1, 2];\ncheck if [1, 2].intersection([2, 3]) == [2];\ncheck if [1, 2].union([2, 3]) == [1, 2, 3];\ncheck if [1, 2, 3].intersection([1, 2]).contains(1);\ncheck if [1, 2, 3].intersection([1, 2]).length() == 2;\n"
+          "code": "check if true;\ncheck if !false;\ncheck if !false && true;\ncheck if false || true;\ncheck if (true || false) && true;\ncheck if true == true;\ncheck if false == false;\ncheck if 1 < 2;\ncheck if 2 > 1;\ncheck if 1 <= 2;\ncheck if 1 <= 1;\ncheck if 2 >= 1;\ncheck if 2 >= 2;\ncheck if 3 == 3;\ncheck if 1 + 2 * 3 - 4 / 2 == 5;\ncheck if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\");\ncheck if \"aaabde\".matches(\"a*c?.e\");\ncheck if \"aaabde\".contains(\"abd\");\ncheck if \"aaabde\" == \"aaa\" + \"b\" + \"de\";\ncheck if \"abcD12\" == \"abcD12\";\ncheck if \"abcD12\".length() == 6;\ncheck if \"é\".length() == 2;\ncheck if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;\ncheck if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z == 2020-12-04T09:46:41Z;\ncheck if hex:12ab == hex:12ab;\ncheck if [1, 2].contains(2);\ncheck if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z);\ncheck if [false, true].contains(true);\ncheck if [\"abc\", \"def\"].contains(\"abc\");\ncheck if [hex:12ab, hex:34de].contains(hex:34de);\ncheck if [1, 2].contains([2]);\ncheck if [1, 2] == [1, 2];\ncheck if [1, 2].intersection([2, 3]) == [2];\ncheck if [1, 2].union([2, 3]) == [1, 2, 3];\ncheck if [1, 2, 3].intersection([1, 2]).contains(1);\ncheck if [1, 2, 3].intersection([1, 2]).length() == 2;\n"
         }
       ],
       "validations": {
@@ -1262,7 +1263,9 @@
                   "check if \"aaabde\".contains(\"abd\")",
                   "check if \"aaabde\".matches(\"a*c?.e\")",
                   "check if \"abcD12\" == \"abcD12\"",
+                  "check if \"abcD12\".length() == 6",
                   "check if \"hello world\".starts_with(\"hello\") && \"hello world\".ends_with(\"world\")",
+                  "check if \"é\".length() == 2",
                   "check if (true || false) && true",
                   "check if 1 + 2 * 3 - 4 / 2 == 5",
                   "check if 1 < 2",
@@ -1307,7 +1310,7 @@
           },
           "authorizer_code": "allow if true;\n",
           "revocation_ids": [
-            "f61b4cb4fc58777fec6c8d39fe62259dc3c78511868236c391e9f67ffd03a3a8b8e3042d4bacce0d5756d053f5afccd4c5e4df0597af44b36bdfab492e5fe50e"
+            "3d5b23b502b3dd920bfb68b9039164d1563bb8927210166fa5c17f41b76b31bb957bc2ed3318452958f658baa2d398fe4cf25c58a27e6c8bc42c9702c8aa1b0c"
           ]
         }
       }
