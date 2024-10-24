@@ -140,27 +140,27 @@ rules application does not generate any new facts, we can stop.
 An _integer_ is a signed 64 bits integer. It supports the following operations:
 lower than, greater than, lower than or equal, greater than or equal, strict equal,
 strict not equal, set inclusion, addition, subtraction, mutiplication, division,
-bitwise and, bitwise or, bitwise xor, lenient equal, lenient not equal.
+bitwise and, bitwise or, bitwise xor, lenient equal, lenient not equal, typeof.
 
 A _string_ is a suite of UTF-8 characters. It supports the following
 operations: prefix, suffix, strict equal, strict not equal, set inclusion, regular
-expression, concatenation (with `+`), substring test (with `.contains()`), lenient equal, lenient not equal.
+expression, concatenation (with `+`), substring test (with `.contains()`), lenient equal, lenient not equal, typeof.
 
 A _byte array_ is a suite of bytes. It supports the following
-operations: strict equal, strict not equal, set inclusion, lenient equal, lenient not equal.
+operations: strict equal, strict not equal, set inclusion, lenient equal, lenient not equal, typeof.
 
 A _date_ is a 64 bit unsigned integer representing a UTC unix timestamp (number of seconds since 1970-01-01T00:00:00Z). It supports
 the following operations: `<`, `<=` (before), `>`, `>=` (after), strict equal,
-strict not equal, set inclusion, lenient equal, lenient not equal.
+strict not equal, set inclusion, lenient equal, lenient not equal, typeof.
 
 A _boolean_ is `true` or `false`. It supports the following operations:
-`===` (strict equal), `!==` (strict not equal), `||`, `&&`, set inclusion, `==` (lenient equal), `!=` (lenient not equal).
+`===` (strict equal), `!==` (strict not equal), `||`, `&&`, set inclusion, `==` (lenient equal), `!=` (lenient not equal), typeof.
 
-A _null_ is a default type indicating the absence of value. It supports `===` (strict equal), `!==` (strict not equal), `==` (lenient equal) and `!=` (lenient not equal). `null` is always equal to itself.
+A _null_ is a default type indicating the absence of value. It supports `===` (strict equal), `!==` (strict not equal), `==` (lenient equal) and `!=` (lenient not equal). `null` is always equal to itself, typeof.
 
 A _set_ is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets. It supports strict equal, strict not equal, intersection, union,
-set inclusion, lenient equal, lenient not equal.
+set inclusion, lenient equal, lenient not equal, any, all, typeof.
 
 #### Grammar
 
@@ -447,6 +447,14 @@ Here are the currently defined unary operations:
 - _parens_: returns its argument without modification (this is used when printing
   the expression, to avoid precedence errors)
 - _length_: defined on strings, byte arrays and sets (for strings, _length_ is defined as the number of bytes in the UTF-8 encoded string; the alternative of counting grapheme clusters would be inconsistent between languages)
+- _type_, defined on all types, returns a string (v6 only)
+  - `integer`
+  - `string`
+  - `date`
+  - `bytes`
+  - `bool`
+  - `set`
+  - `null`
 
 Here are the currently defined binary operations:
 
