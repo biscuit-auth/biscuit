@@ -80,6 +80,7 @@ message CheckV2 {
   enum Kind {
     One = 0;
     All = 1;
+    Reject = 2;
   }
 }
 
@@ -97,6 +98,7 @@ message TermV2 {
     bytes bytes = 5;
     bool bool = 6;
     TermSet set = 7;
+    Empty null = 8;
   }
 }
 
@@ -113,6 +115,7 @@ message Op {
     TermV2 value = 1;
     OpUnary unary = 2;
     OpBinary Binary = 3;
+    OpClosure closure = 4;
   }
 }
 
@@ -121,6 +124,7 @@ message OpUnary {
     Negate = 0;
     Parens = 1;
     Length = 2;
+    TypeOf = 3;
   }
 
   required Kind kind = 1;
@@ -149,9 +153,20 @@ message OpBinary {
     BitwiseOr = 18;
     BitwiseXor = 19;
     NotEqual = 20;
+    HeterogeneousEqual = 21;
+    HeterogeneousNotEqual = 22;
+    LazyAnd = 23;
+    LazyOr = 24;
+    All = 25;
+    Any = 26;
   }
 
   required Kind kind = 1;
+}
+
+message OpClosure {
+  repeated uint32 params = 1;
+  repeated Op ops = 2;
 }
 
 message Policy {

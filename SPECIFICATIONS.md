@@ -138,29 +138,29 @@ rules application does not generate any new facts, we can stop.
 #### Data types
 
 An _integer_ is a signed 64 bits integer. It supports the following operations:
-lower than, greater than, lower than or equal, greater than or equal, equal,
-not equal, set inclusion, addition, subtraction, mutiplication, division,
-bitwise and, bitwise or, bitwise xor.
+lower than, greater than, lower than or equal, greater than or equal, strict equal,
+strict not equal, set inclusion, addition, subtraction, mutiplication, division,
+bitwise and, bitwise or, bitwise xor, lenient equal, lenient not equal, typeof.
 
 A _string_ is a suite of UTF-8 characters. It supports the following
-operations: prefix, suffix, equal, not equal, set inclusion, regular
-expression, concatenation (with `+`), substring test (with `.contains()`).
+operations: prefix, suffix, strict equal, strict not equal, set inclusion, regular
+expression, concatenation (with `+`), substring test (with `.contains()`), lenient equal, lenient not equal, typeof.
 
 A _byte array_ is a suite of bytes. It supports the following
-operations: equal, not equal, set inclusion.
+operations: strict equal, strict not equal, set inclusion, lenient equal, lenient not equal, typeof.
 
 A _date_ is a 64 bit unsigned integer representing a UTC unix timestamp (number of seconds since 1970-01-01T00:00:00Z). It supports
-the following operations: `<`, `<=` (before), `>`, `>=` (after), equal,
-not equal, set inclusion.
+the following operations: `<`, `<=` (before), `>`, `>=` (after), strict equal,
+strict not equal, set inclusion, lenient equal, lenient not equal, typeof.
 
 A _boolean_ is `true` or `false`. It supports the following operations:
-`==`, `!=`, `||`, `&&`, set inclusion.
+`===` (strict equal), `!==` (strict not equal), eager or, eager and, set inclusion, `==` (lenient equal), `!=` (lenient not equal), typeof, short-circuiting or, short-circuiting and.
 
-A _null_ is a default type indicating the absence of value. It supports the operations `==` and `!=` with any other type. _null_ is always equal to itself, and not equal to any other type
+A _null_ is a default type indicating the absence of value. It supports `===` (strict equal), `!==` (strict not equal), `==` (lenient equal) and `!=` (lenient not equal). `null` is always equal to itself, typeof.
 
 A _set_ is a deduplicated list of terms of the same type. It cannot contain
-variables or other sets. It supports equal, not equal, , intersection, union,
-set inclusion.
+variables or other sets. It supports strict equal, strict not equal, intersection, union,
+set inclusion, lenient equal, lenient not equal, any, all, typeof.
 
 #### Grammar
 
@@ -206,7 +206,7 @@ The logic language is described by the following EBNF grammar:
 <method_name> ::= ([a-z] | [A-Z] ) ([a-z] | [A-Z] | [0-9] | "_" )*
 
 <expression_term> ::= <term> | ("(" <sp>? <expression> <sp>? ")")
-<operator> ::= "<" | ">" | "<=" | ">=" | "==" | "!=" | "&&" | "||" | "+" | "-" | "*" | "/" | "&" | "|" | "^"
+<operator> ::= "<" | ">" | "<=" | ">=" | "===" | "!==" | "&&" | "||" | "+" | "-" | "*" | "/" | "&" | "|" | "^" | "==" | "!=="
 
 <sp> ::= (" " | "\t" | "\n")+
 ```
@@ -429,7 +429,7 @@ rule.
 #### Execution
 
 Expressions are internally represented as a series of opcodes for a stack based
-virtual machine. There are three kinds of opcodes:
+virtual machine. There are four kinds of opcodes:
 
 - _value_: a raw value of any type. If it is a variable, the variable must also
   appear in a predicate, so the variable gets a real value for execution. When
@@ -438,8 +438,21 @@ virtual machine. There are three kinds of opcodes:
   it pops a value from the stack, applies the operation, then pushes the result
 - _binary operation_: an operation that applies on two arguments. When executed,
   it pops two values from the stack, applies the operation, then pushes the result
+- _closure_: a function definition containing the name of parameters and the body of the function expressed as a list of opcodes. Closures can be nested.
 
 After executing, the stack must contain only one value, of the boolean type.
+
+##### Closures
+
+Closures are evaluated recursively. When executing a closure, a new empty stack is created, and the closure opcodes are evaluated. After evaluation, the stack must contain only one value, of any type, which is then pushed on the parent stack.
+
+The closure arguments are treated the same way as datalog variables and are replaced by their value when the corresponding opcode is evaluated.
+
+Shadowing (defining a parameter with the same name as a variable already in scope) is not allowed and should be rejected before starting the evaluation.
+
+Short-circuiting boolean operators (`&&` and `||`) are implemented using closures: the right-hand side is defined in a closure (taking zero arguments) and is only evaluated as needed.
+
+##### Operations
 
 Here are the currently defined unary operations:
 
@@ -447,6 +460,14 @@ Here are the currently defined unary operations:
 - _parens_: returns its argument without modification (this is used when printing
   the expression, to avoid precedence errors)
 - _length_: defined on strings, byte arrays and sets (for strings, _length_ is defined as the number of bytes in the UTF-8 encoded string; the alternative of counting grapheme clusters would be inconsistent between languages)
+- _type_, defined on all types, returns a string (v6 only)
+  - `integer`
+  - `string`
+  - `date`
+  - `bytes`
+  - `bool`
+  - `set`
+  - `null`
 
 Here are the currently defined binary operations:
 
@@ -454,8 +475,8 @@ Here are the currently defined binary operations:
 - _greater than_, defined on integers and dates, returns a boolean
 - _less or equal_, defined on integers and dates, returns a boolean
 - _greater or equal_, defined on integers and dates, returns a boolean
-- _equal_, defined on integers, strings, byte arrays, dates, set, returns a boolean
-- _not equal_, defined on integers, strings, byte arrays, dates, set, returns a boolean (v4 only)
+- _strict equal_, defined on integers, strings, byte arrays, dates, set, null, returns a boolean
+- _strict not equal_, defined on integers, strings, byte arrays, dates, set, null, returns a boolean (v4 only)
 - _contains_ takes a set and another value as argument, returns a boolean. Between two sets, indicates if the first set is a superset of the second one.
   between two strings, indicates a substring test.
 - _prefix_, defined on strings, returns a boolean
@@ -465,33 +486,86 @@ Here are the currently defined binary operations:
 - _sub_, defined on integers, returns an integer
 - _mul_, defined on integers, returns an integer
 - _div_, defined on integers, returns an integer
-- _and_, defined on booleans, returns a boolean
-- _or_, defined on booleans, returns a boolean
+- _eager and_, defined on booleans, returns a boolean
+- _eager or_, defined on booleans, returns a boolean
 - _intersection_, defined on sets, return a set that is the intersection of both arguments
 - _union_, defined on sets, return a set that is the union of both arguments
 - _bitwiseAnd_, defined on integers, returns an integer (v4 only)
 - _bitwiseOr_, defined on integers, returns an integer (v4 only)
 - _bitwiseXor_, defined on integers, returns an integer (v4 only)
+- _lenient equal_, defined on all types, returns a boolean (v6 only)
+- _lenient not equal_, defined on all types, returns a boolean (v6 only)
+- _any_, defined on sets, takes a closure term -> boolean, returns a boolean (v6 only)
+- _all_, defined on sets, takes a closure term -> boolean, returns a boolean (v6 only)
+- _short circuiting and_, defined on booleans, takes a closure () -> boolean, returns a boolean (v6 only)
+- _short circuiting or_, defined on booleans, takes a closure () -> boolean, returns a boolean (v6 only)
 
 Integer operations must have overflow checks. If it overflows, the expression
 fails.
 
+Strict equality fails with a type error when trying to compare different types.
+
+Lenient equality returns false when trying to compare different types.
+
 #### Example
 
-The expression `1 + 2 < 4` will translate to the following opcodes: 1, 2, +, 4, <
+The expression `$a + 2 < 4` will translate to the following opcodes: $a, 2, +, 4, <
 
-Here is how it would be executed:
+Here is how it would be executed, given $a is bound to the value 1:
 
 ```
+Context: a ~> 1
 Op | stack
    | [ ]
-1  | [ 1 ]
+$a | [ 1 ]
 2  | [ 2, 1 ]
 +  | [ 3 ]
 4  | [ 4, 3 ]
 <  | [ true ]
 ```
 
+The stack contains only one value, and it is `true`: the expression succeeds.
+
+##### Closures
+
+The expression `[1,2].any($x -> $x == $a)` will translate to the following opcodes: [1,2], x->[$x, $a, ==], any.
+
+Here is how it would be executed, given $a is bound to the value 2:
+
+```
+Context: a ~> 2
+Op            | stack
+              | [ ]
+[1,2]         | [ [1,2] ]
+x->[$x,$a,==] | [ x->[$x,$a,==],[1,2] ]
+any           | … starting recursive evaluation …
+
+
+Beginning new evaluation
+Context: a ~> 2, x ~> 1
+Op | stack
+   | []
+$x | [ 1 ]
+$a | [ 2, 1 ]
+== | [ false ]
+
+The stack contains one value, false. So the evaluation must continue with the next set element.
+
+Beggining new evaluation
+Context: a ~> 2, x ~> 2
+Op | stack
+   | []
+$x | [ 2 ]
+$a | [ 2, 2 ]
+== | [ true ]
+
+The stack contains one value, true. The evaluation can stop here, the evaluation of any can return true.
+
+Resuming parent stack
+Context: a ~> 2
+Op  | stack
+any | true
+```
 The stack contains only one value, and it is `true`: the expression succeeds.
 
 ### Datalog fact generation
