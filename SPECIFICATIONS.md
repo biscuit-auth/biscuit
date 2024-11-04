@@ -160,7 +160,7 @@ strict not equal, set inclusion, lenient equal, lenient not equal, typeof.
 A _boolean_ is `true` or `false`. It supports the following operations:
 `===` (strict equal), `!==` (strict not equal), eager or, eager and, set inclusion, `==` (lenient equal), `!=` (lenient not equal), typeof, short-circuiting or, short-circuiting and.
 
-A _null_ is a default type indicating the absence of value. It supports `===` (strict equal), `!==` (strict not equal), `==` (lenient equal) and `!=` (lenient not equal). `null` is always equal to itself, typeof.
+A _null_ is a default type indicating the absence of value. It supports `===` (strict equal), `!==` (strict not equal), `==` (lenient equal) and `!=` (lenient not equal), typeof. `null` is always equal to itself.
 
 A _set_ is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets. It supports strict equal, strict not equal, intersection, union,
