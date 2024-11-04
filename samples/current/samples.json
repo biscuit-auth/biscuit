@@ -862,7 +862,7 @@
           ],
           "public_keys": [],
           "external_key": null,
-          "code": "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z;\nvalid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, ![\"file1\"].contains($1);\ncheck if valid_date($0), resource($0);\n"
+          "code": "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z;\nvalid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, !{\"file1\"}.contains($1);\ncheck if valid_date($0), resource($0);\n"
         }
       ],
       "validations": {
@@ -902,7 +902,7 @@
                 "origin": 1,
                 "rules": [
                   "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z",
-                  "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, ![\"file1\"].contains($1)"
+                  "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, !{\"file1\"}.contains($1)"
                 ]
               }
             ],
@@ -954,7 +954,7 @@
                 "origin": 1,
                 "rules": [
                   "valid_date(\"file1\") <- time($0), resource(\"file1\"), $0 <= 2030-12-31T12:59:59Z",
-                  "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, ![\"file1\"].contains($1)"
+                  "valid_date($1) <- time($0), resource($1), $0 <= 1999-12-31T12:59:59Z, !{\"file1\"}.contains($1)"
                 ]
               }
             ],
@@ -1245,7 +1245,7 @@
           ],
           "public_keys": [],
           "external_key": null,
-          "code": "check if true;\ncheck if !false;\ncheck if true === true;\ncheck if false === false;\ncheck if 1 < 2;\ncheck if 2 > 1;\ncheck if 1 <= 2;\ncheck if 1 <= 1;\ncheck if 2 >= 1;\ncheck if 2 >= 2;\ncheck if 3 === 3;\ncheck if 1 + 2 * 3 - 4 / 2 === 5;\ncheck if \"hello world\".starts_with(\"hello\"), \"hello world\".ends_with(\"world\");\ncheck if \"aaabde\".matches(\"a*c?.e\");\ncheck if \"aaabde\".contains(\"abd\");\ncheck if \"aaabde\" === \"aaa\" + \"b\" + \"de\";\ncheck if \"abcD12\" === \"abcD12\";\ncheck if \"abcD12\".length() === 6;\ncheck if \"é\".length() === 2;\ncheck if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;\ncheck if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z === 2020-12-04T09:46:41Z;\ncheck if hex:12ab === hex:12ab;\ncheck if [1, 2].contains(2);\ncheck if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z);\ncheck if [false, true].contains(true);\ncheck if [\"abc\", \"def\"].contains(\"abc\");\ncheck if [hex:12ab, hex:34de].contains(hex:34de);\ncheck if [1, 2].contains([2]);\ncheck if [1, 2] === [1, 2];\ncheck if [1, 2].intersection([2, 3]) === [2];\ncheck if [1, 2].union([2, 3]) === [1, 2, 3];\ncheck if [1, 2, 3].intersection([1, 2]).contains(1);\ncheck if [1, 2, 3].intersection([1, 2]).length() === 2;\n"
+          "code": "check if true;\ncheck if !false;\ncheck if true === true;\ncheck if false === false;\ncheck if 1 < 2;\ncheck if 2 > 1;\ncheck if 1 <= 2;\ncheck if 1 <= 1;\ncheck if 2 >= 1;\ncheck if 2 >= 2;\ncheck if 3 === 3;\ncheck if 1 + 2 * 3 - 4 / 2 === 5;\ncheck if \"hello world\".starts_with(\"hello\"), \"hello world\".ends_with(\"world\");\ncheck if \"aaabde\".matches(\"a*c?.e\");\ncheck if \"aaabde\".contains(\"abd\");\ncheck if \"aaabde\" === \"aaa\" + \"b\" + \"de\";\ncheck if \"abcD12\" === \"abcD12\";\ncheck if \"abcD12\".length() === 6;\ncheck if \"é\".length() === 2;\ncheck if 2019-12-04T09:46:41Z < 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z > 2019-12-04T09:46:41Z;\ncheck if 2019-12-04T09:46:41Z <= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2019-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z;\ncheck if 2020-12-04T09:46:41Z === 2020-12-04T09:46:41Z;\ncheck if hex:12ab === hex:12ab;\ncheck if {1, 2}.contains(2);\ncheck if {2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z}.contains(2020-12-04T09:46:41Z);\ncheck if {false, true}.contains(true);\ncheck if {\"abc\", \"def\"}.contains(\"abc\");\ncheck if {hex:12ab, hex:34de}.contains(hex:34de);\ncheck if {1, 2}.contains({2});\ncheck if {1, 2} === {1, 2};\ncheck if {1, 2}.intersection({2, 3}) === {2};\ncheck if {1, 2}.union({2, 3}) === {1, 2, 3};\ncheck if {1, 2, 3}.intersection({1, 2}).contains(1);\ncheck if {1, 2, 3}.intersection({1, 2}).length() === 2;\n"
         }
       ],
       "validations": {
@@ -1280,21 +1280,21 @@
                   "check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z",
                   "check if 2020-12-04T09:46:41Z >= 2020-12-04T09:46:41Z",
                   "check if 3 === 3",
-                  "check if [\"abc\", \"def\"].contains(\"abc\")",
-                  "check if [1, 2, 3].intersection([1, 2]).contains(1)",
-                  "check if [1, 2, 3].intersection([1, 2]).length() === 2",
-                  "check if [1, 2] === [1, 2]",
-                  "check if [1, 2].contains(2)",
-                  "check if [1, 2].contains([2])",
-                  "check if [1, 2].intersection([2, 3]) === [2]",
-                  "check if [1, 2].union([2, 3]) === [1, 2, 3]",
-                  "check if [2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z].contains(2020-12-04T09:46:41Z)",
-                  "check if [false, true].contains(true)",
-                  "check if [hex:12ab, hex:34de].contains(hex:34de)",
                   "check if false === false",
                   "check if hex:12ab === hex:12ab",
                   "check if true",
-                  "check if true === true"
+                  "check if true === true",
+                  "check if {\"abc\", \"def\"}.contains(\"abc\")",
+                  "check if {1, 2, 3}.intersection({1, 2}).contains(1)",
+                  "check if {1, 2, 3}.intersection({1, 2}).length() === 2",
+                  "check if {1, 2} === {1, 2}",
+                  "check if {1, 2}.contains(2)",
+                  "check if {1, 2}.contains({2})",
+                  "check if {1, 2}.intersection({2, 3}) === {2}",
+                  "check if {1, 2}.union({2, 3}) === {1, 2, 3}",
+                  "check if {2019-12-04T09:46:41Z, 2020-12-04T09:46:41Z}.contains(2020-12-04T09:46:41Z)",
+                  "check if {false, true}.contains(true)",
+                  "check if {hex:12ab, hex:34de}.contains(hex:34de)"
                 ]
               }
             ],
@@ -1814,7 +1814,7 @@
           ],
           "public_keys": [],
           "external_key": null,
-          "code": "allowed_operations([\"A\", \"B\"]);\ncheck all operation($op), allowed_operations($allowed), $allowed.contains($op);\n"
+          "code": "allowed_operations({\"A\", \"B\"});\ncheck all operation($op), allowed_operations($allowed), $allowed.contains($op);\n"
         }
       ],
       "validations": {
@@ -1835,7 +1835,7 @@
                   0
                 ],
                 "facts": [
-                  "allowed_operations([\"A\", \"B\"])"
+                  "allowed_operations({\"A\", \"B\"})"
                 ]
               }
             ],
@@ -1877,7 +1877,7 @@
                   0
                 ],
                 "facts": [
-                  "allowed_operations([\"A\", \"B\"])"
+                  "allowed_operations({\"A\", \"B\"})"
                 ]
               }
             ],
@@ -2148,7 +2148,7 @@
           ],
           "public_keys": [],
           "external_key": null,
-          "code": "check if 1 !== 3;\ncheck if 1 | 2 ^ 3 === 0;\ncheck if \"abcD12x\" !== \"abcD12\";\ncheck if 2022-12-04T09:46:41Z !== 2020-12-04T09:46:41Z;\ncheck if hex:12abcd !== hex:12ab;\ncheck if [1, 4] !== [1, 2];\n"
+          "code": "check if 1 !== 3;\ncheck if 1 | 2 ^ 3 === 0;\ncheck if \"abcD12x\" !== \"abcD12\";\ncheck if 2022-12-04T09:46:41Z !== 2020-12-04T09:46:41Z;\ncheck if hex:12abcd !== hex:12ab;\ncheck if {1, 4} !== {1, 2};\n"
         }
       ],
       "validations": {
@@ -2164,8 +2164,8 @@
                   "check if 1 !== 3",
                   "check if 1 | 2 ^ 3 === 0",
                   "check if 2022-12-04T09:46:41Z !== 2020-12-04T09:46:41Z",
-                  "check if [1, 4] !== [1, 2]",
-                  "check if hex:12abcd !== hex:12ab"
+                  "check if hex:12abcd !== hex:12ab",
+                  "check if {1, 4} !== {1, 2}"
                 ]
               }
             ],
@@ -2513,71 +2513,41 @@
       "token": [
         {
           "symbols": [
-            "fact",
-            "value",
-            "fact2"
+            "abcD12",
+            "abcD12x"
           ],
           "public_keys": [],
           "external_key": null,
-          "code": "check if fact(1, $value), 1 == $value;\ncheck if fact2(1, $value), 1 != $value;\n"
+          "code": "check if true == true;\ncheck if false != false;\ncheck if 1 != true;\ncheck if 1 == 1;\ncheck if 1 != 3;\ncheck if 1 != true;\ncheck if \"abcD12\" == \"abcD12\";\ncheck if \"abcD12x\" != \"abcD12\";\ncheck if \"abcD12x\" != true;\ncheck if 2022-12-04T09:46:41Z == 2022-12-04T09:46:41Z;\ncheck if 2022-12-04T09:46:41Z != 2020-12-04T09:46:41Z;\ncheck if 2022-12-04T09:46:41Z != true;\ncheck if hex:12abcd == hex:12abcd;\ncheck if hex:12abcd != hex:12ab;\ncheck if hex:12abcd != true;\ncheck if {1, 2} == {1, 2};\ncheck if {1, 4} != {1, 2};\ncheck if {1, 4} != true;\n"
         }
       ],
       "validations": {
-        "authorized same type": {
+        "": {
           "world": {
-            "facts": [
-              {
-                "origin": [
-                  null
-                ],
-                "facts": [
-                  "fact(1, 1)",
-                  "fact2(1, 2)"
-                ]
-              }
-            ],
+            "facts": [],
             "rules": [],
             "checks": [
               {
                 "origin": 0,
                 "checks": [
-                  "check if fact(1, $value), 1 == $value",
-                  "check if fact2(1, $value), 1 != $value"
-                ]
-              }
-            ],
-            "policies": [
-              "allow if true"
-            ]
-          },
-          "result": {
-            "Ok": 0
-          },
-          "authorizer_code": "fact(1, 1);\nfact2(1, 2);\n\nallow if true;\n",
-          "revocation_ids": [
-            "d65b3aeceb6268124190f5eb87788a5eb81c89a3fc8370c9a3ea362731c55660b2b390ca6270e68afab90862bd2bbb808aa6b5576c975ae773a992a2434c930d"
-          ]
-        },
-        "unauthorized failed logic different type": {
-          "world": {
-            "facts": [
-              {
-                "origin": [
-                  null
-                ],
-                "facts": [
-                  "fact(1, true)",
-                  "fact2(1, false)"
-                ]
-              }
-            ],
-            "rules": [],
-            "checks": [
-              {
-                "origin": 0,
-                "checks": [
-                  "check if fact(1, $value), 1 == $value",
-                  "check if fact2(1, $value), 1 != $value"
+                  "check if \"abcD12\" == \"abcD12\"",
+                  "check if \"abcD12x\" != \"abcD12\"",
+                  "check if \"abcD12x\" != true",
+                  "check if 1 != 3",
+                  "check if 1 != true",
+                  "check if 1 != true",
+                  "check if 1 == 1",
+                  "check if 2022-12-04T09:46:41Z != 2020-12-04T09:46:41Z",
+                  "check if 2022-12-04T09:46:41Z != true",
+                  "check if 2022-12-04T09:46:41Z == 2022-12-04T09:46:41Z",
+                  "check if false != false",
+                  "check if hex:12abcd != hex:12ab",
+                  "check if hex:12abcd != true",
+                  "check if hex:12abcd == hex:12abcd",
+                  "check if true == true",
+                  "check if {1, 2} == {1, 2}",
+                  "check if {1, 4} != true",
+                  "check if {1, 4} != {1, 2}"
                 ]
               }
             ],
@@ -2596,8 +2566,8 @@
                     {
                       "Block": {
                         "block_id": 0,
-                        "check_id": 0,
-                        "rule": "check if fact(1, $value), 1 == $value"
+                        "check_id": 1,
+                        "rule": "check if false != false"
                       }
                     }
                   ]
@@ -2605,9 +2575,9 @@
               }
             }
           },
-          "authorizer_code": "fact(1, true);\nfact2(1, false);\n\nallow if true;\n",
+          "authorizer_code": "allow if true;\n",
           "revocation_ids": [
-            "d65b3aeceb6268124190f5eb87788a5eb81c89a3fc8370c9a3ea362731c55660b2b390ca6270e68afab90862bd2bbb808aa6b5576c975ae773a992a2434c930d"
+            "4af245a2504ec00809bd0cd8d20ceaaac35f8ec5aaa8c7d3fd6652b126d2bf246d64fec8f0e65c409b196d4a60c9723dd4fbb3328988790e97fc4e08e9528208"
           ]
         }
       }
@@ -2624,7 +2594,7 @@
           ],
           "public_keys": [],
           "external_key": null,
-          "code": "check if !false && true;\ncheck if false || true;\ncheck if (true || false) && true;\ncheck if !(false && \"x\".intersection(\"x\"));\ncheck if true || \"x\".intersection(\"x\");\ncheck if [1, 2, 3].all($p -> $p > 0);\ncheck if ![1, 2, 3].all($p -> $p == 2);\ncheck if [1, 2, 3].any($p -> $p > 2);\ncheck if ![1, 2, 3].any($p -> $p > 3);\ncheck if [1, 2, 3].any($p -> $p > 1 && [3, 4, 5].any($q -> $p == $q));\n"
+          "code": "check if !false && true;\ncheck if false || true;\ncheck if (true || false) && true;\ncheck if !(false && \"x\".intersection(\"x\"));\ncheck if true || \"x\".intersection(\"x\");\ncheck if {1, 2, 3}.all($p -> $p > 0);\ncheck if !{1, 2, 3}.all($p -> $p == 2);\ncheck if {1, 2, 3}.any($p -> $p > 2);\ncheck if !{1, 2, 3}.any($p -> $p > 3);\ncheck if {1, 2, 3}.any($p -> $p > 1 && {3, 4, 5}.any($q -> $p == $q));\n"
         }
       ],
       "validations": {
@@ -2637,15 +2607,15 @@
                 "origin": 0,
                 "checks": [
                   "check if !(false && \"x\".intersection(\"x\"))",
-                  "check if ![1, 2, 3].all($p -> $p == 2)",
-                  "check if ![1, 2, 3].any($p -> $p > 3)",
                   "check if !false && true",
+                  "check if !{1, 2, 3}.all($p -> $p == 2)",
+                  "check if !{1, 2, 3}.any($p -> $p > 3)",
                   "check if (true || false) && true",
-                  "check if [1, 2, 3].all($p -> $p > 0)",
-                  "check if [1, 2, 3].any($p -> $p > 1 && [3, 4, 5].any($q -> $p == $q))",
-                  "check if [1, 2, 3].any($p -> $p > 2)",
                   "check if false || true",
-                  "check if true || \"x\".intersection(\"x\")"
+                  "check if true || \"x\".intersection(\"x\")",
+                  "check if {1, 2, 3}.all($p -> $p > 0)",
+                  "check if {1, 2, 3}.any($p -> $p > 1 && {3, 4, 5}.any($q -> $p == $q))",
+                  "check if {1, 2, 3}.any($p -> $p > 2)"
                 ]
               }
             ],
@@ -2670,15 +2640,15 @@
                 "origin": 0,
                 "checks": [
                   "check if !(false && \"x\".intersection(\"x\"))",
-                  "check if ![1, 2, 3].all($p -> $p == 2)",
-                  "check if ![1, 2, 3].any($p -> $p > 3)",
                   "check if !false && true",
+                  "check if !{1, 2, 3}.all($p -> $p == 2)",
+                  "check if !{1, 2, 3}.any($p -> $p > 3)",
                   "check if (true || false) && true",
-                  "check if [1, 2, 3].all($p -> $p > 0)",
-                  "check if [1, 2, 3].any($p -> $p > 1 && [3, 4, 5].any($q -> $p == $q))",
-                  "check if [1, 2, 3].any($p -> $p > 2)",
                   "check if false || true",
-                  "check if true || \"x\".intersection(\"x\")"
+                  "check if true || \"x\".intersection(\"x\")",
+                  "check if {1, 2, 3}.all($p -> $p > 0)",
+                  "check if {1, 2, 3}.any($p -> $p > 1 && {3, 4, 5}.any($q -> $p == $q))",
+                  "check if {1, 2, 3}.any($p -> $p > 2)"
                 ]
               }
             ],
@@ -2712,11 +2682,14 @@
             "bool",
             "set",
             "null",
+            "array",
+            "map",
+            "a",
             "t"
           ],
           "public_keys": [],
           "external_key": null,
-          "code": "integer(1);\nstring(\"test\");\ndate(2023-12-28T00:00:00Z);\nbytes(hex:aa);\nbool(true);\nset([false, true]);\nnull(null);\ncheck if 1.type() == \"integer\";\ncheck if integer($t), $t.type() == \"integer\";\ncheck if \"test\".type() == \"string\";\ncheck if string($t), $t.type() == \"string\";\ncheck if (2023-12-28T00:00:00Z).type() == \"date\";\ncheck if date($t), $t.type() == \"date\";\ncheck if hex:aa.type() == \"bytes\";\ncheck if bytes($t), $t.type() == \"bytes\";\ncheck if true.type() == \"bool\";\ncheck if bool($t), $t.type() == \"bool\";\ncheck if [false, true].type() == \"set\";\ncheck if set($t), $t.type() == \"set\";\ncheck if null.type() == \"null\";\ncheck if null($t), $t.type() == \"null\";\n"
+          "code": "integer(1);\nstring(\"test\");\ndate(2023-12-28T00:00:00Z);\nbytes(hex:aa);\nbool(true);\nset({false, true});\nnull(null);\narray([1, 2, 3]);\nmap({\"a\": true});\ncheck if 1.type() == \"integer\";\ncheck if integer($t), $t.type() == \"integer\";\ncheck if \"test\".type() == \"string\";\ncheck if string($t), $t.type() == \"string\";\ncheck if (2023-12-28T00:00:00Z).type() == \"date\";\ncheck if date($t), $t.type() == \"date\";\ncheck if hex:aa.type() == \"bytes\";\ncheck if bytes($t), $t.type() == \"bytes\";\ncheck if true.type() == \"bool\";\ncheck if bool($t), $t.type() == \"bool\";\ncheck if {false, true}.type() == \"set\";\ncheck if set($t), $t.type() == \"set\";\ncheck if null.type() == \"null\";\ncheck if null($t), $t.type() == \"null\";\ncheck if array($t), $t.type() == \"array\";\ncheck if map($t), $t.type() == \"map\";\n"
         }
       ],
       "validations": {
@@ -2728,12 +2701,14 @@
                   0
                 ],
                 "facts": [
+                  "array([1, 2, 3])",
                   "bool(true)",
                   "bytes(hex:aa)",
                   "date(2023-12-28T00:00:00Z)",
                   "integer(1)",
+                  "map({\"a\": true})",
                   "null(null)",
-                  "set([false, true])",
+                  "set({false, true})",
                   "string(\"test\")"
                 ]
               }
@@ -2746,17 +2721,19 @@
                   "check if \"test\".type() == \"string\"",
                   "check if (2023-12-28T00:00:00Z).type() == \"date\"",
                   "check if 1.type() == \"integer\"",
-                  "check if [false, true].type() == \"set\"",
+                  "check if array($t), $t.type() == \"array\"",
                   "check if bool($t), $t.type() == \"bool\"",
                   "check if bytes($t), $t.type() == \"bytes\"",
                   "check if date($t), $t.type() == \"date\"",
                   "check if hex:aa.type() == \"bytes\"",
                   "check if integer($t), $t.type() == \"integer\"",
+                  "check if map($t), $t.type() == \"map\"",
                   "check if null($t), $t.type() == \"null\"",
                   "check if null.type() == \"null\"",
                   "check if set($t), $t.type() == \"set\"",
                   "check if string($t), $t.type() == \"string\"",
-                  "check if true.type() == \"bool\""
+                  "check if true.type() == \"bool\"",
+                  "check if {false, true}.type() == \"set\""
                 ]
               }
             ],
@@ -2769,7 +2746,81 @@
           },
           "authorizer_code": "allow if true;\n",
           "revocation_ids": [
-            "be401996253dce45ac3d8b2f4b289af1f2cc2a4447a8265a1a2ca879c43377978ffc5ac6633053cd7c30e7c33cf258a37767226834bc80b005c48eb0229c4502"
+            "c8f7ff152b40a3e8f3ab19a435ccd16c41288762864022895b99d2abb6330c794b3f1378a4651b31d249f4c35b69246d88124d40e05e634a0eb9ca9e54b1ca0a"
+          ]
+        }
+      }
+    },
+    {
+      "title": "test array and map operations (v5 blocks)",
+      "filename": "test034_array_map.bc",
+      "token": [
+        {
+          "symbols": [
+            "a",
+            "b",
+            "c",
+            "p",
+            "d",
+            "A",
+            "kv",
+            "id",
+            "roles"
+          ],
+          "public_keys": [],
+          "external_key": null,
+          "code": "check if [1, 2, 1].length() == 3;\ncheck if [\"a\", \"b\"] != true;\ncheck if [\"a\", \"b\"] != [1, 2, 3];\ncheck if [\"a\", \"b\"] == [\"a\", \"b\"];\ncheck if [\"a\", \"b\"] === [\"a\", \"b\"];\ncheck if [\"a\", \"b\"] !== [\"a\", \"c\"];\ncheck if [\"a\", \"b\", \"c\"].contains(\"c\");\ncheck if [1, 2, 3].starts_with([1, 2]);\ncheck if [4, 5, 6].ends_with([6]);\ncheck if [1, 2, \"a\"].get(2) == \"a\";\ncheck if [1, 2].get(3) == null;\ncheck if [1, 2, 3].all($p -> $p > 0);\ncheck if [1, 2, 3].any($p -> $p > 2);\ncheck if {\"a\": 1, \"b\": 2, \"c\": 3, \"d\": 4}.length() == 4;\ncheck if {1: \"a\", 2: \"b\"} != true;\ncheck if {1: \"a\", 2: \"b\"} != {\"a\": 1, \"b\": 2};\ncheck if {1: \"a\", 2: \"b\"} == {1: \"a\", 2: \"b\"};\ncheck if {1: \"a\", 2: \"b\"} !== {\"a\": 1, \"b\": 2};\ncheck if {1: \"a\", 2: \"b\"} === {1: \"a\", 2: \"b\"};\ncheck if {\"a\": 1, \"b\": 2, \"c\": 3, \"d\": 4}.contains(\"d\");\ncheck if {1: \"A\", \"a\": 1, \"b\": 2}.get(\"a\") == 1;\ncheck if {1: \"A\", \"a\": 1, \"b\": 2}.get(1) == \"A\";\ncheck if {1: \"A\", \"a\": 1, \"b\": 2}.get(\"c\") == null;\ncheck if {1: \"A\", \"a\": 1, \"b\": 2}.get(2) == null;\ncheck if {\"a\": 1, \"b\": 2}.all($kv -> $kv.get(0) != \"c\" && $kv.get(1) < 3);\ncheck if {1: \"A\", \"a\": 1, \"b\": 2}.any($kv -> $kv.get(0) == 1 && $kv.get(1) == \"A\");\ncheck if {\"user\": {\"id\": 1, \"roles\": [\"admin\"]}}.get(\"user\").get(\"roles\").contains(\"admin\");\n"
+        }
+      ],
+      "validations": {
+        "": {
+          "world": {
+            "facts": [],
+            "rules": [],
+            "checks": [
+              {
+                "origin": 0,
+                "checks": [
+                  "check if [\"a\", \"b\", \"c\"].contains(\"c\")",
+                  "check if [\"a\", \"b\"] != [1, 2, 3]",
+                  "check if [\"a\", \"b\"] != true",
+                  "check if [\"a\", \"b\"] !== [\"a\", \"c\"]",
+                  "check if [\"a\", \"b\"] == [\"a\", \"b\"]",
+                  "check if [\"a\", \"b\"] === [\"a\", \"b\"]",
+                  "check if [1, 2, \"a\"].get(2) == \"a\"",
+                  "check if [1, 2, 1].length() == 3",
+                  "check if [1, 2, 3].all($p -> $p > 0)",
+                  "check if [1, 2, 3].any($p -> $p > 2)",
+                  "check if [1, 2, 3].starts_with([1, 2])",
+                  "check if [1, 2].get(3) == null",
+                  "check if [4, 5, 6].ends_with([6])",
+                  "check if {\"a\": 1, \"b\": 2, \"c\": 3, \"d\": 4}.contains(\"d\")",
+                  "check if {\"a\": 1, \"b\": 2, \"c\": 3, \"d\": 4}.length() == 4",
+                  "check if {\"a\": 1, \"b\": 2}.all($kv -> $kv.get(0) != \"c\" && $kv.get(1) < 3)",
+                  "check if {\"user\": {\"id\": 1, \"roles\": [\"admin\"]}}.get(\"user\").get(\"roles\").contains(\"admin\")",
+                  "check if {1: \"A\", \"a\": 1, \"b\": 2}.any($kv -> $kv.get(0) == 1 && $kv.get(1) == \"A\")",
+                  "check if {1: \"A\", \"a\": 1, \"b\": 2}.get(\"a\") == 1",
+                  "check if {1: \"A\", \"a\": 1, \"b\": 2}.get(\"c\") == null",
+                  "check if {1: \"A\", \"a\": 1, \"b\": 2}.get(1) == \"A\"",
+                  "check if {1: \"A\", \"a\": 1, \"b\": 2}.get(2) == null",
+                  "check if {1: \"a\", 2: \"b\"} != true",
+                  "check if {1: \"a\", 2: \"b\"} != {\"a\": 1, \"b\": 2}",
+                  "check if {1: \"a\", 2: \"b\"} !== {\"a\": 1, \"b\": 2}",
+                  "check if {1: \"a\", 2: \"b\"} == {1: \"a\", 2: \"b\"}",
+                  "check if {1: \"a\", 2: \"b\"} === {1: \"a\", 2: \"b\"}"
+                ]
+              }
+            ],
+            "policies": [
+              "allow if true"
+            ]
+          },
+          "result": {
+            "Ok": 0
+          },
+          "authorizer_code": "allow if true;\n",
+          "revocation_ids": [
+            "8041144f92616477f1cd00b81e8be79581202a3853b08b3d477797b0d91f30c02fd7c01ca91a00f8a222d6be4794cc287baa361a1a00d5941518c1917967ec03"
           ]
         }
       }
