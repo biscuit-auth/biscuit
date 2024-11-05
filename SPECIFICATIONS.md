@@ -77,6 +77,8 @@ _predicates_ over the following types:
 - _boolean_
 - _null_
 - _set_ a deduplicated list of values of any type, except _variable_ or _set_
+- _array_ an array of values of any type, expect  _variable_ (nested arrays are allowed)
+- _map_ a map of key/value pairs. keys must be either strings or integers, values can be of any type, except _variable_ (nested maps are allowed)
 
 While a Biscuit token does not use a textual representation for storage, we
 use one for parsing and pretty printing of Datalog elements.
@@ -118,8 +120,10 @@ We will represent the various types as follows:
 - byte array: `hex:01A2`
 - date in RFC 3339 format: `1985-04-12T23:20:50.52Z`
 - boolean: `true` or `false`
-- null: `null`, supported since block version 5
-- set: `[ "a", "b", "c"]`
+- null: `null`, supported since block version 6
+- set: `{ "a", "b", "c"}`
+- array: `[ "a", true, null]`, supported since block version 6
+- map: `{ "a": true, 12: "a" }`, supported since block version 6
 
 As an example, assuming we have the following facts: `parent("a", "b")`,
 `parent("b", "c")`, `parent("c", "d")`. If we apply the rule
@@ -156,11 +160,15 @@ strict not equal, set inclusion, lenient equal, lenient not equal, typeof.
 A _boolean_ is `true` or `false`. It supports the following operations:
 `===` (strict equal), `!==` (strict not equal), eager or, eager and, set inclusion, `==` (lenient equal), `!=` (lenient not equal), typeof, short-circuiting or, short-circuiting and.
 
-A _null_ is a default type indicating the absence of value. It supports `===` (strict equal), `!==` (strict not equal), `==` (lenient equal) and `!=` (lenient not equal). `null` is always equal to itself, typeof.
+A _null_ is a default type indicating the absence of value. It supports `===` (strict equal), `!==` (strict not equal), `==` (lenient equal) and `!=` (lenient not equal), typeof. `null` is always equal to itself.
 
 A _set_ is a deduplicated list of terms of the same type. It cannot contain
 variables or other sets. It supports strict equal, strict not equal, intersection, union,
 set inclusion, lenient equal, lenient not equal, any, all, typeof.
+
+An _array_ is an ordered list of terms, not necessarily of the same type. It supports `===` (strict equal), `!==` (strict not equal), `==` (lenient equal) and `!=` (lenient not equal), contains, prefix, suffix, get, typeof.
+
+A _map_ is an unordered collection of key/value pairs, with unique keys. Keys are either strings or integers, values can be any term. It supports `===` (strict equal), `!==` (strict not equal), `==` (lenient equal) and `!=` (lenient not equal), contains, get, typeof.
 
 #### Grammar
 
@@ -197,7 +205,10 @@ The logic language is described by the following EBNF grammar:
 <boolean> ::= "true" | "false"
 <null> ::= "null"
 <date> ::= [0-9]* "-" [0-9] [0-9] "-" [0-9] [0-9] "T" [0-9] [0-9] ":" [0-9] [0-9] ":" [0-9] [0-9] ( "Z" | ( ("+" | "-") [0-9] [0-9] ":" [0-9] [0-9] ))
-<set> ::= "[" <sp>? ( <set_term> ( <sp>? "," <sp>? <set_term>)* <sp>? )? "]"
+<set> ::= "{" <sp>? ( <set_term> ( <sp>? "," <sp>? <set_term>)* <sp>? )? "}"
+<array> ::= "[" <sp>? ( <term> ( <sp>? "," <sp>? <term>)* <sp>? )? "]"
+<map_entry> ::= (<string> | <number>) <sp>? ":" <sp>? <term>
+<map> ::= "{" <sp>? ( <map_entry> ( <sp>? "," <sp>? <map_entry>)* <sp>? )? "}"
 
 <expression> ::= <expression_element> (<sp>? <operator> <sp>? <expression_element>)*
 <expression_element> ::= <expression_unary> | (<expression_term> <expression_method>? )
@@ -305,7 +316,7 @@ succeeds (in the case of `reject if`, the check will fail if any query matches).
 - a `reject if` query succeeds if no set of facts matches the body and expressions
 
 `check all` can only be used starting from block version 4.  
-`reject if` can only be used starting from block version 5.
+`reject if` can only be used starting from block version 6.
 
 Here are some examples of writing checks:
 
