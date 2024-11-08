@@ -510,6 +510,9 @@ Here are the currently defined binary operations:
 - _all_, defined on sets, takes a closure term -> boolean, returns a boolean (v6 only)
 - _short circuiting and_, defined on booleans, takes a closure () -> boolean, returns a boolean (v6 only)
 - _short circuiting or_, defined on booleans, takes a closure () -> boolean, returns a boolean (v6 only)
+- _get_, defined on arrays and maps (v6 only)  
+  on arrays, takes an integer and returns the corresponding element (or `null`, if out of bounds)  
+  on maps, takes either an integer or a string and returns the corresponding element (or `null`, if out of bounds)
 
 Integer operations must have overflow checks. If it overflows, the expression
 fails.
